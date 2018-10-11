@@ -1,45 +1,51 @@
 
-CREATE TABLE admin (
-                a_id INT AUTO_INCREMENT NOT NULL,
-                a_email VARCHAR(60) NOT NULL,
-                a_pass VARCHAR(500) NOT NULL,
-                PRIMARY KEY (a_id, a_email)
+CREATE TABLE users (
+                u_id INT AUTO_INCREMENT NOT NULL,
+                email VARCHAR(60) NOT NULL,
+                u_l_name VARCHAR(25),
+                u_pass VARCHAR(500),
+                u_type VARCHAR(1) NOT NULL,
+                d_acc_created DATE NOT NULL,
+                u_phone VARCHAR(30),
+                u_f_name VARCHAR(25),
+                PRIMARY KEY (u_id)
 );
 
 
-CREATE TABLE service_provider (
-                s_id INT AUTO_INCREMENT NOT NULL,
-                s_email VARCHAR(60) NOT NULL,
-                s_f_name VARCHAR(25) NOT NULL,
-                s_phone_n VARCHAR(20) NOT NULL,
-                s_l_name VARCHAR(50) NOT NULL,
-                s_pass VARCHAR(500) NOT NULL,
-                s_date_joined DATE NOT NULL,
-                s_location VARCHAR(300) NOT NULL,
-                PRIMARY KEY (s_id, s_email)
+CREATE TABLE location (
+                u_id INT NOT NULL,
+                l_id INT AUTO_INCREMENT NOT NULL,
+                l_add_line_2 VARCHAR,
+                city VARCHAR(50) DEFAULT Dublin NOT NULL,
+                l_add_line_1 VARCHAR(70) NOT NULL,
+                PRIMARY KEY (u_id, l_id)
 );
 
 
-CREATE TABLE customer (
-                c_id INT AUTO_INCREMENT NOT NULL,
-                s_id INT NOT NULL,
-                s_email VARCHAR(60) NOT NULL,
-                c_email VARCHAR(60) NOT NULL,
-                c_f_name VARCHAR(25) NOT NULL,
-                c_phone_n VARCHAR(20) NOT NULL,
-                c_date_joined DATE NOT NULL,
-                c_pass VARCHAR(500) NOT NULL,
-                c_l_name VARCHAR(50) NOT NULL,
-                PRIMARY KEY (c_id, s_id, s_email, c_email)
+CREATE TABLE bookings (
+                b_id INT AUTO_INCREMENT NOT NULL,
+                u_id INT NOT NULL,
+                l_id INT NOT NULL,
+                b_status VARCHAR(10) NOT NULL,
+                b_time TIME NOT NULL,
+                PRIMARY KEY (b_id, u_id, l_id)
 );
 
 
-ALTER TABLE customer ADD CONSTRAINT service_provider_customer_fk
-FOREIGN KEY (s_email, s_id)
-REFERENCES service_provider (s_email, s_id)
+ALTER TABLE location ADD CONSTRAINT users_location_fk
+FOREIGN KEY (u_id)
+REFERENCES users (u_id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
-/*creating the root admin hardcoded*/
-INSERT INTO admin (a_email, a_pass) VALUES ('admin@admin.com', 'admin');
+ALTER TABLE bookings ADD CONSTRAINT users_bookings_fk
+FOREIGN KEY (u_id)
+REFERENCES users (u_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
+ALTER TABLE bookings ADD CONSTRAINT location_bookings_fk
+FOREIGN KEY (l_id, u_id)
+REFERENCES location (l_id, u_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
