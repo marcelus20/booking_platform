@@ -57,7 +57,7 @@
   <table id="TAB15" populated="true" UUID="c3cdb65b-aa75-4674-bcc1-2a45538013ac" name="Location" objectType="TABLE" physicalName="location" >
    <remarks></remarks>
    <folder id="FOLTAB151" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL16" populated="true" UUID="d401f04e-6b3f-4574-bff0-72ca28678a3b" autoIncrement="true" autoIncrementSequenceName="location_l_id_seq" defaultValue="" name="Location id" nullable="0" physicalName="l_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL16" populated="true" UUID="d401f04e-6b3f-4574-bff0-72ca28678a3b" autoIncrement="true" autoIncrementSequenceName="location_location_id_seq" defaultValue="" name="Location id" nullable="0" physicalName="location_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL17" populated="true" UUID="20c987e4-887f-47b0-8b86-63c564c07f1f" autoIncrement="false" autoIncrementSequenceName="location_location_address_line_2_seq" defaultValue="" name="Location address line 2" nullable="1" physicalName="location_address_line_2" precision="70" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
@@ -76,7 +76,7 @@
     </folder>
     <folder id="FOLTAB154" populated="true" name="Indices" physicalName="Indices" type="4">
     <index id="IDX20" populated="true" UUID="a2553911-8fa7-44bf-b201-8d591f8edeff" clustered="false" name="l_id" physicalName="l_id" primaryKeyIndex="true" unique="false" >
-     <index-column id="IDC21" populated="true" UUID="1cc8ffa2-5efc-47cb-bdd4-3466ee6a489f" ascendingOrDescending="UNSPECIFIED" column-ref="COL16" name="Location id" physicalName="l_id" />
+     <index-column id="IDC21" populated="true" UUID="1cc8ffa2-5efc-47cb-bdd4-3466ee6a489f" ascendingOrDescending="UNSPECIFIED" column-ref="COL16" name="Location id" physicalName="location_id" />
     </index>
    </folder>
   </table>
@@ -111,10 +111,10 @@
     </index>
    </folder>
   </table>
-  <table id="TAB32" populated="true" UUID="f8e650be-f10d-46a4-8fe1-fb9c06dc329d" name="Admin Table" objectType="TABLE" physicalName="admin_table" >
+  <table id="TAB32" populated="true" UUID="f8e650be-f10d-46a4-8fe1-fb9c06dc329d" name="admin_table" objectType="TABLE" physicalName="admin_table" >
    <remarks></remarks>
    <folder id="FOLTAB321" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL33" populated="true" UUID="a62d67c3-d657-405e-8dac-eecc48b0c49e" autoIncrement="true" autoIncrementSequenceName="admin_table_id_seq" defaultValue="" name="id" nullable="0" physicalName="id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL33" populated="true" UUID="a62d67c3-d657-405e-8dac-eecc48b0c49e" autoIncrement="true" autoIncrementSequenceName="admin_table_admin_id_seq" defaultValue="" name="admin_id" nullable="0" physicalName="admin_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL34" populated="true" UUID="93952f08-0255-4530-8c1e-0e03b727c65b" autoIncrement="false" autoIncrementSequenceName="admin_table_admin_email_seq" defaultValue="" name="email" nullable="0" physicalName="admin_email" precision="60" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
@@ -130,9 +130,9 @@
     </folder>
     <folder id="FOLTAB324" populated="true" name="Indices" physicalName="Indices" type="4">
     <index id="IDX36" populated="true" UUID="253ac37f-0a3a-41de-ba62-37d992d7c852" clustered="false" name="admin_id" physicalName="admin_id" primaryKeyIndex="true" unique="false" >
-     <index-column id="IDC37" populated="true" UUID="d550dc12-aa0d-4a78-8ee7-afaa45aad4b5" ascendingOrDescending="UNSPECIFIED" column-ref="COL33" name="id" physicalName="id" />
+     <index-column id="IDC37" populated="true" UUID="d550dc12-aa0d-4a78-8ee7-afaa45aad4b5" ascendingOrDescending="UNSPECIFIED" column-ref="COL33" name="admin_id" physicalName="admin_id" />
     </index>
-    <index id="IDX38" populated="true" UUID="5e76cb23-5959-4361-b71c-f675d94f1212" clustered="false" name="Admin Table_idx" physicalName="Admin Table_idx" primaryKeyIndex="false" unique="true" >
+    <index id="IDX38" populated="true" UUID="5e76cb23-5959-4361-b71c-f675d94f1212" clustered="false" name="Admin Table_idx" physicalName="Admin_Table_idx" primaryKeyIndex="false" unique="true" >
      <index-column id="IDC39" populated="true" UUID="53364cb8-04c6-4ce9-9b28-89b2bec459e9" ascendingOrDescending="UNSPECIFIED" column-ref="COL34" name="email" physicalName="admin_email" />
     </index>
    </folder>
@@ -144,8 +144,8 @@
    <relationship id="REL42" populated="true" UUID="aecbf6b5-808e-482e-a885-52c04fcbe77e" deferrability="7" deleteRule="3" fk-table-ref="TAB22" fkCardinality="7" identifying="true" name="barber_booking_fk" physicalName="barber_booking_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP43" populated="true" UUID="fa7cef42-e503-496c-a7c2-27f0f2025352" fk-column-ref="COL25" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
    </relationship>
-   <relationship id="REL44" populated="true" UUID="164b400e-7478-4678-9ad7-8859c5f1c60e" deferrability="7" deleteRule="0" fk-table-ref="TAB1" fkCardinality="7" identifying="false" name="location_users_fk" physicalName="location_users_fk" pk-table-ref="TAB15" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP45" populated="true" UUID="cb0e4204-c25a-4e1e-9a23-d9a4122aaa13" fk-column-ref="COL10" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL16" />
+   <relationship id="REL44" populated="true" UUID="164b400e-7478-4678-9ad7-8859c5f1c60e" deferrability="7" deleteRule="0" fk-table-ref="TAB1" fkCardinality="7" identifying="false" name="Location_id_user_foreign_key" physicalName="Location_id_user_foreign_key" pk-table-ref="TAB15" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP45" populated="true" UUID="cb619a5d-59db-4b4a-9eaf-8919ecab7b34" fk-column-ref="COL10" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL16" />
    </relationship>
   </relationships>
  </target-database>
@@ -155,9 +155,9 @@
  <play-pen zoom="1.189207115002721" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="696" y="55" bgColor="0xe6d794" fgColor="0x006633" rounded="true" dashed="true"/>
   <table-pane table-ref="TAB15" x="527" y="443" bgColor="0xc8dccc" fgColor="0x206cff" rounded="true" dashed="true"/>
-  <table-pane table-ref="TAB22" x="35" y="95" bgColor="0xbfd6ff" fgColor="0xcc0000" rounded="true" dashed="true"/>
+  <table-pane table-ref="TAB22" x="36" y="95" bgColor="0xbfd6ff" fgColor="0xcc0000" rounded="true" dashed="true"/>
   <table-pane table-ref="TAB32" x="98" y="322" bgColor="0xbfd6ff" fgColor="0x854f61" rounded="true" dashed="true"/>
-  <table-link relationship-ref="REL44" pkConnection="0.45390070921985815" fkConnection="0.4530612244897959" rLineColor="0x1ec705" pkLabelText="Location_Id" fkLabelText="Location_id_user_fk" orientation="72"/>
+  <table-link relationship-ref="REL44" pkConnection="0.45390070921985815" fkConnection="0.4530612244897959" rLineColor="0x1ec705" pkLabelText="Location_id" fkLabelText="Location_id_user_foreign_key" orientation="72"/>
   <table-link relationship-ref="REL40" pkConnection="0.3891891891891892" fkConnection="0.26495726495726496" rLineColor="0xe11111" pkLabelText="Customer_ID" fkLabelText="Customer_ID_booking_fk" orientation="18"/>
   <table-link relationship-ref="REL42" pkConnection="0.8" fkConnection="0.9145299145299145" rLineColor="0x212121" pkLabelText="Barber_ID" fkLabelText="Barber_ID_booking_fk" orientation="18"/>
  </play-pen>
