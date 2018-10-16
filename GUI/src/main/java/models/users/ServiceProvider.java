@@ -1,0 +1,69 @@
+package models.users;
+
+
+import models.Bookings;
+import models.Complaints;
+import models.Location;
+
+import java.util.Date;
+import java.util.List;
+
+public class ServiceProvider extends User{
+
+    private String companyFullName;
+    private List<Complaints> complaints;
+    private List<Location> locations;
+    private List<Bookings> bookings;
+
+    public ServiceProvider(Long id, String eMail, String password, String phone,
+                           Date dateOfAccountCreation, String companyFullName,
+                           List<Complaints> complaints, List<Location> locations,
+                           List<Bookings> bookings) {
+        super(id, eMail, password, phone, dateOfAccountCreation);
+        this.companyFullName = companyFullName;
+        this.complaints = complaints;
+        this.locations = locations;
+        this.bookings = bookings;
+    }
+
+    public ServiceProvider() {
+    }
+
+    public String getCompanyFullName() {
+        return companyFullName;
+    }
+
+    public List<Complaints> getComplaints() {
+        return complaints;
+    }
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public List<Bookings> getBookings() {
+        return bookings;
+    }
+
+
+
+    public ServiceProvider withCompanyFullName(String companyFullName) {
+        this.companyFullName = companyFullName;
+        return this;
+    }
+
+    public ServiceProvider withComplaints(List<Complaints> complaints) {
+        this.complaints = complaints;
+        return this;
+    }
+
+    public ServiceProvider withLocations(List<Location> locations) {
+        this.locations = locations;
+        return this;
+    }
+
+    public ServiceProvider withBookings(List<Bookings> bookings) {
+        this.bookings = bookings;
+        return this;
+    }
+}
