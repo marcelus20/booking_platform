@@ -1,7 +1,6 @@
 package main;
 
-import controllers.LoginController;
-import interfaces.Controlls;
+import controllers.loginControllers.LoginController;
 
 
 public class Main {
