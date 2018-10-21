@@ -66,4 +66,19 @@ public class ServiceProvider extends User{
         this.bookings = bookings;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "ServiceProvider{" +
+                "companyFullName='" + companyFullName + '\'' +
+                ", complaints=" + complaints +
+                ", locations=" + locations +
+                ", bookings=" + bookings +
+                ", phone='" + phone + '\'' +
+                ", dateOfAccountCreation=" + dateOfAccountCreation +
+                ", id=" + id +
+                ", eMail='" + eMail + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
