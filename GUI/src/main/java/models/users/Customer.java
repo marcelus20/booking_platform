@@ -87,8 +87,8 @@ public class Customer extends User {
         return "Customer{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                //", complaints=" + complaints +
-                //", bookings=" + bookings +
+                ", complaints=" + complaints +
+                ", bookings=" + bookings +
                 ", phone='" + phone + '\'' +
                 ", dateOfAccountCreation=" + dateOfAccountCreation +
                 ", id=" + id +
