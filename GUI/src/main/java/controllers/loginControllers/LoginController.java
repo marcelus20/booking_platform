@@ -3,6 +3,7 @@ package controllers.loginControllers;
 import interfaces.Controlls;
 import interfaces.Repository;
 import models.users.AbstractUser;
+import models.users.Customer;
 import repository.LoginRepository;
 import views.login.Login;
 
@@ -70,10 +71,10 @@ public class LoginController implements Controlls{
                 //System.out.println(email);
                 //System.out.println(password);
 
-                AbstractUser admin = loginRep.selectObj(email, new String(password));
+                AbstractUser user = loginRep.selectObj(email, new String(password));
 
 
-                if(admin == null){
+                if(user == null){
                     login.getErrorMessage().setText("email or password not correct!");
                     login.getErrorMessage().setBackground(Color.CYAN);
                     login.getErrorMessage().setOpaque(true);
@@ -81,7 +82,7 @@ public class LoginController implements Controlls{
                 }else{
 
                 }
-                System.out.println(admin);
+                System.out.println(user);
 
 
 
