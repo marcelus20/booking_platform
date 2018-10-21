@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS admin;
 CREATE TABLE admin (
                 id INT AUTO_INCREMENT NOT NULL,
                 password VARCHAR(128) NOT NULL,
@@ -6,9 +5,10 @@ CREATE TABLE admin (
                 PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS service_provider;
+
 CREATE TABLE service_provider (
                 s_id INT AUTO_INCREMENT NOT NULL,
+                phone VARCHAR(30) NOT NULL,
                 password VARCHAR(128) NOT NULL,
                 email VARCHAR(60) NOT NULL,
                 date_of_account_creation DATE NOT NULL,
@@ -21,8 +21,6 @@ CREATE UNIQUE INDEX service_provider_idx
  ON service_provider
  ( email );
 
-
-DROP TABLE IF EXISTS location;
 CREATE TABLE location (
                 s_id INT NOT NULL,
                 first_line_address VARCHAR(50) NOT NULL,
@@ -32,7 +30,7 @@ CREATE TABLE location (
                 PRIMARY KEY (s_id)
 );
 
-DROP TABLE IF EXISTS customers;
+
 CREATE TABLE customers (
                 customer_id INT AUTO_INCREMENT NOT NULL,
                 password VARCHAR(128) NOT NULL,
@@ -49,7 +47,6 @@ CREATE UNIQUE INDEX customers_idx
  ON customers
  ( email, phone );
 
-DROP TABLE IF EXISTS complaints;
 CREATE TABLE complaints (
                 customer_id INT NOT NULL,
                 s_id INT NOT NULL,
@@ -57,7 +54,7 @@ CREATE TABLE complaints (
                 PRIMARY KEY (customer_id, s_id)
 );
 
-DROP TABLE IF EXISTS booking;
+
 CREATE TABLE booking (
                 customer_id INT NOT NULL,
                 s_id INT NOT NULL,
@@ -66,7 +63,6 @@ CREATE TABLE booking (
 );
 
 
-DROP TABLE IF EXISTS service_type;
 CREATE TABLE service_type (
                 customer_id INT NOT NULL,
                 s_id INT NOT NULL,
