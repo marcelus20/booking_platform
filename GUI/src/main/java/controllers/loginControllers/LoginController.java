@@ -80,7 +80,8 @@ public class LoginController implements Controlls{
                     login.getErrorMessage().setOpaque(true);
 
                 }else{
-
+                    login.getErrorMessage().setText("");
+                    login.getErrorMessage().setOpaque(false);
                 }
                 System.out.println(user);
 
