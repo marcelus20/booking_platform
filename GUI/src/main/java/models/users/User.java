@@ -45,8 +45,8 @@ public class User extends AbstractUser {
         return this;
     }
 
-    public User withPhone(String password){
-        this.password = password;
+    public User withPhone(String phone){
+        this.phone = phone;
         return this;
     }
 
