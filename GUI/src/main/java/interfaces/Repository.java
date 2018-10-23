@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface Repository <T, G> {
 
-    void insertData();
+    void insertData(Object obj);
 
     List<List> selectData(String query);
 
