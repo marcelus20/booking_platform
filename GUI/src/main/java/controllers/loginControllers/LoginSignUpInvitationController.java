@@ -1,12 +1,13 @@
 package controllers.loginControllers;
 
 import interfaces.Controlls;
+import interfaces.ViewsObjectGetter;
 import views.login.LoginSignUpInvitation;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginSignUpInvitationController implements Controlls {
+public class LoginSignUpInvitationController implements Controlls, ViewsObjectGetter<LoginSignUpInvitation> {
 
     private LoginSignUpInvitation loginSignUpInvitation;
 
@@ -45,7 +46,8 @@ public class LoginSignUpInvitationController implements Controlls {
         c.setPreferredSize(new Dimension(410,80));
 
     }
-    public LoginSignUpInvitation buildLoginSignUpInvitation(){
+    @Override
+    public LoginSignUpInvitation getViewObject() {
         return loginSignUpInvitation;
     }
 }
