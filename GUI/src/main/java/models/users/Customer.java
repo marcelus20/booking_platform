@@ -3,7 +3,7 @@ package models.users;
 import models.Bookings;
 import models.Complaints;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
