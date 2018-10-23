@@ -3,7 +3,8 @@ package views.login;
 import controllers.loginControllers.LoginController;
 import controllers.loginControllers.LoginCredentialsController;
 import controllers.loginControllers.LoginSignUpInvitationController;
-import interfaces.Controlls;
+import views.inputPanel.InputPanel;
+import views.inputPanel.InputPasswordPanel;
 
 
 import javax.swing.*;
@@ -36,9 +37,9 @@ public class Login extends JFrame{
 
 
         loginSignUpInvitation = LoginSignUpInvitationController
-               .makeLoginSignUpInvitationController().buildLoginSignUpInvitation();
+               .makeLoginSignUpInvitationController().getViewObject();
         loginCredentials = LoginCredentialsController
-                .makeLoginComponentsController().buildLoginComponentView();
+                .makeLoginComponentsController().getViewObject();
         //this.add(loginCredentials);
         controller.addEventListener(loginCredentials.getLoginButton());
 
@@ -68,10 +69,10 @@ public class Login extends JFrame{
         this.loginSignUpInvitation = loginSignUpInvitation;
     }
 
-    public JTextField getEmail(){
+    public InputPanel getEmail(){
         return loginCredentials.getEmail();
     }
-    public JPasswordField getPassword(){
+    public InputPasswordPanel getPassword(){
         return loginCredentials.getPassword();
     }
 
