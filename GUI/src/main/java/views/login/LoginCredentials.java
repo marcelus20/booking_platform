@@ -1,6 +1,10 @@
 package views.login;
 
+import controllers.inputPanelController.InputPanelController;
+import controllers.inputPanelController.InputPasswordController;
 import utils.ArrayListBuilder;
+import views.inputPanel.InputPanel;
+import views.inputPanel.InputPasswordPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,33 +16,17 @@ public class LoginCredentials extends JPanel {
     private JPanel welcomePanel;
     private JLabel welcomeLabel;
     private JPanel gridTextFieldsPanel;
-    private JLabel emailLabel;
-    private JLabel passwordLabel;
-    private JTextField email;
-    private JPasswordField password;
+    private InputPanel email;
+    private InputPasswordPanel password;
     private JLabel errorMessage;
     private JButton loginButton;
-
-    public LoginCredentials(JPanel welcomePanel, JLabel welcomeLabel, JPanel gridTextFieldsPanel, JLabel emailLabel, JLabel passwordLabel, JTextField email, JPasswordField password, JButton loginButton) {
-        this.welcomePanel = welcomePanel;
-        this.welcomeLabel = welcomeLabel;
-        this.gridTextFieldsPanel = gridTextFieldsPanel;
-        this.emailLabel = emailLabel;
-        this.passwordLabel = passwordLabel;
-        this.email = email;
-        this.password = password;
-        this.errorMessage = new JLabel("");
-        this.loginButton = loginButton;
-    }
 
     public LoginCredentials() {
         welcomePanel = new JPanel();
         welcomeLabel = new JLabel("Welcome to the booking Platform System!");
         gridTextFieldsPanel = new JPanel();
-        emailLabel = new JLabel("email: ");
-        passwordLabel = new JLabel("password: ");
-        email = new JTextField(20);
-        password = new JPasswordField(20);
+        email = InputPanelController.initInputPanelController("email: ").getViewObject();
+        password = InputPasswordController.initInputPasswordController("password: ").getViewObject();
         errorMessage = new JLabel();
         loginButton = new JButton("Login");
 
@@ -84,35 +72,19 @@ public class LoginCredentials extends JPanel {
         this.gridTextFieldsPanel = gridTextFieldsPanel;
     }
 
-    public JLabel getEmailLabel() {
-        return emailLabel;
-    }
-
-    public void setEmailLabel(JLabel emailLabel) {
-        this.emailLabel = emailLabel;
-    }
-
-    public JLabel getPasswordLabel() {
-        return passwordLabel;
-    }
-
-    public void setPasswordLabel(JLabel passwordLabel) {
-        this.passwordLabel = passwordLabel;
-    }
-
-    public JTextField getEmail() {
+    public InputPanel getEmail() {
         return email;
     }
 
-    public void setEmail(JTextField email) {
+    public void setEmail(InputPanel email) {
         this.email = email;
     }
 
-    public JPasswordField getPassword() {
+    public InputPasswordPanel getPassword() {
         return password;
     }
 
-    public void setPassword(JPasswordField password) {
+    public void setPassword(InputPasswordPanel password) {
         this.password = password;
     }
 
