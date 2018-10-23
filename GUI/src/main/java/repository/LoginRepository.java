@@ -18,7 +18,7 @@ public class LoginRepository implements Repository {
 
 
     @Override
-    public void insertData() {
+    public void insertData(Object obj) {
 
     }
 
