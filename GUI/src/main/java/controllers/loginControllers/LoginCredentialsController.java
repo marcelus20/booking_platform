@@ -1,12 +1,13 @@
 package controllers.loginControllers;
 
 import interfaces.Controlls;
+import interfaces.ViewsObjectGetter;
 import views.login.LoginCredentials;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginCredentialsController implements Controlls {
+public class LoginCredentialsController implements Controlls, ViewsObjectGetter {
     private LoginCredentials loginCredentials;
 
     private LoginCredentialsController() {
@@ -22,16 +23,14 @@ public class LoginCredentialsController implements Controlls {
 
     @Override
     public void config() {
-        JPanel tfp = loginCredentials.getGridTextFieldsPanel();
-
         loginCredentials.setLayout(new BorderLayout());
     }
 
     @Override
     public void build() {
         JPanel wp = loginCredentials.getWelcomePanel(); JPanel tfp = loginCredentials.getGridTextFieldsPanel();
-        tfp.add(loginCredentials.getEmailLabel()); tfp.add(loginCredentials.getEmail());
-        tfp.add(loginCredentials.getPasswordLabel()); tfp.add(loginCredentials.getPassword());
+        tfp.add(loginCredentials.getEmail());
+        tfp.add(loginCredentials.getPassword());
         tfp.add(loginCredentials.getErrorMessage()); tfp.add(loginCredentials.getLoginButton());
         wp.add(loginCredentials.getWelcomeLabel()); loginCredentials.add(wp, BorderLayout.NORTH);
         loginCredentials.add(tfp, BorderLayout.CENTER);
@@ -54,8 +53,9 @@ public class LoginCredentialsController implements Controlls {
         this.loginCredentials = loginCredentials;
     }
 
-    public LoginCredentials buildLoginComponentView(){
+
+    @Override
+    public LoginCredentials getViewObject() {
         return loginCredentials;
     }
-
 }
