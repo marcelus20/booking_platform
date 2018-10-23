@@ -3,7 +3,6 @@ package controllers.loginControllers;
 import interfaces.Controlls;
 import interfaces.Repository;
 import models.users.AbstractUser;
-import models.users.Customer;
 import repository.LoginRepository;
 import views.login.Login;
 
@@ -15,7 +14,7 @@ import java.awt.event.ActionListener;
 
 public class LoginController implements Controlls{
 
-    private final Integer WIDTH = 350;
+    private final Integer WIDTH = 420;
 
     private Login login;
     private Repository<LoginRepository, AbstractUser> loginRep;
@@ -66,8 +65,8 @@ public class LoginController implements Controlls{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String email = login.getEmail().getText();
-                char[] password = login.getPassword().getPassword();
+                String email = login.getEmail().getInput().getText();
+                char[] password = ((JPasswordField)login.getPassword().getPassword()).getPassword();
                 //System.out.println(email);
                 //System.out.println(password);
 
