@@ -9,17 +9,17 @@ import models.users.ServiceProvider;
 import java.sql.*;
 import java.util.List;
 
-public class CustomerSignUpRepository implements Repository {
+public class CustomerSignUpRepository extends Database{
 
+
+    public CustomerSignUpRepository() throws SQLException {
+    }
 
     @Override
     public void insertData(final Object obj) {
         final Customer user = (Customer) obj;
 
         try{
-            Connection myConn = DriverManager
-                    .getConnection("jdbc:mysql://localhost/booking_platform", "root", "");
-            Statement myStmt = myConn.createStatement();
             //Here is where it will look in all tables to see if it finds a user
 
             String queryInsertionToServiceProviderTable = new StringBuilder()
@@ -42,13 +42,6 @@ public class CustomerSignUpRepository implements Repository {
 
             System.out.println(queryInsertionToServiceProviderTable);
 
-
-
-            /*String queryInsertionToLocationTable = new StringBuilder()
-                    .append("INSERT INTO location")
-                    .append("( s_id, first_line_address, eir_code, city, second_line_address)")
-                    .append("VALUES( ")
-                    .append(location.get)*/
             myStmt.executeUpdate(queryInsertionToServiceProviderTable);
 
         } catch (SQLException e1) {
@@ -56,18 +49,5 @@ public class CustomerSignUpRepository implements Repository {
         }
     }
 
-    @Override
-    public List<List> selectData(String query) {
-        return null;
-    }
 
-    @Override
-    public Object selectObj(String email, String password) {
-        return null;
-    }
-
-    @Override
-    public void updateData() {
-
-    }
 }

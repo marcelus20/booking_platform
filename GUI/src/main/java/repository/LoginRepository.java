@@ -13,37 +13,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginRepository implements Repository {
+public class LoginRepository extends Database{
 
 
-
-    @Override
-    public void insertData(Object obj) {
-
+    public LoginRepository() throws SQLException {
     }
 
     @Override
-    public List<List> selectData(String query) {
-        return null;
-    }
-
-    @Override
-    public AbstractUser selectObj(String email, String password) {
+    public AbstractUser login(String email, String password) {
         List<List> result= new ArrayList<>();
         AbstractUser user;
         Map<Integer, AbstractUser> tableMapper = new HashMap<>();;
         Integer n = 0;
         try{
-            Connection myConn = DriverManager
-                    .getConnection("jdbc:mysql://localhost/booking_platform", "root", "");
-            Statement myStmt = myConn.createStatement();
             //Here is where it will look in all tables to see if it finds a user
             String query = "";
             ResultSet rs;
             String[] tableTypes = {"admin", "customers", "service_provider"};
             Boolean empty = true;
-
-
 
             while(empty){
                 query = new StringBuilder()
@@ -103,11 +90,6 @@ public class LoginRepository implements Repository {
             user = mapLineToUser(n, tableMapper, result.get(0));
             return user;
         }
-
-    }
-
-    @Override
-    public void updateData() {
 
     }
 

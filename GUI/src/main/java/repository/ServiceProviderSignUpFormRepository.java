@@ -12,8 +12,11 @@ import java.sql.*;
 import java.util.List;
 import java.sql.Date;
 
-public class ServiceProviderSignUpFormRepository implements Repository {
+public class ServiceProviderSignUpFormRepository extends Database{
 
+
+    public ServiceProviderSignUpFormRepository() throws SQLException {
+    }
 
     @Override
     public void insertData(Object obj) {
@@ -21,9 +24,6 @@ public class ServiceProviderSignUpFormRepository implements Repository {
         Location location = user.getLocations().get(0);
 
         try{
-            Connection myConn = DriverManager
-                    .getConnection("jdbc:mysql://localhost/booking_platform", "root", "");
-            Statement myStmt = myConn.createStatement();
             //Here is where it will look in all tables to see if it finds a user
 
             String queryInsertionToServiceProviderTable = new StringBuilder()
@@ -45,12 +45,6 @@ public class ServiceProviderSignUpFormRepository implements Repository {
             System.out.println(queryInsertionToServiceProviderTable);
 
 
-
-            /*String queryInsertionToLocationTable = new StringBuilder()
-                    .append("INSERT INTO location")
-                    .append("( s_id, first_line_address, eir_code, city, second_line_address)")
-                    .append("VALUES( ")
-                    .append(location.get)*/
             myStmt.executeUpdate(queryInsertionToServiceProviderTable);
 
             } catch (SQLException e1) {
@@ -68,7 +62,7 @@ public class ServiceProviderSignUpFormRepository implements Repository {
     }
 
     @Override
-    public Object selectObj(String email, String password) {
+    public Object login(String email, String password) {
         return null;
     }
 
