@@ -2,18 +2,27 @@ package controllers.signUpFormControllers;
 
 import interfaces.Controlls;
 import interfaces.ViewsObjectGetter;
+import models.users.Customer;
+import repository.CustomerSignUpRepository;
 import views.signUpForms.CustomerSignUpForm;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class CustomerSignUpFormController implements Controlls, ViewsObjectGetter {
 
     private CustomerSignUpForm customerSignUpForm;
+    private Customer customer;
+    private CustomerSignUpRepository csr;
+
 
     public CustomerSignUpFormController() {
         customerSignUpForm = new CustomerSignUpForm();
+        customer = new Customer();
+        csr = new CustomerSignUpRepository();
         config();
         setSizes();
         build();
@@ -25,7 +34,7 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
 
     @Override
     public void config() {
-
+        assignButtonsAFunction();
     }
 
     @Override
@@ -53,5 +62,21 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
     @Override
     public CustomerSignUpForm getViewObject() {
         return customerSignUpForm;
+    }
+
+    private void assignButtonsAFunction(){
+        customerSignUpForm.getSubmit().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                customer.withFirstName(customerSignUpForm.getFirstName().getInput().getText());
+                customer.withLastName(customerSignUpForm.getLastName().getInput().getText());
+                customer.withEmail(customerSignUpForm.getEmail().getInput().getText());
+                customer.withPassword(customerSignUpForm.getPasswordPanel().getPassword().getText());
+                customer.withPhone(customerSignUpForm.getPhone().getInput().getText());
+                System.out.println(customer);
+                csr.insertData(customer);
+            }
+        });
+
     }
 }
