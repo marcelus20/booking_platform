@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class LoginController implements Controlls{
 
@@ -21,7 +22,7 @@ public class LoginController implements Controlls{
 
 
 
-    public LoginController() {
+    public LoginController() throws SQLException {
         loginRep = new LoginRepository();
         login = new Login(this);
         config();
@@ -70,7 +71,7 @@ public class LoginController implements Controlls{
                 //System.out.println(email);
                 //System.out.println(password);
 
-                AbstractUser user = loginRep.selectObj(email, new String(password));
+                AbstractUser user = loginRep.login(email, new String(password));
 
 
                 if(user == null){
@@ -142,7 +143,7 @@ public class LoginController implements Controlls{
                 String email = login.getEmail().getText();
                 char[] password = login.getPassword().getPassword();
 
-                AbstractUser admin = loginRep.selectObj(email, new String(password));
+                AbstractUser admin = loginRep.login(email, new String(password));
 
                 if(admin == null){
                     login.getErrorMessage().setText("email or password not correct!");
