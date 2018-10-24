@@ -9,6 +9,7 @@ import views.signUpForms.AdminSignUpForm;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class AdminSignUpFormController implements Controlls, ViewsObjectGetter {
 
@@ -19,7 +20,7 @@ public class AdminSignUpFormController implements Controlls, ViewsObjectGetter {
 
 
 
-    public AdminSignUpFormController() {
+    private AdminSignUpFormController() throws SQLException {
         this.adminSignUpForm = new AdminSignUpForm();
         user = new Admin();
         admSR = new AdminSignUpFormRepository();
@@ -28,7 +29,7 @@ public class AdminSignUpFormController implements Controlls, ViewsObjectGetter {
         build();
     }
 
-    public static AdminSignUpFormController initAdminSignUpController(){
+    public static AdminSignUpFormController initAdminSignUpController() throws SQLException {
         return new AdminSignUpFormController();
     }
 

@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class ServiceProviderSignUpFormController
         implements Controlls<ServiceProviderSignUpForm>,
@@ -24,7 +25,7 @@ public class ServiceProviderSignUpFormController
     private Repository<ServiceProvider, NullType> sRep;
 
 
-    public ServiceProviderSignUpFormController() {
+    public ServiceProviderSignUpFormController() throws SQLException {
         serviceProviderSignUpForm = new ServiceProviderSignUpForm();
         locationForm = LocationFormController.initServiceProviderFormController().getViewObject();
         sRep = new ServiceProviderSignUpFormRepository();
@@ -34,7 +35,7 @@ public class ServiceProviderSignUpFormController
         build();
     }
 
-    public static ServiceProviderSignUpFormController initServiceProviderSignUpFormController(){
+    public static ServiceProviderSignUpFormController initServiceProviderSignUpFormController() throws SQLException {
         return new ServiceProviderSignUpFormController();
     }
 

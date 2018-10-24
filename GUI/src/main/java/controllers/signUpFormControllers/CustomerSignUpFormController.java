@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 
 public class CustomerSignUpFormController implements Controlls, ViewsObjectGetter {
@@ -19,7 +20,7 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
     private CustomerSignUpRepository csr;
 
 
-    public CustomerSignUpFormController() {
+    public CustomerSignUpFormController() throws SQLException {
         customerSignUpForm = new CustomerSignUpForm();
         customer = new Customer();
         csr = new CustomerSignUpRepository();
@@ -27,7 +28,7 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
         setSizes();
         build();
     }
-    public static CustomerSignUpFormController initCustomerSignUpController(){
+    public static CustomerSignUpFormController initCustomerSignUpController() throws SQLException {
         return new CustomerSignUpFormController();
     }
 
