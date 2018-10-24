@@ -24,7 +24,7 @@ public class CustomerSignUpForm extends JPanel {
         passwordPanel = InputPasswordController.initInputPasswordController("Password: ").getViewObject();
         firstName = InputPanelController.initInputPanelController("First Name: ").getViewObject();
         lastName = InputPanelController.initInputPanelController("Last Name: ").getViewObject();
-        phone = InputPanelController.initInputPanelController("Last Name: ").getViewObject();
+        phone = InputPanelController.initInputPanelController("Phone Number: ").getViewObject();
         submit = new JButton("Submit");
         cancel = new JButton("Cancel");
     }
