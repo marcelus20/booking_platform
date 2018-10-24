@@ -9,7 +9,7 @@ public interface Repository <T, G> {
 
     List<List> selectData(String query);
 
-    G selectObj(String email, String password);
+    G login(String email, String password);
 
     void updateData();
 
