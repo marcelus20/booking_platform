@@ -1,3 +1,4 @@
+
 CREATE TABLE admin (
                 id INT AUTO_INCREMENT NOT NULL,
                 password VARCHAR(128) NOT NULL,
@@ -8,11 +9,12 @@ CREATE TABLE admin (
 
 CREATE TABLE service_provider (
                 s_id INT AUTO_INCREMENT NOT NULL,
-                phone VARCHAR(30) NOT NULL,
                 password VARCHAR(128) NOT NULL,
                 email VARCHAR(60) NOT NULL,
                 date_of_account_creation DATE NOT NULL,
+                phone VARCHAR(30) NOT NULL,
                 company_full_name VARCHAR(40) NOT NULL,
+                approved_status VARCHAR(20) NOT NULL,
                 PRIMARY KEY (s_id)
 );
 
@@ -106,3 +108,8 @@ FOREIGN KEY (customer_id, s_id)
 REFERENCES booking (customer_id, s_id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
+
+
+/*INSERTING THE DEFAULT ADMIN SUPERUSER HARDCODED*/
+INSERT INTO admin (password, email) VALUES('admin', 'admin@admin.com');
+
