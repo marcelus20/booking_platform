@@ -28,7 +28,7 @@ public class ServiceProviderSignUpFormRepository extends Database{
 
             String queryInsertionToServiceProviderTable = new StringBuilder()
                     .append("INSERT INTO service_provider ")
-                    .append("(phone, password, email, date_of_account_creation, company_full_name) ")
+                    .append("(phone, password, email, date_of_account_creation, company_full_name, approved_status) ")
                     .append("VALUES( ")
                     .append("'").append(user.getPhone()).append("'")
                     .append(", ")
@@ -39,6 +39,8 @@ public class ServiceProviderSignUpFormRepository extends Database{
                     .append("'").append(new Date(System.currentTimeMillis())).append("'")
                     .append(", ")
                     .append("'").append(user.getCompanyFullName()).append("'")
+                    .append(", ")
+                    .append("'").append(user.getApprovedStatus()).append("'")
                     .append(");")
                     .toString();
 

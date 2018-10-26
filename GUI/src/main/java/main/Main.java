@@ -1,6 +1,7 @@
 package main;
 
 import controllers.signUpFormControllers.AdminSignUpFormController;
+import controllers.signUpFormControllers.ServiceProviderSignUpFormController;
 
 
 import javax.swing.*;
@@ -13,9 +14,9 @@ public class Main extends JFrame {
 
 
 
-        //this.add(ServiceProviderSignUpFormController.initServiceProviderSignUpFormController().getViewObject());
+        this.add(ServiceProviderSignUpFormController.initServiceProviderSignUpFormController().getViewObject());
         //this.add(CustomerSignUpFormController.initCustomerSignUpController().getViewObject());
-        this.add(AdminSignUpFormController.initAdminSignUpController().getViewObject());
+        //this.add(AdminSignUpFormController.initAdminSignUpController().getViewObject());
         this.setVisible(true);
         this.setSize(550,500);
         this.repaint();

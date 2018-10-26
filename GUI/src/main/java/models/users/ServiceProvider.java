@@ -12,19 +12,27 @@ import java.util.List;
 public class ServiceProvider extends User{
 
     private String companyFullName;
+    private String approvedStatus;
     private List<Complaints> complaints;
     private List<Location> locations;
     private List<Bookings> bookings;
 
-    public ServiceProvider(String companyFullName, List<Complaints> complaints, List<Location> locations, List<Bookings> bookings) {
+    public ServiceProvider(String companyFullName, String approvedStatus, List<Complaints> complaints, List<Location> locations, List<Bookings> bookings) {
         this.companyFullName = companyFullName;
+        this.approvedStatus = approvedStatus;
         this.complaints = complaints;
         this.locations = locations;
         this.bookings = bookings;
     }
 
     public ServiceProvider() {
+
         locations = new ArrayList<>();
+        approvedStatus = "pendent";
+    }
+
+    public String getApprovedStatus() {
+        return approvedStatus;
     }
 
     public String getCompanyFullName() {
@@ -44,6 +52,11 @@ public class ServiceProvider extends User{
     }
 
 
+
+    public ServiceProvider withApprovedStatus(String approvedStatus){
+        this.approvedStatus = approvedStatus;
+        return this;
+    }
 
     public ServiceProvider withCompanyFullName(String companyFullName) {
         this.companyFullName = companyFullName;
@@ -74,14 +87,10 @@ public class ServiceProvider extends User{
     public String toString() {
         return "ServiceProvider{" +
                 "companyFullName='" + companyFullName + '\'' +
+                ", approvedStatus='" + approvedStatus + '\'' +
                 ", complaints=" + complaints +
                 ", locations=" + locations +
                 ", bookings=" + bookings +
-                ", phone='" + phone + '\'' +
-                ", dateOfAccountCreation=" + dateOfAccountCreation +
-                ", id=" + id +
-                ", eMail='" + eMail + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }
