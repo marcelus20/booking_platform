@@ -22,7 +22,7 @@ public class ServiceProviderSignUpFormController
 
     private ServiceProviderSignUpForm serviceProviderSignUpForm;
     private LocationForm locationForm;
-    private Repository<ServiceProvider, NullType> sRep;
+    private Repository<ServiceProvider> sRep;
 
 
     public ServiceProviderSignUpFormController() throws SQLException {
