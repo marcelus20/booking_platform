@@ -18,7 +18,7 @@ public class LoginController implements Controlls{
     private final Integer WIDTH = 420;
 
     private Login login;
-    private Repository<LoginRepository, AbstractUser> loginRep;
+    private Repository<LoginRepository> loginRep;
 
 
 
