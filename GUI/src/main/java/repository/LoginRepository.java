@@ -93,6 +93,11 @@ public class LoginRepository extends Database{
 
     }
 
+    @Override
+    public Long getId(AbstractUser user) {
+        return null;
+    }
+
     private void generateLineOfAdmin(List<List> result, ResultSet rs) throws SQLException {
         List<String> line = new ArrayList<>();
         line.add(rs.getString("id"));

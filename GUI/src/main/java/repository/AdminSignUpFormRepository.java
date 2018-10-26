@@ -1,5 +1,6 @@
 package repository;
 
+import models.users.AbstractUser;
 import models.users.Admin;
 
 import java.sql.SQLException;
@@ -33,6 +34,11 @@ public class AdminSignUpFormRepository extends Database {
             e1.printStackTrace();
         }
 
+    }
+
+    @Override
+    public Long getId(AbstractUser user) {
+        return null;
     }
 
 }

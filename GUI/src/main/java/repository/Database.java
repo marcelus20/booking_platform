@@ -1,6 +1,7 @@
 package repository;
 
 import interfaces.Repository;
+import models.users.AbstractUser;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,7 +31,7 @@ public abstract class Database implements Repository {
     }
 
     @Override
-    public Object login(String email, String password) {
+    public AbstractUser login(String email, String password) {
         return null;
     }
 
@@ -38,4 +39,5 @@ public abstract class Database implements Repository {
     public void updateData() {
 
     }
+
 }

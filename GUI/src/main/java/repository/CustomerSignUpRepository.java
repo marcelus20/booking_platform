@@ -2,6 +2,7 @@ package repository;
 
 import interfaces.Repository;
 import models.Location;
+import models.users.AbstractUser;
 import models.users.Customer;
 import models.users.ServiceProvider;
 
@@ -47,6 +48,11 @@ public class CustomerSignUpRepository extends Database{
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
+    }
+
+    @Override
+    public Long getId(AbstractUser user) {
+        return null;
     }
 
 
