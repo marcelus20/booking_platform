@@ -71,7 +71,12 @@ public class LoginController implements Controlls{
                 //System.out.println(email);
                 //System.out.println(password);
 
-                AbstractUser user = loginRep.login(email, new String(password));
+                AbstractUser user = null;
+                try {
+                    user = loginRep.login(email, new String(password));
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
 
 
                 if(user == null){
