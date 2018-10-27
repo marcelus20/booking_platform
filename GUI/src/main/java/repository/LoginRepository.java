@@ -17,10 +17,12 @@ public class LoginRepository extends Database{
 
 
     public LoginRepository() throws SQLException {
+        super();
     }
 
     @Override
-    public AbstractUser login(String email, String password) {
+    public AbstractUser login(String email, String password) throws SQLException {
+        initConnAndStatement();
         List<List> result= new ArrayList<>();
         AbstractUser user;
         Map<Integer, AbstractUser> tableMapper = new HashMap<>();;
@@ -77,8 +79,7 @@ public class LoginRepository extends Database{
             }
 
 
-            myStmt.close();
-            myConn.close();
+            cloceConnAndStatement();
         }catch (Exception e){
             e.printStackTrace();
         }
