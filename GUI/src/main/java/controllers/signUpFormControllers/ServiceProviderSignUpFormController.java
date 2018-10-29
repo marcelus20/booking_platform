@@ -40,9 +40,9 @@ public class ServiceProviderSignUpFormController
     }
 
 
-
     @Override
     public void config() {
+        serviceProviderSignUpForm.setLayout(new GridLayout(0,1));
         assignButtonsAFunction();
     }
 
@@ -53,7 +53,6 @@ public class ServiceProviderSignUpFormController
         serviceProviderSignUpForm.add(serviceProviderSignUpForm.getEmail());
         serviceProviderSignUpForm.add(serviceProviderSignUpForm.getPassword());
         serviceProviderSignUpForm.add(serviceProviderSignUpForm.getPhoneNumber());
-        //serviceProviderSignUpForm.add(ser);
         serviceProviderSignUpForm.add(locationForm.getFirstLineAddress());
         serviceProviderSignUpForm.add(locationForm.getSecondLineAddress());
         serviceProviderSignUpForm.add(locationForm.getCity());

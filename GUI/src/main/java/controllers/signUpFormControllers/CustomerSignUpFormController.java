@@ -35,7 +35,9 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
 
     @Override
     public void config() {
+
         assignButtonsAFunction();
+        customerSignUpForm.setLayout(new GridLayout(0,1));
     }
 
     @Override
