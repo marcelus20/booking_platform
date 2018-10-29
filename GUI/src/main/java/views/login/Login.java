@@ -10,29 +10,14 @@ import views.inputPanel.InputPasswordPanel;
 import javax.swing.*;
 
 public class Login extends JFrame{
-    /*
-    private JLabel welcomeMessage;
-    private JLabel labelUsername;
-    private JTextField email;
-    private JLabel labelPassword;
-    private JPasswordField password;
-    private JLabel errorMessage;
-    private JPanel mainPanel;
-    private JPanel signUpPanel;
-    private JButton loginButton;
-    private JLabel signUpLabel;
-    private JButton signUpButton;
-    private LoginController controller;
-    */
+
     private JPanel mainPanel;
 
     private LoginCredentials loginCredentials;
 
-
-
     private LoginSignUpInvitation loginSignUpInvitation;
 
-    public Login(LoginController controller) {
+    public Login() {
         mainPanel = new JPanel();
 
 
@@ -40,9 +25,6 @@ public class Login extends JFrame{
                .makeLoginSignUpInvitationController().getViewObject();
         loginCredentials = LoginCredentialsController
                 .makeLoginComponentsController().getViewObject();
-        //this.add(loginCredentials);
-        controller.addEventListener(loginCredentials.getLoginButton());
-
     }
 
     public JPanel getMainPanel() {
