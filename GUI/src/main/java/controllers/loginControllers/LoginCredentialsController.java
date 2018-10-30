@@ -23,7 +23,7 @@ public class LoginCredentialsController implements Controlls, ViewsObjectGetter 
 
     @Override
     public void config() {
-        loginCredentials.setLayout(new BorderLayout());
+        loginCredentials.setLayout(new GridLayout(0,1));
     }
 
     @Override
@@ -40,6 +40,7 @@ public class LoginCredentialsController implements Controlls, ViewsObjectGetter 
     public void setSizes() {
         JPanel wp = loginCredentials.getWelcomePanel();
         JPanel tfp = loginCredentials.getGridTextFieldsPanel();
+        loginCredentials.getWelcomeLabel().setFont(new Font("Courier", Font.BOLD,15));
         wp.setPreferredSize(new Dimension(420,50));
         tfp.setPreferredSize(new Dimension(200,100));
 

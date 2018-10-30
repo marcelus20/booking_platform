@@ -27,6 +27,7 @@ public class LoginSignUpInvitationController implements Controlls, ViewsObjectGe
     public void config() {
 
         JPanel c = loginSignUpInvitation.getContainer();
+        c.setLayout(new GridLayout(0,1));
 
         c.add(loginSignUpInvitation.getInvitationLabel());
         c.add(loginSignUpInvitation.getSignUpButton());
@@ -43,6 +44,7 @@ public class LoginSignUpInvitationController implements Controlls, ViewsObjectGe
     @Override
     public void setSizes() {
         JPanel c = loginSignUpInvitation.getContainer();
+        loginSignUpInvitation.getInvitationLabel().setFont(new Font("Courier", Font.BOLD,15));
         c.setPreferredSize(new Dimension(410,80));
 
     }

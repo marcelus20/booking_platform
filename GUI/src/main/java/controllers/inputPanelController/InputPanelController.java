@@ -53,7 +53,7 @@ public class InputPanelController implements Controlls, ViewsObjectGetter<InputP
         inputPanel.getInput().setPreferredSize(new Dimension(200,10));
         inputPanel.getInputLabel().setPreferredSize(new Dimension(200,20));
         inputPanel.getInput().setFont(new Font("Courier", Font.BOLD,15));
-        inputPanel.getInputLabel().setFont(new Font("Courier", Font.BOLD,12));
+        inputPanel.getInputLabel().setFont(new Font("Courier", Font.BOLD,15));
 
 
     }
