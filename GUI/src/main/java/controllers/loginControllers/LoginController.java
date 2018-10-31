@@ -75,7 +75,7 @@ public class LoginController implements Controlls<Login>, ViewsObjectGetter<Logi
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = login.getEmail().getInput().getText();
-                char[] password = ((JPasswordField)login.getPassword().getPassword()).getPassword();
+                char[] password = (login.getPassword().getInput().getPassword());
 
                 try {
                     app.setUser(loginRep.login(email, new String(password)));
@@ -93,7 +93,11 @@ public class LoginController implements Controlls<Login>, ViewsObjectGetter<Logi
                     login.getErrorMessage().setText("");
                     login.getErrorMessage().setOpaque(false);
                     login.setVisible(false);
-                    redirectsToDashBoard(app.getUser());
+                    try {
+                        redirectsToDashBoard(app.getUser());
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
@@ -123,7 +127,7 @@ public class LoginController implements Controlls<Login>, ViewsObjectGetter<Logi
         return login;
     }
 
-    private void redirectsToDashBoard(AbstractUser user){
+    private void redirectsToDashBoard(AbstractUser user) throws SQLException {
         app.setDashboard(DashboardController.initDashBoardController(user, app));
     }
 
