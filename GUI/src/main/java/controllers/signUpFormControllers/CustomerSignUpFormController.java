@@ -3,7 +3,7 @@ package controllers.signUpFormControllers;
 import interfaces.Controlls;
 import interfaces.ViewsObjectGetter;
 import models.users.Customer;
-import repository.CustomerSignUpRepository;
+import repository.CustomerRepository;
 import views.signUpForms.CustomerSignUpForm;
 
 import javax.swing.*;
@@ -17,13 +17,13 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
 
     private CustomerSignUpForm customerSignUpForm;
     private Customer customer;
-    private CustomerSignUpRepository csr;
+    private CustomerRepository csr;
 
 
     public CustomerSignUpFormController() throws SQLException {
         customerSignUpForm = new CustomerSignUpForm();
         customer = new Customer();
-        csr = new CustomerSignUpRepository();
+        csr = new CustomerRepository();
         config();
         setSizes();
         build();
@@ -74,7 +74,7 @@ public class CustomerSignUpFormController implements Controlls, ViewsObjectGette
                 customer.withFirstName(customerSignUpForm.getFirstName().getInput().getText());
                 customer.withLastName(customerSignUpForm.getLastName().getInput().getText());
                 customer.withEmail(customerSignUpForm.getEmail().getInput().getText());
-                customer.withPassword(customerSignUpForm.getPasswordPanel().getPassword().getText());
+                customer.withPassword(new String(customerSignUpForm.getPasswordPanel().getInput().getPassword()));
                 customer.withPhone(customerSignUpForm.getPhone().getInput().getText());
                 System.out.println(customer);
                 csr.insertData(customer);

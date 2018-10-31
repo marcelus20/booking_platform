@@ -63,7 +63,7 @@ public class AdminSignUpFormController implements Controlls, ViewsObjectGetter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 user.withEmail(adminSignUpForm.getEmail().getInput().getText());
-                user.withPassword(adminSignUpForm.getPassword().getPassword().getText());
+                user.withPassword(new String(adminSignUpForm.getPassword().getInput().getPassword()));
                 System.out.println(user);
                 admSR.insertData(user);
 

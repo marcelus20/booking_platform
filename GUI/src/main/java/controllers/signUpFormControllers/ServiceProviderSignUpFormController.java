@@ -5,11 +5,10 @@ import interfaces.Repository;
 import interfaces.ViewsObjectGetter;
 import models.Location;
 import models.users.ServiceProvider;
-import repository.ServiceProviderSignUpFormRepository;
+import repository.ServiceProviderRepository;
 import views.signUpForms.LocationForm;
 import views.signUpForms.ServiceProviderSignUpForm;
 
-import javax.lang.model.type.NullType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,7 +27,7 @@ public class ServiceProviderSignUpFormController
     public ServiceProviderSignUpFormController() throws SQLException {
         serviceProviderSignUpForm = new ServiceProviderSignUpForm();
         locationForm = LocationFormController.initServiceProviderFormController().getViewObject();
-        sRep = new ServiceProviderSignUpFormRepository();
+        sRep = new ServiceProviderRepository();
 
         config();
         setSizes();
