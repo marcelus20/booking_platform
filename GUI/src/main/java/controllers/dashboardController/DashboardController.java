@@ -1,9 +1,11 @@
 package controllers.dashboardController;
 
 import static controllers.dashboardController.adminControlls.AdminDashboardController.initAdminDashboardViewController;
-import static controllers.dashboardController.adminControlls.TableOfEntitiesController.initTableOfEntitiesController;
 
 import controllers.Application;
+import controllers.dashboardController.adminControlls.TableOfBookings;
+import controllers.dashboardController.adminControlls.TableOfServiceProviders;
+import controllers.dashboardController.adminControlls.TablesOfCustomers;
 import controllers.loginControllers.LoginController;
 import interfaces.Controlls;
 import interfaces.ViewsObjectGetter;
@@ -11,11 +13,13 @@ import models.users.AbstractUser;
 import models.users.Admin;
 import models.users.Customer;
 import models.users.ServiceProvider;
+import repository.BookingsRepository;
 import repository.CustomerRepository;
 import repository.ServiceProviderRepository;
 import utils.ArrayListBuilder;
 import views.dashboard.adminView.AdminDashboardView;
 import views.dashboard.Dashboard;
+import views.dashboard.adminView.ListOfBookings;
 import views.dashboard.adminView.ListOfCustomers;
 import views.dashboard.adminView.ListOfServices;
 
@@ -36,7 +40,7 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     private TableView tableView;
 
     private enum TableView{
-        viewinCustomers, viewingServices;
+        viewinCustomers, viewingServices, ViewingBookings;
     }
 
     private DashboardController(AbstractUser user, Application app) throws SQLException {
@@ -106,12 +110,71 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
+                }else if(tableView == TableView.ViewingBookings){
+                    try {
+                        showListOfBookings();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        adminDashboardView.getSeeBookings().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    showListOfBookings();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
 
 
 
+    }
+
+    private void showListOfCustomers() throws SQLException {
+        tableView = TableView.viewinCustomers;
+        dashboard.getOutput().removeAll();
+        dashboard.getOutput().add(adminDashboardView.getRefreash());
+        dashboard.getOutput()
+                .add(new TablesOfCustomers(new ListOfCustomers(), new CustomerRepository())
+                        .getViewObject());
+
+        dashboard.getOutput().repaint();
+        dashboard.getOutput().validate();
+        dashboard.repaint();
+        dashboard.validate();
+    }
+
+    private void showListOfServices() throws SQLException {
+        tableView = TableView.viewingServices;
+        dashboard.getOutput().removeAll();
+        dashboard.getOutput().add(adminDashboardView.getRefreash());
+        dashboard.getOutput()
+                .add(new TableOfServiceProviders(new ListOfServices(), new ServiceProviderRepository())
+                        .getViewObject());
+
+        dashboard.getOutput().repaint();
+        dashboard.getOutput().validate();
+        dashboard.repaint();
+        dashboard.validate();
+    }
+
+    private void showListOfBookings() throws SQLException {
+        tableView = TableView.ViewingBookings;
+        dashboard.getOutput().removeAll();
+        dashboard.getOutput().add(adminDashboardView.getRefreash());
+        dashboard.getOutput()
+                .add(new TableOfBookings(new ListOfBookings(), new BookingsRepository())
+                        .getViewObject());
+
+        dashboard.getOutput().repaint();
+        dashboard.getOutput().validate();
+        dashboard.repaint();
+        dashboard.validate();
     }
 
     private String displayMessage(){
@@ -153,12 +216,12 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         dashboard.getSideBar().add(new JLabel(displayMessage()));
         if(user instanceof Admin){
             dashboard.getSideBar().add(adminDashboardView);
-            //
         }
         dashboard.add(dashboard.getMenu(), BorderLayout.NORTH);
         dashboard.add(dashboard.getSideBar(), BorderLayout.WEST);
         dashboard.add(dashboard.getOutput(), BorderLayout.EAST);
         dashboard.add(dashboard.getFooter(), BorderLayout.SOUTH);
+        dashboard.getFooter().add(new JLabel("CREATED BY: Felipe Mantovani, id: 2017192"));
 
     }
 
@@ -200,34 +263,4 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     public void setInvisible(){
         dashboard.setVisible(false);
     }
-
-
-    private void showListOfCustomers() throws SQLException {
-        tableView = TableView.viewinCustomers;
-        dashboard.getOutput().removeAll();
-        dashboard.getOutput().add(adminDashboardView.getRefreash());
-        dashboard.getOutput()
-                .add(initTableOfEntitiesController(new ListOfCustomers(), new CustomerRepository())
-                        .getViewObject());
-
-        dashboard.getOutput().repaint();
-        dashboard.getOutput().validate();
-        dashboard.repaint();
-        dashboard.validate();
-    }
-
-    private void showListOfServices() throws SQLException {
-        tableView = TableView.viewingServices;
-        dashboard.getOutput().removeAll();
-        dashboard.getOutput().add(adminDashboardView.getRefreash());
-        dashboard.getOutput()
-                .add(initTableOfEntitiesController(new ListOfServices(), new ServiceProviderRepository())
-                        .getViewObject());
-
-        dashboard.getOutput().repaint();
-        dashboard.getOutput().validate();
-        dashboard.repaint();
-        dashboard.validate();
-    }
-
 }
