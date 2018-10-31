@@ -1,12 +1,23 @@
 package controllers.dashboardController;
 
+import static controllers.dashboardController.adminControlls.AdminDashboardController.initAdminDashboardViewController;
+import static controllers.dashboardController.adminControlls.TableOfEntitiesController.initTableOfEntitiesController;
+
 import controllers.Application;
 import controllers.loginControllers.LoginController;
 import interfaces.Controlls;
 import interfaces.ViewsObjectGetter;
 import models.users.AbstractUser;
+import models.users.Admin;
+import models.users.Customer;
+import models.users.ServiceProvider;
+import repository.CustomerRepository;
+import repository.ServiceProviderRepository;
 import utils.ArrayListBuilder;
+import views.dashboard.adminView.AdminDashboardView;
 import views.dashboard.Dashboard;
+import views.dashboard.adminView.ListOfCustomers;
+import views.dashboard.adminView.ListOfServices;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -21,18 +32,24 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     private Dashboard dashboard;
     private AbstractUser user;
     private Application app;
+    private AdminDashboardView adminDashboardView;
+    private TableView tableView;
 
-    private DashboardController(AbstractUser user, Application app) {
+    private enum TableView{
+        viewinCustomers, viewingServices;
+    }
+
+    private DashboardController(AbstractUser user, Application app) throws SQLException {
         this.user = user;
         dashboard = new Dashboard();
         this.app = app;
+        adminDashboardView = initAdminDashboardViewController().getViewObject();
         config();
         setSizes();
         build();
-
     }
 
-    public static DashboardController initDashBoardController (AbstractUser user, Application app){
+    public static DashboardController initDashBoardController (AbstractUser user, Application app) throws SQLException {
         return new DashboardController(user, app);
     }
 
@@ -53,12 +70,59 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         dashboard.repaint();
         dashboard.validate();
 
+        adminDashboardView.getToggleListOfCustomers().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    showListOfCustomers();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        adminDashboardView.getToggleListOfServiceProviders().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    showListOfServices();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        adminDashboardView.getRefreash().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(tableView == TableView.viewinCustomers){
+                    try {
+                        showListOfCustomers();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }else if(tableView == TableView.viewingServices){
+                    try {
+                        showListOfServices();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+
 
 
     }
 
     private String displayMessage(){
-        return new StringBuilder().append("Hello, ").append(user.geteMail()).toString();
+        if(user instanceof Admin){
+            return new StringBuilder().append("Hello, ").append(user.geteMail()).toString();
+        }else if (user instanceof ServiceProvider){
+            return new StringBuilder().append("Hello, ").append(((ServiceProvider) user).getCompanyFullName()).toString();
+        }else{
+            return new StringBuilder().append("Hello, ").append(((Customer)user).getFirstName()).toString();
+        }
+
     }
 
     @Override
@@ -84,12 +148,13 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
             menu.add(item);
         });
 
-
-
-
         dashboard.getMenu().add(menu);
 
         dashboard.getSideBar().add(new JLabel(displayMessage()));
+        if(user instanceof Admin){
+            dashboard.getSideBar().add(adminDashboardView);
+            //
+        }
         dashboard.add(dashboard.getMenu(), BorderLayout.NORTH);
         dashboard.add(dashboard.getSideBar(), BorderLayout.WEST);
         dashboard.add(dashboard.getOutput(), BorderLayout.EAST);
@@ -137,5 +202,32 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     }
 
 
+    private void showListOfCustomers() throws SQLException {
+        tableView = TableView.viewinCustomers;
+        dashboard.getOutput().removeAll();
+        dashboard.getOutput().add(adminDashboardView.getRefreash());
+        dashboard.getOutput()
+                .add(initTableOfEntitiesController(new ListOfCustomers(), new CustomerRepository())
+                        .getViewObject());
+
+        dashboard.getOutput().repaint();
+        dashboard.getOutput().validate();
+        dashboard.repaint();
+        dashboard.validate();
+    }
+
+    private void showListOfServices() throws SQLException {
+        tableView = TableView.viewingServices;
+        dashboard.getOutput().removeAll();
+        dashboard.getOutput().add(adminDashboardView.getRefreash());
+        dashboard.getOutput()
+                .add(initTableOfEntitiesController(new ListOfServices(), new ServiceProviderRepository())
+                        .getViewObject());
+
+        dashboard.getOutput().repaint();
+        dashboard.getOutput().validate();
+        dashboard.repaint();
+        dashboard.validate();
+    }
 
 }
