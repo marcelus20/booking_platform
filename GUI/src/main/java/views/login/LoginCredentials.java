@@ -1,14 +1,14 @@
 package views.login;
 
 import controllers.inputPanelController.InputPanelController;
-import controllers.inputPanelController.InputPasswordController;
+//import controllers.inputPanelController.InputPasswordController;
 import utils.ArrayListBuilder;
 import views.inputPanel.InputPanel;
 import views.inputPanel.InputPasswordPanel;
+import views.inputPanel.TextFieldPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LoginCredentials extends JPanel {
@@ -25,8 +25,8 @@ public class LoginCredentials extends JPanel {
         welcomePanel = new JPanel();
         welcomeLabel = new JLabel("Welcome to the booking Platform System!");
         gridTextFieldsPanel = new JPanel();
-        email = InputPanelController.initInputPanelController("email: ").getViewObject();
-        password = InputPasswordController.initInputPasswordController("password: ").getViewObject();
+        email = InputPanelController.initInputPanelController(new TextFieldPanel("email: ")).getViewObject();
+        password = InputPanelController.initInputPanelController(new InputPasswordPanel("password: ")).getViewObject();
         errorMessage = new JLabel();
         loginButton = new JButton("Login");
 
