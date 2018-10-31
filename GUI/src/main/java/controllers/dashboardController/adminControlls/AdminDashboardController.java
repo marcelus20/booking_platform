@@ -52,6 +52,7 @@ public class AdminDashboardController
     public void build() {
         adminDashboardView.add(adminDashboardView.getToggleListOfCustomers());
         adminDashboardView.add(adminDashboardView.getToggleListOfServiceProviders());
+        adminDashboardView.add(adminDashboardView.getSeeBookings());
 
     }
 
