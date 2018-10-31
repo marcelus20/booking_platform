@@ -2,23 +2,24 @@ package views.signUpForms;
 
 import controllers.inputPanelController.InputPanelController;
 import views.inputPanel.InputPanel;
+import views.inputPanel.TextFieldPanel;
 
 import javax.swing.*;
 
 public class LocationForm extends JPanel{
 
     private JLabel formName;
-    private InputPanel firstLineAddress;
-    private InputPanel secondLineAddress;
-    private InputPanel city;
-    private InputPanel eirCode;
+    private TextFieldPanel firstLineAddress;
+    private TextFieldPanel secondLineAddress;
+    private TextFieldPanel city;
+    private TextFieldPanel eirCode;
 
     public LocationForm() {
         formName = new JLabel("Location form");
-        firstLineAddress = InputPanelController.initInputPanelController("First Line Address: ").getViewObject();
-        secondLineAddress = InputPanelController.initInputPanelController("Second Line Address: ").getViewObject();
-        city = InputPanelController.initInputPanelController("City: ").getViewObject();
-        eirCode = InputPanelController.initInputPanelController("Eircode: ").getViewObject();
+        firstLineAddress = InputPanelController.initInputPanelController(new TextFieldPanel("First Line Address: ")).getViewObject();
+        secondLineAddress = InputPanelController.initInputPanelController(new TextFieldPanel("Second Line Address: ")).getViewObject();
+        city = InputPanelController.initInputPanelController(new TextFieldPanel("City: ")).getViewObject();
+        eirCode = InputPanelController.initInputPanelController(new TextFieldPanel("Eircode: ")).getViewObject();
 
     }
 
@@ -30,37 +31,38 @@ public class LocationForm extends JPanel{
         this.formName = formName;
     }
 
-    public InputPanel getFirstLineAddress() {
+    public TextFieldPanel getFirstLineAddress() {
         return firstLineAddress;
     }
 
-    public void setFirstLineAddress(InputPanel firstLineAddress) {
+    public void setFirstLineAddress(TextFieldPanel firstLineAddress) {
         this.firstLineAddress = firstLineAddress;
     }
 
-    public InputPanel getSecondLineAddress() {
+    public TextFieldPanel getSecondLineAddress() {
         return secondLineAddress;
     }
 
-    public void setSecondLineAddress(InputPanel secondLineAddress) {
+    public void setSecondLineAddress(TextFieldPanel secondLineAddress) {
         this.secondLineAddress = secondLineAddress;
     }
 
-    public InputPanel getCity() {
+    public TextFieldPanel getCity() {
         return city;
     }
 
-    public void setCity(InputPanel city) {
+    public void setCity(TextFieldPanel city) {
         this.city = city;
     }
 
-    public InputPanel getEirCode() {
+    public TextFieldPanel getEirCode() {
         return eirCode;
     }
 
-    public void setEirCode(InputPanel eirCode) {
+    public void setEirCode(TextFieldPanel eirCode) {
         this.eirCode = eirCode;
     }
+
     /*
     private JLabel formName;
 

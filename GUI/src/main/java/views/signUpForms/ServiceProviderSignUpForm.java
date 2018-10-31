@@ -1,17 +1,19 @@
 package views.signUpForms;
-
+import static controllers.inputPanelController.InputPanelController.initInputPanelController;
 import controllers.inputPanelController.InputPanelController;
 import views.inputPanel.InputPanel;
+import views.inputPanel.InputPasswordPanel;
+import views.inputPanel.TextFieldPanel;
 
 import javax.swing.*;
 
 public class ServiceProviderSignUpForm extends JPanel {
 
     private JLabel formName;
-    private InputPanel companyFullName;
-    private InputPanel email;
-    private InputPanel password;
-    private InputPanel phoneNumber;
+    private TextFieldPanel companyFullName;
+    private TextFieldPanel email;
+    private InputPasswordPanel password;
+    private TextFieldPanel phoneNumber;
     private JLabel statusForm;
     private JButton submit;
     private JButton cancel;
@@ -22,10 +24,10 @@ public class ServiceProviderSignUpForm extends JPanel {
 
     public ServiceProviderSignUpForm() {
         formName = new JLabel("Service Provider Subscribing Form");
-        companyFullName = InputPanelController.initInputPanelController("Company Full Name: ").getViewObject();
-        email = InputPanelController.initInputPanelController("Email: ").getViewObject();
-        password = InputPanelController.initInputPanelController("Password: ").getViewObject();
-        phoneNumber = InputPanelController.initInputPanelController("Phone Number: ").getViewObject();
+        companyFullName = initInputPanelController(new TextFieldPanel("Company Full Name: ")).getViewObject();
+        email = initInputPanelController(new TextFieldPanel("Email: ")).getViewObject();
+        password = initInputPanelController(new InputPasswordPanel("Password: ")).getViewObject();
+        phoneNumber = initInputPanelController(new TextFieldPanel("Phone Number: ")).getViewObject();
         statusForm = new JLabel("");
         submit = new JButton("Submit");
         cancel = new JButton("Cancel");
@@ -40,35 +42,35 @@ public class ServiceProviderSignUpForm extends JPanel {
         this.formName = formName;
     }
 
-    public InputPanel getCompanyFullName() {
+    public TextFieldPanel getCompanyFullName() {
         return companyFullName;
     }
 
-    public void setCompanyFullName(InputPanel companyFullName) {
+    public void setCompanyFullName(TextFieldPanel companyFullName) {
         this.companyFullName = companyFullName;
     }
 
-    public InputPanel getEmail() {
+    public TextFieldPanel getEmail() {
         return email;
     }
 
-    public void setEmail(InputPanel email) {
+    public void setEmail(TextFieldPanel email) {
         this.email = email;
     }
 
-    public InputPanel getPassword() {
+    public InputPasswordPanel getPassword() {
         return password;
     }
 
-    public void setPassword(InputPanel password) {
+    public void setPassword(InputPasswordPanel password) {
         this.password = password;
     }
 
-    public InputPanel getPhoneNumber() {
+    public TextFieldPanel getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(InputPanel phoneNumber) {
+    public void setPhoneNumber(TextFieldPanel phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

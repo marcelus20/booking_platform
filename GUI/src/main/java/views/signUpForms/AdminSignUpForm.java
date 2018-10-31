@@ -1,24 +1,25 @@
 package views.signUpForms;
+import static controllers.inputPanelController.InputPanelController.initInputPanelController;
 
-import controllers.inputPanelController.InputPanelController;
-import controllers.inputPanelController.InputPasswordController;
+
 import views.inputPanel.InputPanel;
 import views.inputPanel.InputPasswordPanel;
+import views.inputPanel.TextFieldPanel;
 
 import javax.swing.*;
 
 public class AdminSignUpForm extends JPanel {
 
     private JLabel formName;
-    private InputPanel email;
+    private TextFieldPanel email;
     private InputPasswordPanel password;
     private JButton submit;
     private JButton cancel;
 
     public AdminSignUpForm() {
         formName = new JLabel("Admin signUp form");
-        email = InputPanelController.initInputPanelController("Admin email: ").getViewObject();
-        password = InputPasswordController.initInputPasswordController("Password: ").getViewObject();
+        email = initInputPanelController(new TextFieldPanel("Admin email: ")).getViewObject();
+        password = initInputPanelController(new InputPasswordPanel("Password: ")).getViewObject();
         submit = new JButton("Submit");
         cancel = new JButton("Canel");
     }
@@ -31,11 +32,11 @@ public class AdminSignUpForm extends JPanel {
         this.formName = formName;
     }
 
-    public InputPanel getEmail() {
+    public TextFieldPanel getEmail() {
         return email;
     }
 
-    public void setEmail(InputPanel email) {
+    public void setEmail(TextFieldPanel email) {
         this.email = email;
     }
 

@@ -1,30 +1,31 @@
 package views.signUpForms;
 
 import controllers.inputPanelController.InputPanelController;
-import controllers.inputPanelController.InputPasswordController;
+//import controllers.inputPanelController.InputPasswordController;
 import views.inputPanel.InputPanel;
 import views.inputPanel.InputPasswordPanel;
+import views.inputPanel.TextFieldPanel;
 
 import javax.swing.*;
 
 public class CustomerSignUpForm extends JPanel {
 
     private JLabel formName;
-    private InputPanel email;
+    private TextFieldPanel email;
     private InputPasswordPanel passwordPanel;
-    private InputPanel firstName;
-    private InputPanel lastName;
-    private InputPanel phone;
+    private TextFieldPanel firstName;
+    private TextFieldPanel lastName;
+    private TextFieldPanel phone;
     private JButton submit;
     private JButton cancel;
 
     public CustomerSignUpForm() {
         formName = new JLabel("Customer Subscribing Form");
-        email = InputPanelController.initInputPanelController("Email: ").getViewObject();
-        passwordPanel = InputPasswordController.initInputPasswordController("Password: ").getViewObject();
-        firstName = InputPanelController.initInputPanelController("First Name: ").getViewObject();
-        lastName = InputPanelController.initInputPanelController("Last Name: ").getViewObject();
-        phone = InputPanelController.initInputPanelController("Phone Number: ").getViewObject();
+        email = InputPanelController.initInputPanelController(new TextFieldPanel("email")).getViewObject();
+        passwordPanel = InputPanelController.initInputPanelController(new InputPasswordPanel("password")).getViewObject();
+        firstName = InputPanelController.initInputPanelController(new TextFieldPanel("First Name")).getViewObject();
+        lastName = InputPanelController.initInputPanelController(new TextFieldPanel("Last Name: ")).getViewObject();
+        phone = InputPanelController.initInputPanelController(new TextFieldPanel("Phone Number: ")).getViewObject();
         submit = new JButton("Submit");
         cancel = new JButton("Cancel");
     }
@@ -37,11 +38,11 @@ public class CustomerSignUpForm extends JPanel {
         this.formName = formName;
     }
 
-    public InputPanel getEmail() {
+    public TextFieldPanel getEmail() {
         return email;
     }
 
-    public void setEmail(InputPanel email) {
+    public void setEmail(TextFieldPanel email) {
         this.email = email;
     }
 
@@ -53,27 +54,27 @@ public class CustomerSignUpForm extends JPanel {
         this.passwordPanel = passwordPanel;
     }
 
-    public InputPanel getFirstName() {
+    public TextFieldPanel getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(InputPanel firstName) {
+    public void setFirstName(TextFieldPanel firstName) {
         this.firstName = firstName;
     }
 
-    public InputPanel getLastName() {
+    public TextFieldPanel getLastName() {
         return lastName;
     }
 
-    public void setLastName(InputPanel lastName) {
+    public void setLastName(TextFieldPanel lastName) {
         this.lastName = lastName;
     }
 
-    public InputPanel getPhone() {
+    public TextFieldPanel getPhone() {
         return phone;
     }
 
-    public void setPhone(InputPanel phone) {
+    public void setPhone(TextFieldPanel phone) {
         this.phone = phone;
     }
 
