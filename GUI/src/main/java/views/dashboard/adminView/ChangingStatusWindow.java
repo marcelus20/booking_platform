@@ -13,8 +13,7 @@ public class ChangingStatusWindow extends JFrame {
     public ChangingStatusWindow() throws HeadlessException {
         container = new JPanel();
         serviceProviderModel = new JPanel();
-        approve = new JButton("APPROVE");
-        disapprove = new JButton("DISAPPROVE");
+
     }
 
     public JPanel getContainer() {
