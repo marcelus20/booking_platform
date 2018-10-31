@@ -10,11 +10,13 @@ public interface Repository <T> {
 
     void insertData(Object obj);
 
-    List<List> selectData(String query);
+    List<List> selectAll();
+
+    List<List> executeSelectQuery(String query);
 
     AbstractUser login(String email, String password) throws SQLException;
 
-    void updateData();
+    void executeUpdateQuery(String query);
 
     /**
      * this method will take the User as a parameter, look for this user in the database and return its id.
