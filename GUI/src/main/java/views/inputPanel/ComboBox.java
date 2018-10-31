@@ -1,16 +1,15 @@
 package views.inputPanel;
 
+
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
 
-public abstract class InputPanel <I extends JTextComponent> extends JPanel {
-
+public class ComboBox  extends JPanel{
     private JLabel inputLabel;
-    protected I input;
+    private JComboBox input;
 
-    public InputPanel(final String label) {
+    public ComboBox(final String label) {
         inputLabel = new JLabel(label);
+        input = new JComboBox();
     }
 
     public JLabel getInputLabel() {
@@ -21,11 +20,11 @@ public abstract class InputPanel <I extends JTextComponent> extends JPanel {
         this.inputLabel = inputLabel;
     }
 
-    public I getInput() {
+    public JComboBox getInput() {
         return input;
     }
 
-    public void setInput(I input) {
+    public void setInput(JComboBox input) {
         this.input = input;
     }
 }
