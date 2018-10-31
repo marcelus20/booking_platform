@@ -1,12 +1,11 @@
 package utils;
 
+import models.Bookings;
 import models.Location;
 import models.users.ServiceProvider;
-
 import java.sql.Date;
-import java.util.ArrayList;
+import java.sql.Time;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Tools {
 
@@ -26,6 +25,7 @@ public class Tools {
     }
 
     public static ServiceProvider serviceMapper(List<String> line){
+
         ServiceProvider serviceProvider = new ServiceProvider();
         Location location = new Location();
         serviceProvider.withId(Long.parseLong(line.get(0)));
@@ -43,16 +43,14 @@ public class Tools {
         return serviceProvider;
     }
 
-//    public static List<String> reduceListToEvery4Element(List<String> biggerList){
-//        List<String> reducedList = new ArrayList<>();
-//
-//        IntStream.range(0, biggerList.size())
-//                .forEach(idx->{
-//                    if(idx %4 == 0){
-//                        reducedList.add(biggerList.get(idx));
-//                    }
-//                });
-//
-//        return reducedList;
-//    }
+    public static Bookings bookingsMapper(List<String> line){
+        Bookings bookings = new Bookings();
+
+        bookings.withCustomerId(Long.parseLong(line.get(0)));
+        bookings.withServiceId(Long.parseLong(line.get(1)));
+        bookings.withTime(Time.valueOf(line.get(5)));
+
+        return bookings;
+    }
+
 }
