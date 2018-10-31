@@ -4,6 +4,7 @@ import models.users.AbstractUser;
 import models.users.Admin;
 
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class AdminSignUpFormRepository extends Database {
@@ -35,6 +36,17 @@ public class AdminSignUpFormRepository extends Database {
         }
 
     }
+
+    @Override
+    public List<List> selectAll() {
+        return null;
+    }
+
+    @Override
+    public List<List> executeSelectQuery(String query) {
+        return null;
+    }
+
 
     @Override
     public Long getId(AbstractUser user) {

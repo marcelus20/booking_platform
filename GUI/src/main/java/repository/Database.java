@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public abstract class Database implements Repository {
+public abstract class Database implements Repository{
 
     protected static Connection myConn;
     protected static Statement myStmt;
@@ -23,10 +23,6 @@ public abstract class Database implements Repository {
 
     }
 
-    @Override
-    public List<List> selectData(String query) {
-        return null;
-    }
 
     @Override
     public AbstractUser login(String email, String password) throws SQLException {
@@ -34,7 +30,7 @@ public abstract class Database implements Repository {
     }
 
     @Override
-    public void updateData() {
+    public void executeUpdateQuery(String query){
 
     }
 
@@ -43,7 +39,7 @@ public abstract class Database implements Repository {
                 .getConnection("jdbc:mysql://localhost/booking_platform", "root", "");
         myStmt = myConn.createStatement();
     }
-    public void cloceConnAndStatement() throws SQLException {
+    public void closeConnAndStatement() throws SQLException {
         myConn.close();
         myStmt.close();
     }

@@ -1,6 +1,5 @@
 package repository;
 
-import interfaces.Repository;
 import models.users.AbstractUser;
 import models.users.Admin;
 import models.users.Customer;
@@ -8,7 +7,6 @@ import models.users.ServiceProvider;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +16,16 @@ public class LoginRepository extends Database{
 
     public LoginRepository() throws SQLException {
         super();
+    }
+
+    @Override
+    public List<List> selectAll() {
+        return null;
+    }
+
+    @Override
+    public List<List> executeSelectQuery(String query) {
+        return null;
     }
 
     @Override
@@ -79,7 +87,7 @@ public class LoginRepository extends Database{
             }
 
 
-            cloceConnAndStatement();
+            closeConnAndStatement();
         }catch (Exception e){
             e.printStackTrace();
         }

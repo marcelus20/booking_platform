@@ -9,13 +9,14 @@ import models.users.ServiceProvider;
 import views.signUpForms.ServiceProviderSignUpForm;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
 
-public class ServiceProviderSignUpFormRepository extends Database {
+public class ServiceProviderRepository extends Database {
 
 
-    public ServiceProviderSignUpFormRepository() throws SQLException {
+    public ServiceProviderRepository() throws SQLException {
     }
 
     @Override
@@ -85,35 +86,100 @@ public class ServiceProviderSignUpFormRepository extends Database {
             myStmt.executeUpdate(query);
 
 
-
+            closeConnAndStatement();
             } catch (SQLException e1) {
             e1.printStackTrace();
         }
-
-
-
-
     }
 
     @Override
-    public List<List> selectData(String query) {
-        return null;
+    public List<List> selectAll() {
+        List<List> data = new ArrayList<>();
+        try{
+            initConnAndStatement();
+            String query = new StringBuilder("SELECT * FROM service_provider AS s ")
+                    .append("JOIN location AS l ON s.s_id = l.s_id ;").toString();
+            ResultSet rs = myStmt.executeQuery(query);
+
+            while (rs.next()){
+                List<String> line = new ArrayList<>();
+                line.add(rs.getString("s_id"));
+                //line.add(rs.getString("password"));
+                line.add(rs.getString("email"));
+                line.add(rs.getString("date_of_account_creation"));
+                line.add(rs.getString("phone"));
+                line.add(rs.getString("company_full_name"));
+                line.add(rs.getString("approved_status"));
+                line.add(rs.getString("first_line_address"));
+                line.add(rs.getString("eir_code"));
+                line.add(rs.getString("city"));
+                line.add(rs.getString("second_line_address"));
+
+
+                data.add(line);
+            }
+            closeConnAndStatement();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return data;
     }
+
 
     @Override
     public AbstractUser login(String email, String password) {
         return null;
     }
 
-    @Override
-    public void updateData() {
 
-    }
 
     @Override
     public Long getId(AbstractUser user) {
         user = (ServiceProvider) user;
         return user.getId();
+    }
+
+    @Override
+    public List<List> executeSelectQuery(String query){
+        List<List> data = new ArrayList<>();
+        try{
+            initConnAndStatement();
+            ResultSet rs = myStmt.executeQuery(query);
+
+            while (rs.next()){
+                List<String> line = new ArrayList<>();
+                line.add(rs.getString("s_id"));
+                //line.add(rs.getString("password"));
+                line.add(rs.getString("email"));
+                line.add(rs.getString("date_of_account_creation"));
+                line.add(rs.getString("phone"));
+                line.add(rs.getString("company_full_name"));
+                line.add(rs.getString("approved_status"));
+                line.add(rs.getString("first_line_address"));
+                line.add(rs.getString("eir_code"));
+                line.add(rs.getString("city"));
+                line.add(rs.getString("second_line_address"));
+
+                data.add(line);
+            }
+            closeConnAndStatement();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return data;
+    }
+
+    @Override
+    public void executeUpdateQuery(String query){
+        try{
+            initConnAndStatement();
+
+            myStmt.executeUpdate(query);
+
+            closeConnAndStatement();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
     }
 
 
