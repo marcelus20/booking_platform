@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS booking_platform;
+CREATE DATABASE booking_platform;
+USE booking_platform;
+
 
 CREATE TABLE admin (
                 id INT AUTO_INCREMENT NOT NULL,
@@ -49,64 +53,31 @@ CREATE UNIQUE INDEX customers_idx
  ON customers
  ( email, phone );
 
-CREATE TABLE complaints (
-                customer_id INT NOT NULL,
-                s_id INT NOT NULL,
-                complaint VARCHAR(500) NOT NULL,
-                PRIMARY KEY (customer_id, s_id)
-);
-
-
 CREATE TABLE booking (
+                time_stamp DATETIME NOT NULL,
                 customer_id INT NOT NULL,
                 s_id INT NOT NULL,
-                time TIME NOT NULL,
-                PRIMARY KEY (customer_id, s_id)
-);
-
-
-CREATE TABLE service_type (
-                customer_id INT NOT NULL,
-                s_id INT NOT NULL,
-                type VARCHAR(20) NOT NULL,
-                PRIMARY KEY (customer_id, s_id)
+                complaint VARCHAR(500),
+                PRIMARY KEY (time_stamp, customer_id, s_id)
 );
 
 
 ALTER TABLE location ADD CONSTRAINT service_provider_location_fk
 FOREIGN KEY (s_id)
 REFERENCES service_provider (s_id)
-ON DELETE NO ACTION
+ON DELETE CASCADE
 ON UPDATE NO ACTION;
 
 ALTER TABLE booking ADD CONSTRAINT service_provider_booking_fk
 FOREIGN KEY (s_id)
 REFERENCES service_provider (s_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE complaints ADD CONSTRAINT service_provider_complaints_fk
-FOREIGN KEY (s_id)
-REFERENCES service_provider (s_id)
-ON DELETE NO ACTION
+ON DELETE CASCADE
 ON UPDATE NO ACTION;
 
 ALTER TABLE booking ADD CONSTRAINT customers_booking_fk
 FOREIGN KEY (customer_id)
 REFERENCES customers (customer_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE complaints ADD CONSTRAINT customers_complaints_fk
-FOREIGN KEY (customer_id)
-REFERENCES customers (customer_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE service_type ADD CONSTRAINT booking_service_type_fk
-FOREIGN KEY (customer_id, s_id)
-REFERENCES booking (customer_id, s_id)
-ON DELETE NO ACTION
+ON DELETE CASCADE
 ON UPDATE NO ACTION;
 
 
