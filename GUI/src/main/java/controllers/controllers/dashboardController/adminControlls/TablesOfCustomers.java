@@ -1,7 +1,7 @@
 package controllers.controllers.dashboardController.adminControlls;
 
-import models.users.Customer;
-import controllers.repositories.CustomerRepository;
+import models.entities.Customer;
+import models.repositories.CustomerRepository;
 import utils.Tools;
 import views.dashboard.adminView.ListOfCustomers;
 import javax.swing.*;

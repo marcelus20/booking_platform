@@ -1,8 +1,8 @@
 package controllers.controllers.dashboardController.adminControlls;
 
 import controllers.controllers.dashboardController.adminControlls.statusChangers.ChangingBookings;
-import models.Bookings;
-import controllers.repositories.BookingsRepository;
+import models.entities.Bookings;
+import models.repositories.BookingsRepository;
 import utils.Tools;
 import utils.Tuple;
 import views.dashboard.adminView.ListOfBookings;

@@ -1,4 +1,4 @@
-package controllers.repositories;
+package models.repositories;
 
 import models.users.AbstractUser;
 

@@ -4,10 +4,10 @@ import controllers.Application;
 import controllers.controllers.dashboardController.DashboardController;
 import controllers.controllers.signUpFormControllers.FormsController;
 import controllers.controllers.Controlls;
-import controllers.repositories.Repository;
+import models.repositories.Repository;
 import controllers.controllers.ViewsObjectGetter;
 import models.users.AbstractUser;
-import controllers.repositories.LoginRepository;
+import models.repositories.LoginRepository;
 import views.login.Login;
 
 import javax.swing.*;

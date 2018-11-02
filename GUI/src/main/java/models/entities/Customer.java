@@ -1,7 +1,7 @@
-package models.users;
+package models.entities;
 
-import models.Bookings;
 import models.Complaints;
+import models.users.User;
 
 import java.sql.Date;
 import java.util.List;

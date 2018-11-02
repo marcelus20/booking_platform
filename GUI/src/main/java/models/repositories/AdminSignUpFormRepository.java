@@ -1,7 +1,7 @@
-package controllers.repositories;
+package models.repositories;
 
 import models.users.AbstractUser;
-import models.users.Admin;
+import models.entities.Admin;
 
 import java.sql.SQLException;
 import java.util.List;

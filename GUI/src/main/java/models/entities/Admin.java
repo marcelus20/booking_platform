@@ -1,8 +1,10 @@
-package models.users;
+package models.entities;
+
+import models.users.AbstractUser;
 
 import java.util.Objects;
 
-public class Admin extends AbstractUser{
+public class Admin extends AbstractUser {
 
 
     @Override

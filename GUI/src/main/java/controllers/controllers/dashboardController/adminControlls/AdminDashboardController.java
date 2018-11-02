@@ -4,8 +4,8 @@ import static controllers.controllers.dashboardController.adminControlls.TableOf
 
 import controllers.controllers.Controlls;
 import controllers.controllers.ViewsObjectGetter;
-import controllers.repositories.CustomerRepository;
-import controllers.repositories.ServiceProviderRepository;
+import models.repositories.CustomerRepository;
+import models.repositories.ServiceProviderRepository;
 import views.dashboard.adminView.AdminDashboardView;
 import views.dashboard.adminView.ListOfCustomers;
 import views.dashboard.adminView.ListOfServices;

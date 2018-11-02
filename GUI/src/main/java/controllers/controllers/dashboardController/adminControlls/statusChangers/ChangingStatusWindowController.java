@@ -1,7 +1,7 @@
 package controllers.controllers.dashboardController.adminControlls.statusChangers;
 
 import controllers.controllers.Controlls;
-import controllers.repositories.Repository;
+import models.repositories.Repository;
 import controllers.controllers.ViewsObjectGetter;
 import views.dashboard.adminView.ChangingStatusWindow;
 import java.awt.*;

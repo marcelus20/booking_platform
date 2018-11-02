@@ -2,8 +2,8 @@ package controllers.controllers.signUpFormControllers;
 
 import controllers.controllers.Controlls;
 import controllers.controllers.ViewsObjectGetter;
-import models.users.Admin;
-import controllers.repositories.AdminSignUpFormRepository;
+import models.entities.Admin;
+import models.repositories.AdminSignUpFormRepository;
 import views.signUpForms.AdminSignUpForm;
 
 import java.awt.*;

@@ -1,8 +1,8 @@
-package controllers.repositories;
+package models.repositories;
 
-import models.Location;
+import models.entities.Location;
 import models.users.AbstractUser;
-import models.users.ServiceProvider;
+import models.entities.ServiceProvider;
 
 import java.sql.*;
 import java.util.ArrayList;

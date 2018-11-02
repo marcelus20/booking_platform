@@ -1,7 +1,7 @@
-package controllers.repositories;
+package models.repositories;
 
 import models.users.AbstractUser;
-import models.users.Customer;
+import models.entities.Customer;
 
 
 import java.sql.*;

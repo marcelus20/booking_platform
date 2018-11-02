@@ -1,8 +1,8 @@
 package utils;
 
-import models.Bookings;
-import models.Location;
-import models.users.ServiceProvider;
+import models.entities.Bookings;
+import models.entities.Location;
+import models.entities.ServiceProvider;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;

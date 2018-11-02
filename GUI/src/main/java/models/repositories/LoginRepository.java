@@ -1,9 +1,9 @@
-package controllers.repositories;
+package models.repositories;
 
 import models.users.AbstractUser;
-import models.users.Admin;
-import models.users.Customer;
-import models.users.ServiceProvider;
+import models.entities.Admin;
+import models.entities.Customer;
+import models.entities.ServiceProvider;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -2,8 +2,8 @@ package controllers.controllers.signUpFormControllers;
 
 import controllers.controllers.Controlls;
 import controllers.controllers.ViewsObjectGetter;
-import models.users.Customer;
-import controllers.repositories.CustomerRepository;
+import models.entities.Customer;
+import models.repositories.CustomerRepository;
 import views.signUpForms.CustomerSignUpForm;
 
 import javax.swing.*;

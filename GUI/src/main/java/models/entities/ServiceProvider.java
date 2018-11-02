@@ -1,15 +1,13 @@
-package models.users;
+package models.entities;
 
 
-import models.Bookings;
 import models.Complaints;
-import models.Location;
+import models.users.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class ServiceProvider extends User{
+public class ServiceProvider extends User {
 
     private String companyFullName;
     private String approvedStatus;

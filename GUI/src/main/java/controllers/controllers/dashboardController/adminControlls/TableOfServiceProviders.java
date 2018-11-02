@@ -1,8 +1,8 @@
 package controllers.controllers.dashboardController.adminControlls;
 
 import controllers.controllers.dashboardController.adminControlls.statusChangers.ChangingServiceProvider;
-import models.users.ServiceProvider;
-import controllers.repositories.ServiceProviderRepository;
+import models.entities.ServiceProvider;
+import models.repositories.ServiceProviderRepository;
 import utils.Tools;
 import views.dashboard.adminView.ListOfServices;
 import javax.swing.*;

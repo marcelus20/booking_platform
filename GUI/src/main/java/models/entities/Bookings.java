@@ -1,4 +1,6 @@
-package models;
+package models.entities;
+
+import models.ServiceType;
 
 import java.sql.Time;
 import java.util.List;

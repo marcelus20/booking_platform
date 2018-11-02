@@ -1,8 +1,8 @@
 package controllers.controllers.dashboardController.adminControlls.statusChangers;
 
-import controllers.repositories.Repository;
-import models.Bookings;
-import controllers.repositories.BookingsRepository;
+import models.repositories.Repository;
+import models.entities.Bookings;
+import models.repositories.BookingsRepository;
 import utils.ArrayListBuilder;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package controllers.controllers.dashboardController.adminControlls.statusChangers;
 
-import controllers.repositories.Repository;
-import models.users.ServiceProvider;
+import models.repositories.Repository;
+import models.entities.ServiceProvider;
 import utils.ArrayListBuilder;
 
 import javax.swing.*;

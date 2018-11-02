@@ -1,7 +1,7 @@
 package controllers.controllers.dashboardController.adminControlls;
 
 import controllers.controllers.Controlls;
-import controllers.repositories.Repository;
+import models.repositories.Repository;
 import controllers.controllers.ViewsObjectGetter;
 import views.dashboard.adminView.TableOfEntities;
 import javax.swing.*;

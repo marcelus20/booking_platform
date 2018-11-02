@@ -1,11 +1,11 @@
 package controllers.controllers.signUpFormControllers;
 
 import controllers.controllers.Controlls;
-import controllers.repositories.Repository;
+import models.repositories.Repository;
 import controllers.controllers.ViewsObjectGetter;
-import models.Location;
-import models.users.ServiceProvider;
-import controllers.repositories.ServiceProviderRepository;
+import models.entities.Location;
+import models.entities.ServiceProvider;
+import models.repositories.ServiceProviderRepository;
 import views.signUpForms.LocationForm;
 import views.signUpForms.ServiceProviderSignUpForm;
 
