@@ -50,10 +50,10 @@ public class ChangingServiceProvider extends ChangingStatusWindowController<Serv
     public void build() {
         ArrayListBuilder<JTextField> textFieldList = new ArrayListBuilder()
                 .add(new JTextField(model.getCompanyFullName()))
-                .add(new JTextField(model.getLocations().get(0).getFirst_line_address()))
-                .add(new JTextField(model.getLocations().get(0).getSecond_line_address()))
-                .add(new JTextField(model.getLocations().get(0).getCity()))
-                .add(new JTextField(model.getLocations().get(0).getEir_code()));
+                .add(new JTextField(model.getLocations().getFirst_line_address()))
+                .add(new JTextField(model.getLocations().getSecond_line_address()))
+                .add(new JTextField(model.getLocations().getCity()))
+                .add(new JTextField(model.getLocations().getEir_code()));
         textFieldList.build().forEach(jTextField -> {
             jTextField.setEditable(false);
             changingStatusWindow.getServiceProviderModel().add(jTextField);

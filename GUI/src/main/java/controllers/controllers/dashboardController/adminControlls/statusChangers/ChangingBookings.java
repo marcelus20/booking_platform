@@ -47,7 +47,7 @@ public class ChangingBookings extends ChangingStatusWindowController<Bookings> {
         ArrayListBuilder<JTextField> textFieldList = new ArrayListBuilder()
                 .add(new JTextField(String.valueOf("Customer_ID: "+model.getServiceId())))
                 .add(new JTextField(String.valueOf("Service_ID" +model.getCustomerId())))
-                .add(new JTextField(String.valueOf("TIME: "+model.getTime())));
+                .add(new JTextField(String.valueOf("TIME: "+model.getTimestamp())));
 
         textFieldList.build().forEach(jTextField -> {
             jTextField.setEditable(false);
