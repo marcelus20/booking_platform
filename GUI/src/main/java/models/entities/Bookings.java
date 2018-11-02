@@ -1,23 +1,23 @@
 package models.entities;
 
-import models.ServiceType;
 
-import java.sql.Time;
-import java.util.List;
+
+import java.sql.Timestamp;
+
 import java.util.Objects;
 
 public class Bookings {
 
     private Long customerId;
     private Long serviceId;
-    private Time time;
-    private List<ServiceType> services_type;
+    private Timestamp timestamp;
+    private String complaint;
 
-    public Bookings(Long customerId, Long serviceId, Time time, List<ServiceType> services_type) {
+    public Bookings(Long customerId, Long serviceId, Timestamp timestamp, String complaint) {
         this.customerId = customerId;
         this.serviceId = serviceId;
-        this.time = time;
-        this.services_type = services_type;
+        this.timestamp = timestamp;
+        this.complaint = complaint;
     }
 
     public Bookings() {
@@ -31,56 +31,53 @@ public class Bookings {
         return serviceId;
     }
 
-    public Time getTime() {
-        return time;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public List<ServiceType> getServices_type() {
-        return services_type;
+    public String getComplaint() {
+        return complaint;
     }
 
-    public Bookings withCustomerId(Long customerId) {
+    public Bookings withCustomerId(Long customerId){
         this.customerId = customerId;
         return this;
     }
 
-    public Bookings withServiceId(Long serviceId) {
+    public Bookings withServiceId(Long serviceId){
         this.serviceId = serviceId;
         return this;
     }
 
-    public Bookings withTime(Time time) {
-        this.time = time;
+    public Bookings withTimestamp(Timestamp timestamp){
+        this.timestamp = timestamp;
         return this;
     }
 
-    public Bookings withTime(List<ServiceType> services_type) {
-        this.services_type = services_type;
+    public Bookings withComplaint(String complaint){
+        this.complaint = complaint;
         return this;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bookings bookings = (Bookings) o;
-        return Objects.equals(customerId, bookings.customerId) &&
-                Objects.equals(serviceId, bookings.serviceId) &&
-                Objects.equals(time, bookings.time);
+        return Objects.equals(timestamp, bookings.timestamp) &&
+                Objects.equals(complaint, bookings.complaint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, serviceId, time);
+        return Objects.hash(timestamp, complaint);
     }
 
     @Override
     public String toString() {
         return "Bookings{" +
-                "customerId=" + customerId +
-                ", serviceId=" + serviceId +
-                ", time=" + time +
+                "timestamp=" + timestamp +
+                ", complaint='" + complaint + '\'' +
                 '}';
     }
 }

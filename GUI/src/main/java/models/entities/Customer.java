@@ -1,6 +1,5 @@
 package models.entities;
 
-import models.Complaints;
 import models.users.User;
 
 import java.sql.Date;
@@ -11,16 +10,14 @@ public class Customer extends User {
 
     private String firstName;
     private String lastName;
-    private List<Complaints> complaints;
     private List<Bookings> bookings;
 
     public Customer(Long id, String eMail,String password, String phone,
                     Date dateOfAccountCreation, String firstName, String lastName,
-                    List<Complaints> complaints, List<Bookings> bookings) {
+                    List<Bookings> bookings) {
         super(id, eMail, password, phone, dateOfAccountCreation);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.complaints = complaints;
         this.bookings = bookings;
     }
 
@@ -33,10 +30,6 @@ public class Customer extends User {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public List<Complaints> getComplaints() {
-        return complaints;
     }
 
     public List<Bookings> getBookings() {
@@ -55,10 +48,6 @@ public class Customer extends User {
         return this;
     }
 
-    public Customer withComplaints(List<Complaints> complaints) {
-        this.complaints = complaints;
-        return this;
-    }
 
     public Customer withBookings(List<Bookings> bookings) {
         this.bookings = bookings;
@@ -73,13 +62,12 @@ public class Customer extends User {
         Customer customer = (Customer) o;
         return Objects.equals(firstName, customer.firstName) &&
                 Objects.equals(lastName, customer.lastName) &&
-                Objects.equals(complaints, customer.complaints) &&
                 Objects.equals(bookings, customer.bookings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), firstName, lastName, complaints, bookings);
+        return Objects.hash(super.hashCode(), firstName, lastName, bookings);
     }
 
     @Override
@@ -87,7 +75,6 @@ public class Customer extends User {
         return "Customer{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", complaints=" + complaints +
                 ", bookings=" + bookings +
                 ", phone='" + phone + '\'' +
                 ", dateOfAccountCreation=" + dateOfAccountCreation +

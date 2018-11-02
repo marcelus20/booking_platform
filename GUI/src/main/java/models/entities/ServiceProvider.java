@@ -1,84 +1,81 @@
 package models.entities;
 
 
-import models.Complaints;
+
 import models.users.User;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ServiceProvider extends User {
 
     private String companyFullName;
     private String approvedStatus;
-    private List<Complaints> complaints;
-    private List<Location> locations;
+    private Location location;
     private List<Bookings> bookings;
 
-    public ServiceProvider(String companyFullName, String approvedStatus, List<Complaints> complaints, List<Location> locations, List<Bookings> bookings) {
+    public ServiceProvider(Long id, String eMail, String password, String phone, Date dateOfAccountCreation, String companyFullName, String approvedStatus, Location location, List<Bookings> bookings) {
+        super(id, eMail, password, phone, dateOfAccountCreation);
         this.companyFullName = companyFullName;
         this.approvedStatus = approvedStatus;
-        this.complaints = complaints;
-        this.locations = locations;
+        this.location = location;
         this.bookings = bookings;
     }
 
     public ServiceProvider() {
-
-        locations = new ArrayList<>();
         approvedStatus = "pendent";
-    }
-
-    public String getApprovedStatus() {
-        return approvedStatus;
     }
 
     public String getCompanyFullName() {
         return companyFullName;
     }
 
-    public List<Complaints> getComplaints() {
-        return complaints;
+    public String getApprovedStatus() {
+        return approvedStatus;
     }
 
-    public List<Location> getLocations() {
-        return locations;
+    public Location getLocations() {
+        return location;
     }
 
     public List<Bookings> getBookings() {
         return bookings;
     }
 
-
-
-    public ServiceProvider withApprovedStatus(String approvedStatus){
-        this.approvedStatus = approvedStatus;
-        return this;
-    }
-
-    public ServiceProvider withCompanyFullName(String companyFullName) {
+    public ServiceProvider withCompanyFullName(String companyFullName){
         this.companyFullName = companyFullName;
         return this;
     }
-
-    public ServiceProvider withComplaints(List<Complaints> complaints) {
-        this.complaints = complaints;
+    public ServiceProvider withApprovedStatus(String approvedStatus){
+        this.companyFullName = approvedStatus;
         return this;
     }
-
-    public ServiceProvider withLocations(List<Location> locations) {
-        this.locations = locations;
+    public ServiceProvider withLocation(Location location){
+        this.location = location;
         return this;
     }
-
-    public ServiceProvider withLocations(Location location) {
-        this.locations.add(location);
-        return this;
-    }
-
-    public ServiceProvider withBookings(List<Bookings> bookings) {
+    public ServiceProvider withBookings(List<Bookings> bookings){
         this.bookings = bookings;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ServiceProvider that = (ServiceProvider) o;
+        return Objects.equals(companyFullName, that.companyFullName) &&
+                Objects.equals(approvedStatus, that.approvedStatus) &&
+                Objects.equals(location, that.location) &&
+                Objects.equals(bookings, that.bookings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), companyFullName, approvedStatus, location, bookings);
     }
 
     @Override
@@ -86,8 +83,7 @@ public class ServiceProvider extends User {
         return "ServiceProvider{" +
                 "companyFullName='" + companyFullName + '\'' +
                 ", approvedStatus='" + approvedStatus + '\'' +
-                ", complaints=" + complaints +
-                ", locations=" + locations +
+                ", locations=" + location +
                 ", bookings=" + bookings +
                 '}';
     }
