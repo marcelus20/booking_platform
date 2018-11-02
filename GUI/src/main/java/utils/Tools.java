@@ -5,6 +5,7 @@ import models.entities.Location;
 import models.entities.ServiceProvider;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Tools {
@@ -42,16 +43,16 @@ public class Tools {
         location.withEirCode(line.get(7));
         location.withCity(line.get(8));
         location.withSecondLineAddress(line.get(9));
-        serviceProvider.withLocations(location);
+        serviceProvider.withLocation(location);
         return serviceProvider;
     }
 
     public static Bookings bookingsMapper(List<String> line){
         Bookings bookings = new Bookings();
 
-        bookings.withCustomerId(Long.parseLong(line.get(0)));
-        bookings.withServiceId(Long.parseLong(line.get(1)));
-        bookings.withTime(Time.valueOf(line.get(5)));
+
+
+        bookings.withTimestamp(Timestamp.valueOf(line.get(5)));
 
         return bookings;
     }
