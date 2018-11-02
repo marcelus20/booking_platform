@@ -18,7 +18,7 @@ public class ServiceProviderRepository extends Database {
     @Override
     public void insertData(Object obj) {
         ServiceProvider user = (ServiceProvider) obj;
-        Location location = user.getLocations().get(0);
+        Location location = user.getLocations();
 
         try{
             //Here is where it will look in all tables to see if it finds a user
