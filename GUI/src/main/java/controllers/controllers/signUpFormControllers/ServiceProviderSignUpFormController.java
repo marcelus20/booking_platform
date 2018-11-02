@@ -91,7 +91,7 @@ public class ServiceProviderSignUpFormController
                 location.withCity(locationForm.getCity().getInput().getText());
                 location.withEirCode(locationForm.getEirCode().getInput().getText());
 
-                serviceProvider.withLocations(location);
+                serviceProvider.withLocation(location);
 
                 System.out.println(serviceProvider);
 
