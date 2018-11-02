@@ -10,6 +10,9 @@ import java.util.List;
 public class Tools {
 
     public static String[][] convertListToArray(List<List> list){
+        if(list.size() == 0){
+            return new String[0][0];
+        }
         final Integer lineSize = list.get(0).size();
         final Integer listSize = list.size();
 

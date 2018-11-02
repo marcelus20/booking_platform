@@ -1,8 +1,8 @@
 package views.signUpForms;
 
-import static controllers.signUpFormControllers
+import static controllers.controllers.signUpFormControllers
         .CustomerSignUpFormController.initCustomerSignUpController;
-import static controllers.signUpFormControllers
+import static controllers.controllers.signUpFormControllers
         .ServiceProviderSignUpFormController.initServiceProviderSignUpFormController;
 
 import javax.swing.*;

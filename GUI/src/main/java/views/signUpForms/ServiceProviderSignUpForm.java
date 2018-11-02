@@ -1,7 +1,6 @@
 package views.signUpForms;
-import static controllers.inputPanelController.InputPanelController.initInputPanelController;
-import controllers.inputPanelController.InputPanelController;
-import views.inputPanel.InputPanel;
+import static controllers.controllers.inputPanelController.InputPanelController.initInputPanelController;
+
 import views.inputPanel.InputPasswordPanel;
 import views.inputPanel.TextFieldPanel;
 

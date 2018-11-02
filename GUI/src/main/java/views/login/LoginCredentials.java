@@ -1,7 +1,7 @@
 package views.login;
 
-import controllers.inputPanelController.InputPanelController;
-//import controllers.inputPanelController.InputPasswordController;
+import controllers.controllers.inputPanelController.InputPanelController;
+//import controllers.controllers.inputPanelController.InputPasswordController;
 import utils.ArrayListBuilder;
 import views.inputPanel.InputPanel;
 import views.inputPanel.InputPasswordPanel;

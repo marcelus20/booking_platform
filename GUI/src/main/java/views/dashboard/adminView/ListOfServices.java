@@ -1,7 +1,6 @@
 package views.dashboard.adminView;
 
-import static controllers.inputPanelController.ComboBoxController.initComboBoxController;
-import controllers.inputPanelController.ComboBoxController;
+import static controllers.controllers.inputPanelController.ComboBoxController.initComboBoxController;
 
 import views.inputPanel.ComboBox;
 

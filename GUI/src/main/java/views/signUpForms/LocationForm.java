@@ -1,7 +1,6 @@
 package views.signUpForms;
 
-import controllers.inputPanelController.InputPanelController;
-import views.inputPanel.InputPanel;
+import controllers.controllers.inputPanelController.InputPanelController;
 import views.inputPanel.TextFieldPanel;
 
 import javax.swing.*;

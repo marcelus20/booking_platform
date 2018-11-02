@@ -1,8 +1,7 @@
 package views.login;
 
-import controllers.loginControllers.LoginController;
-import controllers.loginControllers.LoginCredentialsController;
-import controllers.loginControllers.LoginSignUpInvitationController;
+import controllers.controllers.loginControllers.LoginCredentialsController;
+import controllers.controllers.loginControllers.LoginSignUpInvitationController;
 import views.inputPanel.InputPanel;
 import views.inputPanel.InputPasswordPanel;
 

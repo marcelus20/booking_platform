@@ -1,11 +1,9 @@
 package controllers;
 
-import controllers.dashboardController.DashboardController;
-import controllers.loginControllers.LoginController;
-import controllers.signUpFormControllers.FormsController;
+import controllers.controllers.dashboardController.DashboardController;
+import controllers.controllers.loginControllers.LoginController;
+import controllers.controllers.signUpFormControllers.FormsController;
 import models.users.AbstractUser;
-import views.dashboard.Dashboard;
-import views.login.Login;
 
 import java.sql.SQLException;
 
