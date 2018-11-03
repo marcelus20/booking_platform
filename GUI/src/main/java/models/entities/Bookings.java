@@ -11,12 +11,14 @@ public class Bookings {
     private Long customerId;
     private Long serviceId;
     private Timestamp timestamp;
+    private String BookingStatus;
     private String complaint;
 
-    public Bookings(Long customerId, Long serviceId, Timestamp timestamp, String complaint) {
+    public Bookings(Long customerId, Long serviceId, Timestamp timestamp, String bookingStatus, String complaint) {
         this.customerId = customerId;
         this.serviceId = serviceId;
         this.timestamp = timestamp;
+        BookingStatus = bookingStatus;
         this.complaint = complaint;
     }
 
@@ -64,19 +66,23 @@ public class Bookings {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bookings bookings = (Bookings) o;
-        return Objects.equals(timestamp, bookings.timestamp) &&
+        return Objects.equals(customerId, bookings.customerId) &&
+                Objects.equals(serviceId, bookings.serviceId) &&
+                Objects.equals(timestamp, bookings.timestamp) &&
                 Objects.equals(complaint, bookings.complaint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, complaint);
+        return Objects.hash(customerId, serviceId, timestamp, complaint);
     }
 
     @Override
     public String toString() {
         return "Bookings{" +
-                "timestamp=" + timestamp +
+                "customerId=" + customerId +
+                ", serviceId=" + serviceId +
+                ", timestamp=" + timestamp +
                 ", complaint='" + complaint + '\'' +
                 '}';
     }
