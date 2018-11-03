@@ -26,8 +26,8 @@ public class TableOfBookings extends TableOfEntitiesController<ListOfBookings, B
     public void build() {
         super.build();
         mappedResults = mapResultsToObjects(results);
-        String[] columns = new String[]{"Customer id","service id","Customer Name",
-                "Customer last name", "Company", "Time"};
+        String[] columns = new String[]{"Date and Time", "Complaint", "Customer id","service id","Customer Name",
+                "Customer last name", "Company"};
         if (results.size() == 0){
             tableOfEntities.add(new JLabel("NO RESULTS TO BE SHOWN"));
         }else{
