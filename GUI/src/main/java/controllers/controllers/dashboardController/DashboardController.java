@@ -1,11 +1,10 @@
 package controllers.controllers.dashboardController;
 
 import static controllers.controllers.dashboardController.adminControlls.AdminDashboardController.initAdminDashboardViewController;
-
 import controllers.Application;
-import controllers.controllers.dashboardController.adminControlls.TableOfBookings;
-import controllers.controllers.dashboardController.adminControlls.TableOfServiceProviders;
-import controllers.controllers.dashboardController.adminControlls.TablesOfCustomers;
+import controllers.controllers.dashboardController.adminControlls.AdminDashboardController;
+import controllers.controllers.dashboardController.customerControls.CustomerDashboardControler;
+import controllers.controllers.dashboardController.serviceProviderControls.ServiceProviderDashboardControler;
 import controllers.controllers.loginControllers.LoginController;
 import controllers.controllers.Controlls;
 import controllers.controllers.ViewsObjectGetter;
@@ -13,16 +12,8 @@ import models.users.AbstractUser;
 import models.entities.Admin;
 import models.entities.Customer;
 import models.entities.ServiceProvider;
-import models.repositories.BookingsRepository;
-import models.repositories.CustomerRepository;
-import models.repositories.ServiceProviderRepository;
 import utils.ArrayListBuilder;
-import views.dashboard.adminView.AdminDashboardView;
 import views.dashboard.Dashboard;
-import views.dashboard.adminView.ListOfBookings;
-import views.dashboard.adminView.ListOfCustomers;
-import views.dashboard.adminView.ListOfServices;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -36,10 +27,11 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     private Dashboard dashboard;
     private AbstractUser user;
     private Application app;
-    private AdminDashboardView adminDashboardView;
-    private TableView tableView;
+    private AdminDashboardController adminDashboardController;
+    private ServiceProviderDashboardControler serviceProviderDashBoardController;
+    private CustomerDashboardControler customerDashboardController;
 
-    private enum TableView{
+    public enum TableView{
         viewinCustomers, viewingServices, ViewingBookings;
     }
 
@@ -47,7 +39,7 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         this.user = user;
         dashboard = new Dashboard();
         this.app = app;
-        adminDashboardView = initAdminDashboardViewController().getViewObject();
+        redirectToProperPanel();
         config();
         setSizes();
         build();
@@ -57,124 +49,33 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         return new DashboardController(user, app);
     }
 
-
-    @Override
-    public Dashboard getViewObject() {
-        return dashboard;
+    private List<JMenuItem> createJmenuItems(){
+        return new ArrayListBuilder().add(new JMenuItem("File"))
+                .add(new JMenuItem("Edit")).add(new JMenuItem("Logout"))
+                .build();
     }
 
-    @Override
-    public void config() {
-        makeBorders();
-        dashboard.setSize(1280,720);
-        dashboard.setVisible(true);
-        dashboard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        dashboard.setLayout(new BorderLayout());
-
-        dashboard.repaint();
-        dashboard.validate();
-
-        adminDashboardView.getToggleListOfCustomers().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    showListOfCustomers();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-        adminDashboardView.getToggleListOfServiceProviders().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    showListOfServices();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-
-        adminDashboardView.getRefreash().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(tableView == TableView.viewinCustomers){
-                    try {
-                        showListOfCustomers();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }else if(tableView == TableView.viewingServices){
-                    try {
-                        showListOfServices();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }else if(tableView == TableView.ViewingBookings){
-                    try {
-                        showListOfBookings();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        adminDashboardView.getSeeBookings().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    showListOfBookings();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-
-
-
+    private void redirectToProperPanel() throws SQLException {
+        if(user instanceof Admin){
+            adminDashboardController = initAdminDashboardViewController(dashboard);
+        }else if (user instanceof ServiceProvider){
+            //serviceProviderDashBoardController =
+        }else{
+            //customerDashboardController =
+        }
     }
 
-    private void showListOfCustomers() throws SQLException {
-        tableView = TableView.viewinCustomers;
-        dashboard.getOutput().removeAll();
-        dashboard.getOutput().add(adminDashboardView.getRefreash());
-        dashboard.getOutput()
-                .add(new TablesOfCustomers(new ListOfCustomers(), new CustomerRepository())
-                        .getViewObject());
-
-        dashboard.getOutput().repaint();
-        dashboard.getOutput().validate();
-        dashboard.repaint();
-        dashboard.validate();
+    private void makeBorders(){
+        dashboard.getSideBar().setBorder(new LineBorder(Color.DARK_GRAY, 2));
+        dashboard.getOutput().setBorder(new LineBorder(Color.DARK_GRAY, 2));
+        dashboard.getFooter().setBorder(new LineBorder(Color.LIGHT_GRAY));
+        dashboard.getSideBar().setBackground(Color.LIGHT_GRAY);
     }
 
-    private void showListOfServices() throws SQLException {
-        tableView = TableView.viewingServices;
-        dashboard.getOutput().removeAll();
-        dashboard.getOutput().add(adminDashboardView.getRefreash());
-        dashboard.getOutput()
-                .add(new TableOfServiceProviders(new ListOfServices(), new ServiceProviderRepository())
-                        .getViewObject());
-
-        dashboard.getOutput().repaint();
-        dashboard.getOutput().validate();
-        dashboard.repaint();
-        dashboard.validate();
-    }
-
-    private void showListOfBookings() throws SQLException {
-        tableView = TableView.ViewingBookings;
-        dashboard.getOutput().removeAll();
-        dashboard.getOutput().add(adminDashboardView.getRefreash());
-        dashboard.getOutput()
-                .add(new TableOfBookings(new ListOfBookings(), new BookingsRepository())
-                        .getViewObject());
-
-        dashboard.getOutput().repaint();
-        dashboard.getOutput().validate();
-        dashboard.repaint();
-        dashboard.validate();
+    private void logout() throws SQLException {
+        app.setUser(null);
+        app.getDashboard().getViewObject().dispose();
+        app.setLogin(LoginController.initLoginController(app));
     }
 
     private String displayMessage(){
@@ -186,6 +87,30 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
             return new StringBuilder().append("Hello, ").append(((Customer)user).getFirstName()).toString();
         }
 
+    }
+
+    public void setVisible(){
+        dashboard.setVisible(true);
+    }
+
+    public void setVisible(Boolean flag){
+        dashboard.setVisible(flag);
+    }
+
+    public void setInvisible(){
+        dashboard.setVisible(false);
+    }
+
+    @Override
+    public void config() {
+        makeBorders();
+        dashboard.setSize(1280,720);
+        dashboard.setVisible(true);
+        dashboard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        dashboard.setLayout(new BorderLayout());
+        dashboard.repaint();
+        dashboard.validate();
+        adminDashboardController.config();
     }
 
     @Override
@@ -215,13 +140,14 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
 
         dashboard.getSideBar().add(new JLabel(displayMessage()));
         if(user instanceof Admin){
-            dashboard.getSideBar().add(adminDashboardView);
+            dashboard.getSideBar().add(adminDashboardController.getViewObject());
         }
         dashboard.add(dashboard.getMenu(), BorderLayout.NORTH);
         dashboard.add(dashboard.getSideBar(), BorderLayout.WEST);
         dashboard.add(dashboard.getOutput(), BorderLayout.EAST);
         dashboard.add(dashboard.getFooter(), BorderLayout.SOUTH);
         dashboard.getFooter().add(new JLabel("CREATED BY: Felipe Mantovani, id: 2017192"));
+        adminDashboardController.build();
 
     }
 
@@ -230,37 +156,13 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         dashboard.getSideBar().setPreferredSize(new Dimension(300,600));
         dashboard.getOutput().setPreferredSize(new Dimension(950,600));
         dashboard.getFooter().setPreferredSize(new Dimension(120, 50));
+        adminDashboardController.setSizes();
 
     }
 
-    private List<JMenuItem> createJmenuItems(){
-        return new ArrayListBuilder().add(new JMenuItem("File"))
-                .add(new JMenuItem("Edit")).add(new JMenuItem("Logout"))
-                .build();
+    @Override
+    public Dashboard getViewObject() {
+        return dashboard;
     }
 
-    private void makeBorders(){
-        dashboard.getSideBar().setBorder(new LineBorder(Color.DARK_GRAY, 2));
-        dashboard.getOutput().setBorder(new LineBorder(Color.DARK_GRAY, 2));
-        dashboard.getFooter().setBorder(new LineBorder(Color.LIGHT_GRAY));
-        dashboard.getSideBar().setBackground(Color.LIGHT_GRAY);
-    }
-
-    private void logout() throws SQLException {
-        app.setUser(null);
-        app.getDashboard().getViewObject().dispose();
-        app.setLogin(LoginController.initLoginController(app));
-    }
-
-    public void setVisible(){
-        dashboard.setVisible(true);
-    }
-
-    public void setVisible(Boolean flag){
-        dashboard.setVisible(flag);
-    }
-
-    public void setInvisible(){
-        dashboard.setVisible(false);
-    }
 }
