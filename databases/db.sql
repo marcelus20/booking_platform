@@ -3,6 +3,7 @@ CREATE DATABASE booking_platform;
 USE booking_platform;
 
 
+
 CREATE TABLE admin (
                 id INT AUTO_INCREMENT NOT NULL,
                 password VARCHAR(128) NOT NULL,
@@ -26,6 +27,14 @@ CREATE TABLE service_provider (
 CREATE UNIQUE INDEX service_provider_idx
  ON service_provider
  ( email );
+
+CREATE TABLE booking_slots (
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                s_id INT NOT NULL,
+                availability BOOLEAN DEFAULT True NOT NULL,
+                PRIMARY KEY (timestamp, s_id)
+);
+
 
 CREATE TABLE location (
                 s_id INT NOT NULL,
@@ -54,9 +63,10 @@ CREATE UNIQUE INDEX customers_idx
  ( email, phone );
 
 CREATE TABLE booking (
-                time_stamp DATETIME NOT NULL,
+                time_stamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 customer_id INT NOT NULL,
                 s_id INT NOT NULL,
+                booking_status VARCHAR(15) NOT NULL,
                 complaint VARCHAR(500),
                 PRIMARY KEY (time_stamp, customer_id, s_id)
 );
@@ -68,9 +78,15 @@ REFERENCES service_provider (s_id)
 ON DELETE CASCADE
 ON UPDATE NO ACTION;
 
-ALTER TABLE booking ADD CONSTRAINT service_provider_booking_fk
+ALTER TABLE booking_slots ADD CONSTRAINT service_provider_booking_slots_fk
 FOREIGN KEY (s_id)
 REFERENCES service_provider (s_id)
+ON DELETE CASCADE
+ON UPDATE NO ACTION;
+
+ALTER TABLE booking ADD CONSTRAINT booking_slots_booking_fk
+FOREIGN KEY (time_stamp, s_id)
+REFERENCES booking_slots (timestamp, s_id)
 ON DELETE CASCADE
 ON UPDATE NO ACTION;
 
@@ -79,7 +95,6 @@ FOREIGN KEY (customer_id)
 REFERENCES customers (customer_id)
 ON DELETE CASCADE
 ON UPDATE NO ACTION;
-
 
 /*INSERTING THE DEFAULT ADMIN SUPERUSER HARDCODED*/
 INSERT INTO admin (password, email) VALUES('admin', 'admin@admin.com');

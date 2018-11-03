@@ -142,16 +142,19 @@
   <table id="TAB40" populated="true" UUID="68894aff-8da6-400c-9b84-24411a370087" name="Bookings" objectType="TABLE" physicalName="booking" >
    <remarks></remarks>
    <folder id="FOLTAB401" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL41" populated="true" UUID="0a13ab8a-b43b-4d63-9474-8b45fa12105f" autoIncrement="false" autoIncrementSequenceName="booking_time_stamp_seq" defaultValue="" name="Timestamp" nullable="0" physicalName="time_stamp" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
+    <column id="COL41" populated="true" UUID="0a13ab8a-b43b-4d63-9474-8b45fa12105f" autoIncrement="false" autoIncrementSequenceName="booking_time_stamp_seq" defaultValue="CURRENT_TIMESTAMP" name="Timestamp" nullable="0" physicalName="time_stamp" precision="0" primaryKeySeq="0" referenceCount="2" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
      <remarks></remarks>
     </column>
     <column id="COL42" populated="true" UUID="998ede1d-fdef-4b46-bfe1-fa5713fb16f7" autoIncrement="false" autoIncrementSequenceName="customers_customer_id_seq_1" defaultValue="" name="customer_id" nullable="0" physicalName="customer_id" precision="0" primaryKeySeq="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL43" populated="true" UUID="ac7ed867-eac0-4d2a-9377-d76cb1f3fa3d" autoIncrement="false" autoIncrementSequenceName="service_provider_s_id_seq_1_1" defaultValue="" name="Service Id" nullable="0" physicalName="s_id" precision="0" primaryKeySeq="2" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL43" populated="true" UUID="5dd8b3ff-a111-4bc8-ab50-d284c7696fed" autoIncrement="false" autoIncrementSequenceName="service_provider_s_id_seq_1_1" defaultValue="" name="Service Id" nullable="0" physicalName="s_id" precision="0" primaryKeySeq="2" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL44" populated="true" UUID="ff547c89-70c4-424c-b676-e52688f4a9d9" autoIncrement="false" autoIncrementSequenceName="booking_complaint_seq" defaultValue="" name="Complaint" nullable="1" physicalName="complaint" precision="500" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL44" populated="true" UUID="cdd3ca7e-470a-4ae5-a852-ad4c38dca819" autoIncrement="false" autoIncrementSequenceName="booking_booking_status_seq" defaultValue="" name="Booking Status" nullable="0" physicalName="booking_status" precision="15" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks></remarks>
+    </column>
+    <column id="COL45" populated="true" UUID="ff547c89-70c4-424c-b676-e52688f4a9d9" autoIncrement="false" autoIncrementSequenceName="booking_complaint_seq" defaultValue="" name="Complaint" nullable="1" physicalName="complaint" precision="500" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     </folder>
@@ -160,22 +163,50 @@
     <folder id="FOLTAB402" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
     </folder>
     <folder id="FOLTAB404" populated="true" name="Indices" physicalName="Indices" type="4">
-    <index id="IDX45" populated="true" UUID="3ff720e8-e7b2-4f19-b816-471020edf81a" clustered="false" name="bookings_id" physicalName="bookings_id" primaryKeyIndex="true" unique="false" >
-     <index-column id="IDC46" populated="true" UUID="c79b568d-fee1-4e85-8ea6-fa28db3a58b9" ascendingOrDescending="UNSPECIFIED" column-ref="COL41" name="Timestamp" physicalName="time_stamp" />
-     <index-column id="IDC47" populated="true" UUID="01d23dc0-9f04-42ba-ae61-538106538747" ascendingOrDescending="UNSPECIFIED" column-ref="COL42" name="customer_id" physicalName="customer_id" />
-     <index-column id="IDC48" populated="true" UUID="27757e93-ea30-4624-90f5-5321e1f7e72b" ascendingOrDescending="UNSPECIFIED" column-ref="COL43" name="Service Id" physicalName="s_id" />
+    <index id="IDX46" populated="true" UUID="3ff720e8-e7b2-4f19-b816-471020edf81a" clustered="false" name="bookings_id" physicalName="bookings_id" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC47" populated="true" UUID="c79b568d-fee1-4e85-8ea6-fa28db3a58b9" ascendingOrDescending="UNSPECIFIED" column-ref="COL41" name="Timestamp" physicalName="time_stamp" />
+     <index-column id="IDC48" populated="true" UUID="01d23dc0-9f04-42ba-ae61-538106538747" ascendingOrDescending="UNSPECIFIED" column-ref="COL42" name="customer_id" physicalName="customer_id" />
+     <index-column id="IDC49" populated="true" UUID="b76bd987-e904-4643-9b88-7d94fe97cc93" ascendingOrDescending="UNSPECIFIED" column-ref="COL43" name="Service Id" physicalName="s_id" />
+    </index>
+   </folder>
+  </table>
+  <table id="TAB50" populated="true" UUID="81d4ac11-19b0-4447-9a11-f13d39d949cc" name="Booking Slots" objectType="TABLE" physicalName="booking_slots" >
+   <remarks></remarks>
+   <folder id="FOLTAB501" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL51" populated="true" UUID="1a789e27-5f15-479b-bddd-387d16aa9db1" autoIncrement="false" autoIncrementSequenceName="booking_slots_timestamp_seq" defaultValue="CURRENT_TIMESTAMP" name="Timestamp" nullable="0" physicalName="timestamp" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
+     <remarks></remarks>
+    </column>
+    <column id="COL52" populated="true" UUID="7bc47526-f29d-46a6-9251-ecfb6a0afeea" autoIncrement="false" autoIncrementSequenceName="service_provider_s_id_seq_2" defaultValue="" name="Service Id" nullable="0" physicalName="s_id" precision="0" primaryKeySeq="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+     <remarks></remarks>
+    </column>
+    <column id="COL53" populated="true" UUID="4b48ad15-01f9-43b7-bd76-bc7e7604b637" autoIncrement="false" autoIncrementSequenceName="booking_slots_availability_seq" defaultValue="True" name="Availability" nullable="0" physicalName="availability" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="16" userDefinedTypeUUID="a26374aa-3026-4bb8-b564-eb2e186dfa5d" >
+     <remarks></remarks>
+    </column>
+    </folder>
+    <folder id="FOLTAB503" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
+    </folder>
+    <folder id="FOLTAB502" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
+    </folder>
+    <folder id="FOLTAB504" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX54" populated="true" UUID="25318c21-c211-4312-98a6-8c231a976dff" clustered="false" name="booking_slots_pk" physicalName="booking_slots_pk" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC55" populated="true" UUID="25f6cfbf-2855-4b5a-9e41-c1026ff16417" ascendingOrDescending="UNSPECIFIED" column-ref="COL51" name="Timestamp" physicalName="timestamp" />
+     <index-column id="IDC56" populated="true" UUID="e129ad64-af46-4ff2-a0d1-1eb3197a8276" ascendingOrDescending="UNSPECIFIED" column-ref="COL52" name="Service Id" physicalName="s_id" />
     </index>
    </folder>
   </table>
   <relationships>
-   <relationship id="REL49" populated="true" UUID="5030c3dd-5926-4ee0-a6f8-8659b040f791" deferrability="7" deleteRule="0" fk-table-ref="TAB40" fkCardinality="7" identifying="true" name="customers_booking_fk" physicalName="customers_booking_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP50" populated="true" UUID="4334b0a1-606a-4bcd-8a92-21a0cbdca12c" fk-column-ref="COL42" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
+   <relationship id="REL57" populated="true" UUID="5030c3dd-5926-4ee0-a6f8-8659b040f791" deferrability="7" deleteRule="0" fk-table-ref="TAB40" fkCardinality="7" identifying="true" name="customers_booking_fk" physicalName="customers_booking_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP58" populated="true" UUID="4334b0a1-606a-4bcd-8a92-21a0cbdca12c" fk-column-ref="COL42" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
    </relationship>
-   <relationship id="REL51" populated="true" UUID="0c17220d-a71a-4701-adb3-9e2708c7d121" deferrability="7" deleteRule="0" fk-table-ref="TAB26" fkCardinality="3" identifying="true" name="service_provider_location_fk" physicalName="service_provider_location_fk" pk-table-ref="TAB14" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP52" populated="true" UUID="d781c9a1-c148-44e4-8a7c-36bea091510c" fk-column-ref="COL27" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
+   <relationship id="REL59" populated="true" UUID="0c17220d-a71a-4701-adb3-9e2708c7d121" deferrability="7" deleteRule="0" fk-table-ref="TAB26" fkCardinality="3" identifying="true" name="service_provider_location_fk" physicalName="service_provider_location_fk" pk-table-ref="TAB14" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP60" populated="true" UUID="d781c9a1-c148-44e4-8a7c-36bea091510c" fk-column-ref="COL27" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
    </relationship>
-   <relationship id="REL53" populated="true" UUID="3bf03d05-bd92-44c7-af03-ef5094e8d5cc" deferrability="7" deleteRule="0" fk-table-ref="TAB40" fkCardinality="7" identifying="true" name="service_provider_booking_fk" physicalName="service_provider_booking_fk" pk-table-ref="TAB14" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP54" populated="true" UUID="e3289326-d146-492e-87f9-1b498e4c7e42" fk-column-ref="COL43" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
+   <relationship id="REL61" populated="true" UUID="482b47d4-c378-49c2-9c86-3a5f7a78996f" deferrability="7" deleteRule="0" fk-table-ref="TAB50" fkCardinality="7" identifying="true" name="service_provider_booking_slots_fk" physicalName="service_provider_booking_slots_fk" pk-table-ref="TAB14" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP62" populated="true" UUID="5efaf266-3d0f-4a97-af80-97781dc010df" fk-column-ref="COL52" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
+   </relationship>
+   <relationship id="REL63" populated="true" UUID="630ab6ac-3571-4d80-ba75-197beca0368e" deferrability="7" deleteRule="0" fk-table-ref="TAB40" fkCardinality="3" identifying="true" name="booking_slots_booking_fk" physicalName="booking_slots_booking_fk" pk-table-ref="TAB50" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP64" populated="true" UUID="bd239809-e264-4d63-82f3-cdf67aa30fa6" fk-column-ref="COL41" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL51" />
+    <column-mapping id="CMP65" populated="true" UUID="0bb20c5b-c65e-4fad-9748-3425e719a40c" fk-column-ref="COL43" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL52" />
    </relationship>
   </relationships>
  </target-database>
@@ -187,10 +218,12 @@
   <table-pane table-ref="TAB14" x="40" y="98" bgColor="0xc7d0df" fgColor="0x006633" rounded="true" dashed="true"/>
   <table-pane table-ref="TAB26" x="775" y="120" bgColor="0xf6bcbc" fgColor="0xcc0000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB34" x="485" y="32" bgColor="0xf0f0f0" fgColor="0x5229a3" rounded="true" dashed="true"/>
-  <table-pane table-ref="TAB40" x="429" y="341" bgColor="0xe8cfdb" fgColor="0x0000cc" rounded="true" dashed="true"/>
-  <table-link relationship-ref="REL51" pkConnection="0.5074626865671642" fkConnection="0.48717948717948717" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="33"/>
-  <table-link relationship-ref="REL49" pkConnection="0.5471698113207547" fkConnection="0.4948453608247423" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="65"/>
-  <table-link relationship-ref="REL53" pkConnection="0.6477987421383647" fkConnection="0.4845360824742268" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="129"/>
+  <table-pane table-ref="TAB40" x="456" y="335" bgColor="0xe8cfdb" fgColor="0x0000cc" rounded="true" dashed="true"/>
+  <table-pane table-ref="TAB50" x="53" y="337" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-link relationship-ref="REL59" pkConnection="0.5074626865671642" fkConnection="0.48717948717948717" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="33"/>
+  <table-link relationship-ref="REL57" pkConnection="0.5471698113207547" fkConnection="0.4948453608247423" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="65"/>
+  <table-link relationship-ref="REL61" pkConnection="0.49226006191950467" fkConnection="0.5017182130584192" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="132"/>
+  <table-link relationship-ref="REL63" pkConnection="0.5747126436781609" fkConnection="0.42276422764227645" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="33"/>
  </play-pen>
  <critic-manager>
   <critic-grouping platformType="Generic" enabled="true">
