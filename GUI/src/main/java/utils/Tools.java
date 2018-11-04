@@ -6,6 +6,7 @@ import models.entities.ServiceProvider;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Tools {
@@ -59,5 +60,53 @@ public class Tools {
 
         return bookings;
     }
+
+
+
+    public static class MyCustomDateTime {
+
+        Time time;
+
+        Timestamp timestamp;
+
+        public MyCustomDateTime(Timestamp timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public MyCustomDateTime(Time time) {
+            timestamp = formatDateTime(Timestamp.valueOf(getCurrentDate() + " " + time));
+        }
+
+        public MyCustomDateTime() {
+            time = Time.valueOf("08:00:00");
+            timestamp = Timestamp.valueOf(getCurrentDate() + " "+ time);
+        }
+
+        public Date getCurrentDate(){
+            return new Date(System.currentTimeMillis());
+        }
+
+        private Timestamp getCurrentDatetime(){
+            return formatDateTime(new Timestamp(System.currentTimeMillis()));
+        }
+
+        private Timestamp formatDateTime(Timestamp timestamp){
+            return Timestamp.valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp));
+        }
+
+        public MyCustomDateTime add30(){
+            timestamp = new Timestamp(timestamp.getTime()+1800000);
+            return this;
+        }
+
+        public Timestamp getTimestamp() {
+            return timestamp;
+        }
+
+        public Time getTime() {
+            return time;
+        }
+    }
+
 
 }
