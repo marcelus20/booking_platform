@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.github.lgooddatepicker.components.DatePicker;
 import java.util.stream.IntStream;
 
 
@@ -98,6 +99,10 @@ public class Main extends JFrame {
 //
 //        new Application();
 
-        new Main();
+        //new Main();
+        new BookingSlotsController();
+
+
+
     }
 }
