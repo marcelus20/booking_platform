@@ -7,14 +7,23 @@ public class BookingSlots {
 
     private Timestamp timestamp;
     private Long serviceId;
-    private String availability;
+    private Boolean availability;
     private Bookings booking;
 
-    public BookingSlots(Timestamp timestamp, Long serviceId, String availability, Bookings booking) {
+    public BookingSlots(Timestamp timestamp, Long serviceId, Boolean availability, Bookings booking) {
         this.timestamp = timestamp;
         this.serviceId = serviceId;
         this.availability = availability;
         this.booking = booking;
+    }
+
+    public BookingSlots(Timestamp timestamp, Long serviceId) {
+        this.timestamp = timestamp;
+        this.serviceId = serviceId;
+        availability = true;
+    }
+
+    public BookingSlots() {
     }
 
     public Timestamp getTimestamp() {
@@ -25,7 +34,7 @@ public class BookingSlots {
         return serviceId;
     }
 
-    public String getAvailability() {
+    public Boolean  getAvailability() {
         return availability;
     }
 
@@ -43,7 +52,7 @@ public class BookingSlots {
         return this;
     }
 
-    public BookingSlots withAvailability(String availability){
+    public BookingSlots withAvailability(Boolean  availability){
         this.availability = availability;
         return this;
     }
