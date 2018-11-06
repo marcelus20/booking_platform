@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
+import static controllers.controllers.dashboardController.serviceProviderControls.ServiceProviderDashboardControler.initServiceProviderDashboardController;
 
 public class DashboardController implements Controlls<Dashboard>, ViewsObjectGetter<Dashboard> {
 
@@ -59,7 +60,7 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         if(user instanceof Admin){
             adminDashboardController = initAdminDashboardViewController(dashboard);
         }else if (user instanceof ServiceProvider){
-            //serviceProviderDashBoardController =
+            serviceProviderDashBoardController = initServiceProviderDashboardController(dashboard, (ServiceProvider) user);
         }else{
             //customerDashboardController =
         }
@@ -110,7 +111,10 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         dashboard.setLayout(new BorderLayout());
         dashboard.repaint();
         dashboard.validate();
-        adminDashboardController.config();
+        if(userIsAdmin()){
+            adminDashboardController.config();
+        }
+
     }
 
     @Override
@@ -147,7 +151,10 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         dashboard.add(dashboard.getOutput(), BorderLayout.EAST);
         dashboard.add(dashboard.getFooter(), BorderLayout.SOUTH);
         dashboard.getFooter().add(new JLabel("CREATED BY: Felipe Mantovani, id: 2017192"));
-        adminDashboardController.build();
+        if(userIsAdmin()){
+            adminDashboardController.build();
+        }
+
 
     }
 
@@ -156,13 +163,32 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         dashboard.getSideBar().setPreferredSize(new Dimension(300,600));
         dashboard.getOutput().setPreferredSize(new Dimension(950,600));
         dashboard.getFooter().setPreferredSize(new Dimension(120, 50));
-        adminDashboardController.setSizes();
+        if(userIsAdmin()){
+            adminDashboardController.setSizes();
+        }
+
 
     }
 
     @Override
     public Dashboard getViewObject() {
         return dashboard;
+    }
+
+    private Boolean userIsAdmin(){
+        if(user instanceof Admin){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean userIsServiceProvider(){
+        if(user instanceof ServiceProvider){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

@@ -1,23 +1,35 @@
-package main;
+package controllers.controllers.dashboardController.serviceProviderControls;
 
 import com.github.lgooddatepicker.components.*;
 
 import com.github.lgooddatepicker.optionalusertools.CalendarSelectionListener;
 import com.github.lgooddatepicker.zinternaltools.CalendarSelectionEvent;
 import controllers.controllers.Controlls;
+import controllers.controllers.ViewsObjectGetter;
+import models.entities.BookingSlots;
+import models.entities.ServiceProvider;
+import models.repositories.BookingSlotsRepository;
+import models.repositories.Repository;
+import views.dashboard.serviceProviderView.bookingSlots.SlotOptions;
+import views.dashboard.serviceProviderView.bookingSlots.Slots;
 import utils.Tools;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class BookingSlotsController extends JFrame implements Controlls<Slots> {
+public class BookingSlotsController implements Controlls<Slots>, ViewsObjectGetter<SlotOptions> {
     private Slots slots;
     private Slots availableSlots;
     private SlotOptions slotOptions;
+    private Repository<BookingSlotsRepository> b;
+    private List<BookingSlots> bookingSlots;
+    private ServiceProvider user;
 
 
     private List<JButton> slotsButtons;
@@ -27,23 +39,29 @@ public class BookingSlotsController extends JFrame implements Controlls<Slots> {
     private List<Tools.MyCustomDateTime> dateTimes;
 
 
-    public BookingSlotsController() {
+    public BookingSlotsController(ServiceProvider user) throws SQLException {
         slots = new Slots("Slots");
         availableSlots = new Slots("AvailableSlots");
         dateTime = new Tools.MyCustomDateTime();
         slotOptions = new SlotOptions();
         calendarPanel = new CalendarPanel();
         dateTimes = new ArrayList<>();
-
+        b = new BookingSlotsRepository();
+        this.user = user;
         config();
         setSizes();
         build();
+    }
+
+    public static BookingSlotsController initBookingSlotsController(ServiceProvider user) throws SQLException {
+        return new BookingSlotsController(user);
     }
 
     @Override
     public void config() {
         addCalendarPanelAListener();
         addAddDateToScheduleButtonAListener();
+        addSaveAListener();
         availableSlotsButtons = new ArrayList<>();
         slotsButtons = new ArrayList<>();
         for(int i = 0; i < 24; i++){
@@ -103,8 +121,6 @@ public class BookingSlotsController extends JFrame implements Controlls<Slots> {
 
         slotOptions.getAddDayToSchedule().setEnabled(false);
 
-        setSize(500,500);
-        setVisible(true);
         validateAndRepaintAll();
     }
 
@@ -146,11 +162,14 @@ public class BookingSlotsController extends JFrame implements Controlls<Slots> {
 
         JScrollPane scrollPane = new JScrollPane(slotOptions.getSideBar());
         slotOptions.add(scrollPane, BorderLayout.LINE_START);
-        add(slotOptions);
+//        add(slotOptions);
     }
 
     @Override
     public void setSizes() {
+
+        slotOptions.getSideBar().setPreferredSize(new Dimension(400, 500));
+        slotOptions.getOutput().setPreferredSize(new Dimension(450,500));
 
     }
 
@@ -159,8 +178,7 @@ public class BookingSlotsController extends JFrame implements Controlls<Slots> {
         availableSlots.repaint();
         availableSlots.validate();
         availableSlots.validate();
-        repaint();
-        validate();
+
     }
 
     private void addCalendarPanelAListener(){
@@ -203,7 +221,18 @@ public class BookingSlotsController extends JFrame implements Controlls<Slots> {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                bookingSlots = dateTimes.stream()
+                        .map(dateTime->new BookingSlots(dateTime.getTimestamp(), user.getId()))
+                        .collect(Collectors.toList());
+                System.out.println(bookingSlots);
+                bookingSlots.forEach(bookingSlot->b.insertData(bookingSlot));
+
             }
         });
+    }
+
+    @Override
+    public SlotOptions getViewObject() {
+        return slotOptions;
     }
 }
