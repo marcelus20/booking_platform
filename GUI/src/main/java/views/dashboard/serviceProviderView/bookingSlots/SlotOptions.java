@@ -1,4 +1,4 @@
-package main;
+package views.dashboard.serviceProviderView.bookingSlots;
 
 import javax.swing.*;
 
