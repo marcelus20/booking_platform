@@ -3,11 +3,16 @@ package utils;
 import models.entities.Bookings;
 import models.entities.Location;
 import models.entities.ServiceProvider;
+
+import javax.swing.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Tools {
 
@@ -70,11 +75,19 @@ public class Tools {
         Timestamp timestamp;
 
         public MyCustomDateTime(Timestamp timestamp) {
+
             this.timestamp = timestamp;
+            time = Time.valueOf(String.valueOf(timestamp).split(" ")[0]);
         }
 
         public MyCustomDateTime(Time time) {
             timestamp = formatDateTime(Timestamp.valueOf(getCurrentDate() + " " + time));
+            time = time;
+        }
+
+        public MyCustomDateTime(String dateString, String timeString) {
+            time = Time.valueOf(timeString);
+            timestamp = Timestamp.valueOf(dateString + " "+ timeString);
         }
 
         public MyCustomDateTime() {
@@ -96,6 +109,7 @@ public class Tools {
 
         public MyCustomDateTime add30(){
             timestamp = new Timestamp(timestamp.getTime()+1800000);
+            time = new Time(timestamp.getTime());
             return this;
         }
 
@@ -106,6 +120,34 @@ public class Tools {
         public Time getTime() {
             return time;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MyCustomDateTime dateTime = (MyCustomDateTime) o;
+            return Objects.equals(time, dateTime.time) &&
+                    Objects.equals(timestamp, dateTime.timestamp);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(time, timestamp);
+        }
+
+        @Override
+        public String toString() {
+            return "MyCustomDateTime{" +
+                    "timestamp=" + timestamp +
+                    '}';
+        }
+    }
+
+    public static List<JButton> sortJButtonsByText(List<JButton> buttons){
+        List<Time> times = buttons.stream().map(b->Time.valueOf(b.getText())).collect(Collectors.toList());
+        Collections.sort(times);
+        buttons = times.stream().map(time->new JButton(String.valueOf(time))).collect(Collectors.toList());
+        return buttons;
     }
 
 
