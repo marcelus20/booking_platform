@@ -66,7 +66,6 @@ public class FormsController implements Controlls<Forms>, ViewsObjectGetter<Form
     }
 
     private void displayPanel(JPanel panel){
-        System.out.println("aqui");
         forms.getFormView().removeAll();
         forms.getFormView().add(panel, BorderLayout.CENTER);
         forms.validate();
@@ -123,6 +122,21 @@ public class FormsController implements Controlls<Forms>, ViewsObjectGetter<Form
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
+            }
+        });
+        forms.getServiceProviderSignUpForm().getCancel().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(forms.getServiceProviderSignUpForm());
+//                app.getForms().setInvisible();
+//                app.setForms(null);
+//                try {
+//                    app.setLogin(LoginController.initLoginController(app));
+//
+//                } catch (SQLException e1) {
+//                    e1.printStackTrace();
+//                }
+//                forms.dispose();
             }
         });
     }

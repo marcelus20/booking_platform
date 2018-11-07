@@ -24,7 +24,7 @@ public class ServiceProviderSignUpFormController
     private Repository<ServiceProvider> sRep;
 
 
-    public ServiceProviderSignUpFormController() throws SQLException {
+    private ServiceProviderSignUpFormController() throws SQLException {
         serviceProviderSignUpForm = new ServiceProviderSignUpForm();
         locationForm = LocationFormController.initServiceProviderFormController().getViewObject();
         sRep = new ServiceProviderRepository();
@@ -34,8 +34,31 @@ public class ServiceProviderSignUpFormController
         build();
     }
 
+    private ServiceProviderSignUpFormController(ServiceProvider user) {
+        serviceProviderSignUpForm = new ServiceProviderSignUpForm();
+        locationForm = LocationFormController.initServiceProviderFormController().getViewObject();
+
+        serviceProviderSignUpForm.getFormName().setText("Updating datils");
+        serviceProviderSignUpForm.getCompanyFullName().getInput().setText(user.getCompanyFullName());
+        serviceProviderSignUpForm.getPhoneNumber().getInput().setText(user.getPhone());
+        serviceProviderSignUpForm.getEmail().getInput().setText(user.geteMail());
+
+        locationForm.getCity().getInput().setText(user.getLocations().getCity());
+        locationForm.getEirCode().getInput().setText(user.getLocations().getEir_code());
+        locationForm.getFirstLineAddress().getInput().setText(user.getLocations().getFirst_line_address());
+        locationForm.getSecondLineAddress().getInput().setText(user.getLocations().getSecond_line_address());
+        serviceProviderSignUpForm.setCancel(null);
+        config();
+        setSizes();
+        build();
+    }
+
     public static ServiceProviderSignUpFormController initServiceProviderSignUpFormController() throws SQLException {
         return new ServiceProviderSignUpFormController();
+    }
+
+    public static ServiceProviderSignUpFormController initServiceProviderSignUpFormController(ServiceProvider user){
+        return new ServiceProviderSignUpFormController(user);
     }
 
 
@@ -60,7 +83,10 @@ public class ServiceProviderSignUpFormController
         buttonsPanel.setLayout(new BorderLayout());
         buttonsPanel.add(serviceProviderSignUpForm.getStatusForm(), BorderLayout.NORTH);
         buttonsPanel.add(serviceProviderSignUpForm.getSubmit(), BorderLayout.LINE_START);
-        buttonsPanel.add(serviceProviderSignUpForm.getCancel(), BorderLayout.LINE_END);
+        if(serviceProviderSignUpForm.getCancel() != null){
+            buttonsPanel.add(serviceProviderSignUpForm.getCancel(), BorderLayout.LINE_END);
+        }
+
         serviceProviderSignUpForm.add(buttonsPanel);
     }
 
@@ -95,13 +121,21 @@ public class ServiceProviderSignUpFormController
 
                 System.out.println(serviceProvider);
 
-                sRep.insertData(serviceProvider);
+                try {
+                    sRep.insertData(serviceProvider);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
                 serviceProviderSignUpForm.getStatusForm()
                         .setText("<html><body>Your request to subscribe as a service provider has been sent. <br>" +
                                 "One of the admins will take the request and approve or disapprove. </body></html>");
 
             }
         });
+
+
     }
+
+
 
 }
