@@ -17,10 +17,13 @@ public class BookingsRepository extends Database{
         try{
             initConnAndStatement();
             String query = new StringBuilder("SELECT ")
-                    .append("b.time_stamp, b.complaint, ")
-                    .append("c.customer_id, s.s_id, c.first_name, c.last_name, ")
+                    .append("bs.timestamp, bs.s_id, ")
+                    .append("b.booking_status, b.complaint, ")
+                    .append("c.customer_id, c.first_name, c.last_name, ")
                     .append("s.company_full_name ")
-                    .append("FROM booking AS b ")
+                    .append("FROM booking_slots AS bs ")
+                    .append("JOIN booking AS b ")
+                    .append("ON bs.timestamp = b.time_stamp AND bs.s_id = b.s_id ")
                     .append("JOIN customers AS c ")
                     .append("ON b.customer_id = c.customer_id ")
                     .append("JOIN service_provider AS s ")
@@ -31,10 +34,12 @@ public class BookingsRepository extends Database{
 
             while (rs.next()){
                 List<String> line = new ArrayList<>();
-                line.add(rs.getString("time_stamp"));
+                line.add(rs.getString("timestamp"));
+                line.add(rs.getString("s_id"));
+                line.add(rs.getString("booking_status"));
                 line.add(rs.getString("complaint"));
                 line.add(rs.getString("customer_id"));
-                line.add(rs.getString("s_id"));
+
                 line.add(rs.getString("first_name"));
                 //line.add(rs.getString("password"));
                 line.add(rs.getString("last_name"));
@@ -49,6 +54,7 @@ public class BookingsRepository extends Database{
         return data;
 
     }
+
 
     @Override
     public List<List> executeSelectQuery(String query) {

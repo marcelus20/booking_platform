@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Repository <T> {
 
-    void insertData(Object obj);
+    void insertData(Object obj) throws SQLException;
 
     List<List> selectAll();
 

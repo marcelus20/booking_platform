@@ -14,8 +14,10 @@ public class BookingSlotsRepository extends Database implements Repository {
     }
 
     @Override
-    public void insertData(Object obj) {
+    public void insertData(Object obj) throws SQLException {
         super.insertData(obj);
+        initConnAndStatement();
+
         BookingSlots b = (BookingSlots) obj;
         Integer availability;
         if(b.getAvailability()){

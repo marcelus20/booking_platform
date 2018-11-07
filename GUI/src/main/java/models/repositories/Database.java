@@ -17,7 +17,7 @@ public abstract class Database implements Repository{
     }
 
     @Override
-    public void insertData(Object obj) {
+    public void insertData(Object obj) throws SQLException {
 
     }
 

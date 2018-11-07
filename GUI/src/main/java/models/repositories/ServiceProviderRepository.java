@@ -1,8 +1,10 @@
 package models.repositories;
 
+import models.entities.Bookings;
 import models.entities.Location;
 import models.users.AbstractUser;
 import models.entities.ServiceProvider;
+import views.signUpForms.ServiceProviderSignUpForm;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +15,51 @@ public class ServiceProviderRepository extends Database {
 
 
     public ServiceProviderRepository() throws SQLException {
+    }
+
+    public ServiceProvider populateBookingsAttribute(ServiceProvider serviceProvider){
+        String query = new StringBuilder().append("SELECT * FROM booking WHERE s_id = ")
+                .append("'").append(serviceProvider.getId()).append("';").toString();
+        try{
+            initConnAndStatement();
+            ResultSet rs = myStmt.executeQuery(query);
+
+            serviceProvider.withBookings(new ArrayList<>());
+            while (rs.next()){
+                Bookings booking= new Bookings();
+                booking.withTimestamp(Timestamp.valueOf(rs.getString("time_stamp")));
+                booking.withCustomerId(rs.getLong("customer_id"));
+                booking.withServiceId(rs.getLong("s_id"));
+                booking.withBookingStatus(rs.getString("booking_status"));
+                booking.withComplaint(rs.getString("complaint"));
+                serviceProvider.getBookings().add(booking);
+            }
+            closeConnAndStatement();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return serviceProvider;
+    }
+
+    public ServiceProvider populateLocationAttribute(ServiceProvider serviceProvider){
+        String query = new StringBuilder().append("SELECT * FROM location WHERE s_id = ")
+                .append("'").append(serviceProvider.getId()).append("';").toString();
+        try{
+            initConnAndStatement();
+            ResultSet rs = myStmt.executeQuery(query);
+
+            while (rs.next()){
+                serviceProvider.withLocation(new Location());
+                serviceProvider.getLocations().withFirstLineAddress(rs.getString("first_line_address"));
+                serviceProvider.getLocations().withEirCode(rs.getString("eir_code"));
+                serviceProvider.getLocations().withCity(rs.getString("city"));
+                serviceProvider.getLocations().withSecondLineAddress(rs.getString("second_line_address"));
+            }
+            closeConnAndStatement();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return serviceProvider;
     }
 
     @Override
@@ -177,6 +224,8 @@ public class ServiceProviderRepository extends Database {
             e1.printStackTrace();
         }
     }
+
+
 
 
 }

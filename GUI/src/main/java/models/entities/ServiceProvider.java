@@ -5,7 +5,6 @@ package models.entities;
 import models.users.User;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +48,7 @@ public class ServiceProvider extends User {
         return this;
     }
     public ServiceProvider withApprovedStatus(String approvedStatus){
-        this.companyFullName = approvedStatus;
+        this.approvedStatus = approvedStatus;
         return this;
     }
     public ServiceProvider withLocation(Location location){

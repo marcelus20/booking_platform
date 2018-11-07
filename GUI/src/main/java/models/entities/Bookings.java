@@ -11,14 +11,14 @@ public class Bookings {
     private Long customerId;
     private Long serviceId;
     private Timestamp timestamp;
-    private String BookingStatus;
+    private String bookingStatus;
     private String complaint;
 
     public Bookings(Long customerId, Long serviceId, Timestamp timestamp, String bookingStatus, String complaint) {
         this.customerId = customerId;
         this.serviceId = serviceId;
         this.timestamp = timestamp;
-        BookingStatus = bookingStatus;
+        this.bookingStatus = bookingStatus;
         this.complaint = complaint;
     }
 
@@ -35,6 +35,10 @@ public class Bookings {
 
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public String getBookingStatus() {
+        return bookingStatus;
     }
 
     public String getComplaint() {
@@ -56,6 +60,11 @@ public class Bookings {
         return this;
     }
 
+    public Bookings withBookingStatus(String bookingStatus){
+        this.bookingStatus = bookingStatus;
+        return this;
+    }
+
     public Bookings withComplaint(String complaint){
         this.complaint = complaint;
         return this;
@@ -69,12 +78,13 @@ public class Bookings {
         return Objects.equals(customerId, bookings.customerId) &&
                 Objects.equals(serviceId, bookings.serviceId) &&
                 Objects.equals(timestamp, bookings.timestamp) &&
+                Objects.equals(bookingStatus, bookings.bookingStatus) &&
                 Objects.equals(complaint, bookings.complaint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, serviceId, timestamp, complaint);
+        return Objects.hash(customerId, serviceId, timestamp, bookingStatus, complaint);
     }
 
     @Override
@@ -83,6 +93,7 @@ public class Bookings {
                 "customerId=" + customerId +
                 ", serviceId=" + serviceId +
                 ", timestamp=" + timestamp +
+                ", bookingStatus='" + bookingStatus + '\'' +
                 ", complaint='" + complaint + '\'' +
                 '}';
     }

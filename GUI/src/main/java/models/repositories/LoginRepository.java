@@ -1,9 +1,11 @@
 package models.repositories;
 
+import models.entities.Location;
 import models.users.AbstractUser;
 import models.entities.Admin;
 import models.entities.Customer;
 import models.entities.ServiceProvider;
+import views.signUpForms.ServiceProviderSignUpForm;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -134,11 +136,12 @@ public class LoginRepository extends Database{
         line.add(rs.getString("phone"));
         line.add(rs.getString("date_of_account_creation"));
         line.add(rs.getString("company_full_name"));
+        line.add(rs.getString("approved_status"));
         result.add(line);
     }
 
     private AbstractUser mapLineToUser(Integer tableKey, Map<Integer,
-            AbstractUser> tableMapper, List<String> mappedLine){
+            AbstractUser> tableMapper, List<String> mappedLine) throws SQLException {
 
         if(tableMapper.get(tableKey) instanceof Admin){
             Admin admin = new Admin();
@@ -158,6 +161,7 @@ public class LoginRepository extends Database{
             customer.withLastName(mappedLine.get(6));
             return customer;
         }else if (tableMapper.get(tableKey) instanceof ServiceProvider){
+            Repository<ServiceProviderRepository> svpRep= new ServiceProviderRepository();
 
             ServiceProvider svp = new ServiceProvider();
             svp.withId(Long.valueOf(mappedLine.get(0)));
@@ -166,9 +170,14 @@ public class LoginRepository extends Database{
             svp.withPhone(mappedLine.get(3));
             //svp.withDateOfAccountCreation(Date.parse(mappedLine.get(4)));
             svp.withCompanyFullName(mappedLine.get(5));
+            svp.withApprovedStatus(mappedLine.get(6));
+
+            svp = ((ServiceProviderRepository) svpRep).populateLocationAttribute(svp);
+
             return svp;
         }else{return null;}
     }
+
 
 
 }
