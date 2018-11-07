@@ -59,9 +59,12 @@ public class Tools {
 
 
         bookings.withTimestamp(Timestamp.valueOf(line.get(0)));
-        bookings.withComplaint(line.get(1));
-        bookings.withCustomerId(Long.parseLong(line.get(2)));
-        bookings.withServiceId(Long.parseLong(line.get(3)));
+        bookings.withServiceId(Long.parseLong(line.get(1)));
+        bookings.withBookingStatus(line.get(2));
+        bookings.withComplaint(line.get(3));
+        bookings.withCustomerId(Long.parseLong(line.get(4)));
+
+
 
         return bookings;
     }
