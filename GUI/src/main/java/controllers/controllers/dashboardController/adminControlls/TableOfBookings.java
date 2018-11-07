@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +28,8 @@ public class TableOfBookings extends TableOfEntitiesController<ListOfBookings, B
     public void build() {
         super.build();
         mappedResults = mapResultsToObjects(results);
-        String[] columns = new String[]{"Date and Time", "Complaint", "Customer id","service id","Customer Name",
-                "Customer last name", "Company"};
+        String[] columns = new String[]{"Date and Time", "Service ID", "Booking Status","Complaint","Customer ID",
+                "First Name", "Last Name", "Company"};
         if (results.size() == 0){
             tableOfEntities.add(new JLabel("NO RESULTS TO BE SHOWN"));
         }else{
@@ -43,12 +45,13 @@ public class TableOfBookings extends TableOfEntitiesController<ListOfBookings, B
                                 .tuple(tableOfEntities.getTable().getModel().getValueAt(rowIndex, 0).toString(),
                                         tableOfEntities.getTable().getModel().getValueAt(rowIndex, 1).toString());
                         mappedResults.forEach(bookings -> {
-                            if (bookings.getCustomerId() == Long.parseLong(id.getX())
-                                    && bookings.getServiceId() == Long.parseLong(id.getY())){
+                            if (String.valueOf(bookings.getTimestamp()).equalsIgnoreCase(id.getX())
+                                && String.valueOf(bookings.getServiceId()).equals(id.getY())){
+                                System.out.println("hey");
                                 new ChangingBookings(bookings, repository)
                                         .getViewObject();
-                            }
-                        });
+                            }}
+                        );
                     }
                 }
             });
