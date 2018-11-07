@@ -32,6 +32,7 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     private ServiceProviderDashboardControler serviceProviderDashBoardController;
     private CustomerDashboardControler customerDashboardController;
 
+
     public enum TableView{
         viewinCustomers, viewingServices, ViewingBookings;
     }
@@ -44,6 +45,7 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         config();
         setSizes();
         build();
+
     }
 
     public static DashboardController initDashBoardController (AbstractUser user, Application app) throws SQLException {
@@ -57,10 +59,11 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
     }
 
     private void redirectToProperPanel() throws SQLException {
+        dashboard.getSideBar().add(new JLabel(displayMessage()));
         if(user instanceof Admin){
             adminDashboardController = initAdminDashboardViewController(dashboard);
         }else if (user instanceof ServiceProvider){
-            serviceProviderDashBoardController = initServiceProviderDashboardController(dashboard, (ServiceProvider) user);
+            serviceProviderDashBoardController = initServiceProviderDashboardController(this, (ServiceProvider) user);
         }else{
             //customerDashboardController =
         }
@@ -141,8 +144,6 @@ public class DashboardController implements Controlls<Dashboard>, ViewsObjectGet
         });
 
         dashboard.getMenu().add(menu);
-
-        dashboard.getSideBar().add(new JLabel(displayMessage()));
         if(user instanceof Admin){
             dashboard.getSideBar().add(adminDashboardController.getViewObject());
         }
