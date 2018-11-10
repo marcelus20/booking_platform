@@ -2,6 +2,7 @@ package models.repositories;
 
 import models.users.AbstractUser;
 import models.entities.Customer;
+import utils.Tuple;
 
 
 import java.sql.*;
@@ -83,6 +84,29 @@ public class CustomerRepository extends Database{
     @Override
     public Long getId(AbstractUser user) {
         return null;
+    }
+
+    public Tuple<String, String> getCustomerName(Long id) throws SQLException {
+        initConnAndStatement();
+
+        String query = new StringBuilder().append("SELECT first_name, last_name FROM customers ")
+                .append("WHERE customer_id = ")
+                .append(id).append(";").toString();
+        System.out.println(query);
+
+        ResultSet rs = myStmt.executeQuery(query);
+
+        Tuple<String, String> tuple = Tuple.tuple("", "");
+
+        while (rs.next()){
+//            tuple = Tuple.tuple(rs.getString("first_name"), rs.getString("last_name"));
+            tuple = tuple.withX(rs.getString("first_name"));
+            tuple = tuple.withY(rs.getString("last_name"));
+        }
+
+
+        closeConnAndStatement();
+        return tuple;
     }
 
 
