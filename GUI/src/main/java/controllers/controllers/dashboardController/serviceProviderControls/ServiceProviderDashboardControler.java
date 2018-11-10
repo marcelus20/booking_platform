@@ -46,6 +46,7 @@ public class ServiceProviderDashboardControler {
         addManageSlotsEntryAListener();
         addUpdateYourDetailsAListner();
         addViewBookingsSoFarAListener();
+        addViewBookingsCommingUpAListener();
     }
 
     private void addManageSlotsEntryAListener() {
@@ -98,6 +99,19 @@ public class ServiceProviderDashboardControler {
             public void actionPerformed(ActionEvent e) {
                 dashboard.getOutput().removeAll();
                 dashboard.getOutput().add(serviceProviderBookingListController.getViewObject());
+                dashboard.getOutput().repaint();
+                dashboard.getOutput().validate();
+            }
+        });
+    }
+
+    private void addViewBookingsCommingUpAListener(){
+        toggleButtonsController.getViewObject()
+                .getViewAppointmentsBooked().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dashboard.getOutput().removeAll();
+                dashboard.getOutput().add(serviceProviderBookingListController.getServiceProviderNotCompleteBookingList());
                 dashboard.getOutput().repaint();
                 dashboard.getOutput().validate();
             }
