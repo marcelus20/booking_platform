@@ -196,21 +196,21 @@
   </table>
   <relationships>
    <relationship id="REL57" populated="true" UUID="5030c3dd-5926-4ee0-a6f8-8659b040f791" deferrability="7" deleteRule="0" fk-table-ref="TAB40" fkCardinality="7" identifying="true" name="customers_booking_fk" physicalName="customers_booking_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP58" populated="true" UUID="4334b0a1-606a-4bcd-8a92-21a0cbdca12c" fk-column-ref="COL42" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
+    <column-mapping id="CMP58" populated="true" UUID="b695424b-f880-4dac-a3e8-19453e71a441" fk-column-ref="COL42" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
    </relationship>
    <relationship id="REL59" populated="true" UUID="0c17220d-a71a-4701-adb3-9e2708c7d121" deferrability="7" deleteRule="0" fk-table-ref="TAB26" fkCardinality="3" identifying="true" name="service_provider_location_fk" physicalName="service_provider_location_fk" pk-table-ref="TAB14" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP60" populated="true" UUID="d781c9a1-c148-44e4-8a7c-36bea091510c" fk-column-ref="COL27" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
+    <column-mapping id="CMP60" populated="true" UUID="52e85e59-4bea-4ef4-ac50-83e3fb367f55" fk-column-ref="COL27" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
    </relationship>
    <relationship id="REL61" populated="true" UUID="482b47d4-c378-49c2-9c86-3a5f7a78996f" deferrability="7" deleteRule="0" fk-table-ref="TAB50" fkCardinality="7" identifying="true" name="service_provider_booking_slots_fk" physicalName="service_provider_booking_slots_fk" pk-table-ref="TAB14" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP62" populated="true" UUID="5efaf266-3d0f-4a97-af80-97781dc010df" fk-column-ref="COL52" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
+    <column-mapping id="CMP62" populated="true" UUID="9407f057-f11f-4db9-ab32-441e64c5311d" fk-column-ref="COL52" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL15" />
    </relationship>
    <relationship id="REL63" populated="true" UUID="630ab6ac-3571-4d80-ba75-197beca0368e" deferrability="7" deleteRule="0" fk-table-ref="TAB40" fkCardinality="3" identifying="true" name="booking_slots_booking_fk" physicalName="booking_slots_booking_fk" pk-table-ref="TAB50" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP64" populated="true" UUID="bd239809-e264-4d63-82f3-cdf67aa30fa6" fk-column-ref="COL41" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL51" />
-    <column-mapping id="CMP65" populated="true" UUID="0bb20c5b-c65e-4fad-9748-3425e719a40c" fk-column-ref="COL43" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL52" />
+    <column-mapping id="CMP64" populated="true" UUID="2012465a-e2cb-42a4-9c27-a24733cf3f03" fk-column-ref="COL41" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL51" />
+    <column-mapping id="CMP65" populated="true" UUID="70e2c3d8-11f7-4522-88f0-c178fc6d42d0" fk-column-ref="COL43" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL52" />
    </relationship>
   </relationships>
  </target-database>
- <ddl-generator type="ca.sqlpower.architect.ddl.MySqlDDLGenerator" allow-connection="false"> </ddl-generator>
+ <ddl-generator type="ca.sqlpower.architect.ddl.MySqlDDLGenerator" allow-connection="true"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
  <play-pen zoom="1.0" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
@@ -218,12 +218,12 @@
   <table-pane table-ref="TAB14" x="40" y="98" bgColor="0xc7d0df" fgColor="0x006633" rounded="true" dashed="true"/>
   <table-pane table-ref="TAB26" x="775" y="120" bgColor="0xf6bcbc" fgColor="0xcc0000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB34" x="485" y="32" bgColor="0xf0f0f0" fgColor="0x5229a3" rounded="true" dashed="true"/>
-  <table-pane table-ref="TAB40" x="456" y="335" bgColor="0xe8cfdb" fgColor="0x0000cc" rounded="true" dashed="true"/>
-  <table-pane table-ref="TAB50" x="53" y="337" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
-  <table-link relationship-ref="REL59" pkConnection="0.5074626865671642" fkConnection="0.48717948717948717" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="33"/>
-  <table-link relationship-ref="REL57" pkConnection="0.5471698113207547" fkConnection="0.4948453608247423" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="65"/>
-  <table-link relationship-ref="REL61" pkConnection="0.49226006191950467" fkConnection="0.5017182130584192" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="132"/>
-  <table-link relationship-ref="REL63" pkConnection="0.5747126436781609" fkConnection="0.42276422764227645" rLineColor="0x4c4c4c" pkLabelText="" fkLabelText="" orientation="33"/>
+  <table-pane table-ref="TAB40" x="472" y="365" bgColor="0xe8cfdb" fgColor="0x0000cc" rounded="true" dashed="true"/>
+  <table-pane table-ref="TAB50" x="53" y="367" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-link relationship-ref="REL59" pkConnection="0.5074626865671642" fkConnection="0.48717948717948717" rLineColor="0x4c4c4c" pkLabelText="Has" fkLabelText="" orientation="33"/>
+  <table-link relationship-ref="REL57" pkConnection="0.5471698113207547" fkConnection="0.4948453608247423" rLineColor="0x4c4c4c" pkLabelText="Books" fkLabelText="" orientation="65"/>
+  <table-link relationship-ref="REL61" pkConnection="0.49226006191950467" fkConnection="0.5017182130584192" rLineColor="0x4c4c4c" pkLabelText="adds" fkLabelText="" orientation="132"/>
+  <table-link relationship-ref="REL63" pkConnection="0.5747126436781609" fkConnection="0.42276422764227645" rLineColor="0x4c4c4c" pkLabelText="Contains" fkLabelText="" orientation="33"/>
  </play-pen>
  <critic-manager>
   <critic-grouping platformType="Generic" enabled="true">
