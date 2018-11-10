@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class Tools {
 
     public static String[][] convertListToArray(List<List> list){
+        System.out.println(list);
         if(list.size() == 0){
             return new String[0][0];
         }
@@ -53,10 +55,9 @@ public class Tools {
         return serviceProvider;
     }
 
-    public static Bookings bookingsMapper(List<String> line){
+    public static Bookings
+    bookingsMapper(List<String> line){
         Bookings bookings = new Bookings();
-
-
 
         bookings.withTimestamp(Timestamp.valueOf(line.get(0)));
         bookings.withServiceId(Long.parseLong(line.get(1)));
@@ -151,6 +152,16 @@ public class Tools {
         Collections.sort(times);
         buttons = times.stream().map(time->new JButton(String.valueOf(time))).collect(Collectors.toList());
         return buttons;
+    }
+
+    public static List<Bookings> getRidOfNullElementInLists(List<Bookings> bookingsList){
+        List<Bookings> newBookings = new ArrayList<>();
+        bookingsList.forEach(b->{
+            if(b!= null){
+                newBookings.add(b);
+            }
+        });
+        return newBookings;
     }
 
 
