@@ -18,6 +18,14 @@ public class ServiceProviderBookingList extends JPanel{
         scrollPane = new JScrollPane();
     }
 
+    public ServiceProviderBookingList(String title) {
+        this.title = new JLabel(title);
+        instructions = new JLabel("Click on the table row to see details of the customer");
+        header = new JPanel();
+        table = new JTable();
+        scrollPane = new JScrollPane();
+    }
+
     public JLabel getTitle() {
         return title;
     }
