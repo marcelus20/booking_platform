@@ -1,14 +1,19 @@
 package views.forms;
 
+import views.InputPanelContainer;
 import views.customComponents.ButtonPanel;
 import views.customComponents.InputPanel;
-import views.customComponents.MyCustomJFrame;
+
 import views.customComponents.MyCustomJLabel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SignUp extends MyCustomJFrame {
+import static models.utils.ArrayListBuilder.arrayListBuilder;
+
+public class SignUp extends JPanel implements InputPanelContainer {
 
     private final MyCustomJLabel titlePage;
     private final InputPanel email;
@@ -19,7 +24,7 @@ public class SignUp extends MyCustomJFrame {
     private final ButtonPanel cancel;
 
     public SignUp(String title) {
-        super("Forms", 500,600);
+//        super("Forms", 500,600);
 
         titlePage = new MyCustomJLabel(title, 30);
         email = new InputPanel("new email: ", new JTextField());
@@ -28,24 +33,24 @@ public class SignUp extends MyCustomJFrame {
         phone = new InputPanel("Phone Number", new JTextField());
         submit = new ButtonPanel("Submit");
         cancel = new ButtonPanel("Cancel");
-        getFramePanel().setLayout(new GridLayout(0,1));
-        getFramePanel().add(this.titlePage.getLabel());
-        getFramePanel().add(this.email);
-        getFramePanel().add(password);
-        getFramePanel().add(confirmPassword);
-        getFramePanel().add(phone);
+        setLayout(new GridLayout(0,1));
+        add(this.titlePage.getLabel());
+        add(this.email);
+        add(password);
+        add(confirmPassword);
+        add(phone);
 
     }
 
     protected void addFormButtons(){
         JPanel bPanel = new JPanel();
         bPanel.setLayout(new GridLayout(1,2));
-        bPanel.add(submit); bPanel.add(cancel); getFramePanel().add(bPanel);
+        bPanel.add(submit); bPanel.add(cancel); add(bPanel);
     }
 
     protected void reduceElementsToEmailAndPassword(){
-        getFramePanel().removeAll(); getFramePanel().add(this.email);getFramePanel().add(password);
-        getFramePanel().add(this.confirmPassword); addFormButtons();
+        removeAll(); add(this.email); add(password);
+        add(this.confirmPassword); addFormButtons();
     }
 
     public JLabel getTitlePage() {
@@ -74,5 +79,11 @@ public class SignUp extends MyCustomJFrame {
 
     public JButton getCancel() {
         return cancel.getButton().getButton();
+    }
+
+    @Override
+    public List<InputPanel> getInputsPanel() {
+        return arrayListBuilder(new ArrayList<InputPanel>())
+                .add(email).add(password).add(confirmPassword).add(phone).build();
     }
 }

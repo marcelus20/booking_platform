@@ -7,7 +7,7 @@ public class ButtonPanel extends JPanel {
 
     private final MyCustomJButton button;
 
-    public ButtonPanel(String label, String buttonLabel) {
+    public ButtonPanel(String buttonLabel) {
 
         this.button = new MyCustomJButton(buttonLabel);
         setBorder(BorderFactory.createLineBorder(Color.lightGray));

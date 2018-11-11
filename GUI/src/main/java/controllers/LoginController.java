@@ -4,7 +4,6 @@ import models.Database;
 import models.utils.Tools;
 import models.users.AbstraticUser;
 import views.login.Login;
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
@@ -16,11 +15,13 @@ import java.util.List;
 public class LoginController implements Control{
 
     private Login login;
+    private Application app;
     private List<Boolean> validator;
 
-    public LoginController() {
+    public LoginController(Application app) {
         this.login = new Login();
         validator = Arrays.asList(false, false);
+        this.app = app;
         switchOffLoginButton();
         addButtonsAFunction();
         addInputsAListener();
@@ -37,13 +38,13 @@ public class LoginController implements Control{
                     if(user == null){
                         Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
                     }else{
-                        System.out.println(user);
+                        login.dispose();
+                        app.setUser(user);
+                        System.out.println(app.getUser());
                     }
                 } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
                     e1.printStackTrace();
                 }
-                System.out.println(validator);
-
             }
         });
     }
@@ -51,7 +52,12 @@ public class LoginController implements Control{
         login.getSignUp().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(login, "redirection to Forms");
+                login.dispose();
+                try {
+                    app.setFormController(new FormController(app));
+                } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
     }
@@ -72,48 +78,60 @@ public class LoginController implements Control{
 
     @Override
     public void addInputsAListener() {
-        login.getInputPanels().forEach(input->{
+        login.getInputsPanel().forEach(input->{
             input.getInput().getInput().getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    validate(e);
+                    try {
+                        validate(e);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    validate(e);
+                    try {
+                        validate(e);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    validate(e);
+                    try {
+                        validate(e);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
-                public void validate(DocumentEvent e){
 
-                    String inputTxt = input.getInput().getInput().getText();
-                    String label = input.getLabel().getText();
+                public void validate(DocumentEvent e) throws Exception {
+                    Tools.formValidator(()->{
+                        String inputTxt = input.getInput().getInput().getText();
+                        String label = input.getLabel().getText();
 
-
-                    if(inputTxt.length() > 3){
-                        if(label.contains("Email")){
-                            validator.set(0, true);
+                        if(Tools.validateStringsNonSmallerEqualsThan3(inputTxt)){
+                            if(label.contains("Email")){
+                                validator.set(0, true);
+                            }else{
+                                validator.set(1, true);
+                            }
                         }else{
-                            validator.set(1, true);
+                            if(label.contains("Email")){
+                                validator.set(0, false);
+                            }else{
+                                validator.set(1, false);
+                            }
                         }
-                    }else{
-                        if(label.contains("Email")){
-                            validator.set(0, false);
+                        if(validator.stream().reduce(true, (current, next)->current && next)){
+                            switchOnLoginButton();
                         }else{
-                            validator.set(1, false);
+                            switchOffLoginButton();
                         }
-                    }
-//
-                    if(validator.stream().reduce(true, (current, next)->current && next)){
-                        switchOnLoginButton();
-                    }else{
-                        switchOffLoginButton();
-                    }
-
+                        return null;
+                    });
                 }
             });
         });

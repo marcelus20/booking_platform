@@ -1,20 +1,14 @@
 package main;
 
 import controllers.Application;
-import java.sql.SQLException;
-
-
+import models.utils.Tools;
 
 public class Main {
 
-    public static void main(String... args) throws SQLException {
 
+
+    public static void main(String... args) {
         new Application();
-
-
-
-
-
 
     }
 }

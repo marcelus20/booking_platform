@@ -1,8 +1,6 @@
 package views.customComponents;
 
 
-import models.Tools;
-
 import javax.swing.*;
 import java.awt.Font;
 

@@ -20,8 +20,8 @@ public class InputPanel extends JPanel {
         add(this.label.getLabel());add(this.input.getInput());
     }
 
-    public MyCustomJLabel getLabel() {
-        return label;
+    public JLabel getLabel() {
+        return label.getLabel();
     }
 
     public MyCustomJField getInput() {
