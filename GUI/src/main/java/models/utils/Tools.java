@@ -68,7 +68,7 @@ public class Tools {
     }
 
     public static Boolean validatePasswordCriteria(String pass){
-        return pass.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,20})");
+        return pass.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,12})");
     }
 
 
