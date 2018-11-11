@@ -2,7 +2,7 @@ package views.customComponents;
 
 
 import javax.swing.*;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * This class is a custom Label.
@@ -21,7 +21,6 @@ public class MyCustomJLabel{
     }
 
     public MyCustomJLabel(final String label, final String fontType, final Integer fontSize) {
-
         this.label = new JLabel(label, SwingConstants.CENTER);
         this.label.setFont(new Font(fontType, Font.PLAIN, fontSize));
     }
@@ -38,6 +37,10 @@ public class MyCustomJLabel{
 
     public JLabel getLabel() {
         return label;
+    }
+
+    public void setFontToWhite(){
+        this.label.setForeground(Color.WHITE);
     }
 
 
