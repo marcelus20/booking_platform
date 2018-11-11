@@ -28,7 +28,7 @@ public class FormController implements Control{
 
     private Tuple<ServiceProviderForm, List<Boolean>> serviceProviderForm;
     private Tuple<CustomerForm, List<Boolean>> customerForm;
-    private Form signUpForm;
+    private Form form;
     private Application app;
     private List<Boolean> validator;
     private Repository<ServiceProviderRepository> sRep;
@@ -41,9 +41,9 @@ public class FormController implements Control{
         customerForm = tuple(cf, cf.getInputsPanel().stream().map(i->false).collect(Collectors.toList()));
         serviceProviderForm = tuple(svf, svf.getInputsPanel().stream().map(i->false).collect(Collectors.toList()));
 
-        signUpForm = new Form(customerForm.getX());
+        form = new Form(customerForm.get_1());
         this.app = app;
-        validator = customerForm.getY();
+        validator = customerForm.get_2();
 
         sRep = new ServiceProviderRepository();
         cRep = new CustomerRepository();
@@ -55,8 +55,8 @@ public class FormController implements Control{
 
     }
 
-    public Form getSignUpForm() {
-        return signUpForm;
+    public Form getForm() {
+        return form;
     }
 
 
@@ -123,8 +123,8 @@ public class FormController implements Control{
 
     @Override
     public void addButtonsAFunction() {
-        CustomerForm cf = customerForm.getX();
-        ServiceProviderForm svf = serviceProviderForm.getX();
+        CustomerForm cf = customerForm.get_1();
+        ServiceProviderForm svf = serviceProviderForm.get_1();
 
         Arrays.asList(cf.getSubmit(), svf.getSubmit()).forEach(button->{
             button.addActionListener(new ActionListener() {
@@ -132,14 +132,14 @@ public class FormController implements Control{
                 public void actionPerformed(ActionEvent e) {
                     try {
                         Tools.formValidator(()->{
-                            if(signUpForm.getRegistrationForm() instanceof CustomerForm){
+                            if(form.getRegistrationForm() instanceof CustomerForm){
                                 validatePassword(cf.getPassword(), cf.getConfirmPassword());
                                 validateEmail(cf.getEmail()); validatePhone(cf.getPhone());
                                 validateFirstName(cf.getFirstName());
                                 validateLastName(cf.getLastName());
 
 
-                            }else if (signUpForm.getRegistrationForm() instanceof ServiceProviderForm){
+                            }else if (form.getRegistrationForm() instanceof ServiceProviderForm){
                                 validatePassword(svf.getPassword(), svf.getConfirmPassword());
                                 validateEmail(svf.getEmail()); validatePhone(svf.getPhone());
                                 validateCompanyFullName(svf.getCompanyFullName());
@@ -152,8 +152,8 @@ public class FormController implements Control{
                         e1.printStackTrace();
                     }
                     if(validator.stream().reduce(true, (acc, next)->acc && next)){
-                        if(signUpForm.getRegistrationForm() instanceof ServiceProviderForm){
-                            Tools.alertWarning(signUpForm, generateWarningMessage(), "Your status is pendent");
+                        if(form.getRegistrationForm() instanceof ServiceProviderForm){
+                            Tools.alertWarning(form, generateWarningMessage(), "Your status is pendent");
                             ServiceProvider service = new ServiceProvider();
                             service.withPassword(svf.getPassword()); service.withEmail(svf.getEmail());
                             service.withDateCreated(new Date(System.currentTimeMillis()));
@@ -168,7 +168,7 @@ public class FormController implements Control{
                             redirectToLogin();
 
                         }else{
-                            Tools.alertMsg(signUpForm, "You have just subscribed! You will be redirected to Login Page", "Success");
+                            Tools.alertMsg(form, "You have just subscribed! You will be redirected to Login Page", "Success");
                             Customer customer = new Customer();
                             customer.withPassword(cf.getPassword()); customer.withEmail(cf.getEmail());
                             customer.withPhone(cf.getPhone()); customer.withFirstName(cf.getFirstName());
@@ -184,13 +184,13 @@ public class FormController implements Control{
 
                     }else{
                         String msg = generateFormErrorMessage();
-                        Tools.alertError(signUpForm, msg, "Form not valid");
+                        Tools.alertError(form, msg, "Form not valid");
                     }
                 }
             });
         });
 
-        Arrays.asList(customerForm.getX().getCancel(), serviceProviderForm.getX().getCancel()).forEach(button->{
+        Arrays.asList(customerForm.get_1().getCancel(), serviceProviderForm.get_1().getCancel()).forEach(button->{
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -201,7 +201,7 @@ public class FormController implements Control{
     }
 
     private void redirectToLogin() {
-        signUpForm.dispose();
+        form.dispose();
         app.setFormController(null);
         app.login();
     }
@@ -210,25 +210,25 @@ public class FormController implements Control{
     public void addInputsAListener() {
 
 
-        signUpForm.getRegistrationForm().getInputsPanel().get(5);
+        form.getRegistrationForm().getInputsPanel().get(5);
 
-        signUpForm.getToggleServiceForm().addActionListener(new ActionListener() {
+        form.getToggleServiceForm().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                signUpForm.withRegistrationForm(serviceProviderForm.getX());
+                form.withRegistrationForm(serviceProviderForm.get_1());
 
-                validator = serviceProviderForm.getY();
+                validator = serviceProviderForm.get_2();
 
             }
         });
 
-        signUpForm.getTogleCustomerForm().addActionListener(new ActionListener() {
+        form.getTogleCustomerForm().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                signUpForm.withRegistrationForm(customerForm.getX());
+                form.withRegistrationForm(customerForm.get_1());
 
-                validator = customerForm.getY();
+                validator = customerForm.get_2();
 
             }
         });

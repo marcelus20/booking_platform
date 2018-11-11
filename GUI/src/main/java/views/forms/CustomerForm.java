@@ -22,11 +22,11 @@ public class CustomerForm extends SignUp implements InputPanelContainer {
     }
 
     public String getFirstName() {
-        return firstName.getInput().getInput().getText();
+        return firstName.getInput().getInput().getText().trim();
     }
 
     public String getLastName() {
-        return lastName.getInput().getInput().getText();
+        return lastName.getInput().getInput().getText().trim();
     }
 
     @Override

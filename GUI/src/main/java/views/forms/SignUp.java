@@ -58,19 +58,19 @@ public class SignUp extends JPanel implements InputPanelContainer {
     }
 
     public String getEmail() {
-        return email.getInput().getInput().getText();
+        return email.getInput().getInput().getText().trim();
     }
 
     public String getPassword() {
-        return password.getInput().getInput().getText();
+        return password.getInput().getInput().getText().trim();
     }
 
     public String getConfirmPassword() {
-        return confirmPassword.getInput().getInput().getText();
+        return confirmPassword.getInput().getInput().getText().trim();
     }
 
     public String getPhone() {
-        return phone.getInput().getInput().getText();
+        return phone.getInput().getInput().getText().trim();
     }
 
     public JButton getSubmit() {

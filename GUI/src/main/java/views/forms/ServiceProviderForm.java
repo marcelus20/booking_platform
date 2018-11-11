@@ -20,7 +20,7 @@ public class ServiceProviderForm extends SignUp implements InputPanelContainer {
     }
 
     public String getCompanyFullName() {
-        return companyFullName.getInput().getInput().getText();
+        return companyFullName.getInput().getInput().getText().trim();
     }
 
     @Override
