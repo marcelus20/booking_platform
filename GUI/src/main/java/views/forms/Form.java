@@ -16,7 +16,7 @@ public class Form extends MyCustomJFrame{
 
     public Form(SignUp registrationForm) {
 
-        super("Sign Up", 500, 700);
+        super("Sign Up", 600, 900);
 
         bar = new JMenuBar();
         menu = new JMenu("Registration Forms");

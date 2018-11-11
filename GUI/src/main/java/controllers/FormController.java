@@ -1,6 +1,7 @@
 package controllers;
 
 import models.entitiesRepresentation.Customer;
+import models.entitiesRepresentation.Location;
 import models.entitiesRepresentation.ServiceProvider;
 import models.repositories.CustomerRepository;
 import models.repositories.Repository;
@@ -10,17 +11,14 @@ import models.utils.Tools;
 import views.forms.CustomerForm;
 import views.forms.Form;
 import views.forms.ServiceProviderForm;
-
-
-
 import static models.tuples.Tuple.tuple;
-
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -121,6 +119,33 @@ public class FormController implements Control{
         }
     }
 
+    public void validateLocation(){
+
+        Boolean firstAndSecondLineAddress = Arrays.asList(Tools.validateStringsNonSmallerEqualsThan3(serviceProviderForm.get_1()
+                .getInputsPanel().get(5).getInput().getInput().getText().trim()), Tools.validateStringsNonSmallerEqualsThan3(serviceProviderForm.get_1()
+                .getInputsPanel().get(6).getInput().getInput().getText().trim()))
+                .stream().reduce((acc, next )->acc || next).get();
+
+        if(firstAndSecondLineAddress){
+            validator.set(5, true);  validator.set(6, true);
+        }else{
+            validator.set(5, false); validator.set(6, false);
+        }
+        if(Tools.validateStringsNonSmallerEqualsThan3(serviceProviderForm.get_1()
+                .getInputsPanel().get(7).getInput().getInput().getText().trim())){
+            validator.set(7, true);
+        }else{
+            validator.set(7, false);
+        }
+        if(serviceProviderForm.get_1()
+                .getInputsPanel().get(8).getInput().getInput().getText().trim().length() > 1){
+            validator.set(8, true);
+        }else{
+            validator.set(8, false);
+        }
+
+    }
+
     @Override
     public void addButtonsAFunction() {
         CustomerForm cf = customerForm.get_1();
@@ -143,6 +168,7 @@ public class FormController implements Control{
                                 validatePassword(svf.getPassword(), svf.getConfirmPassword());
                                 validateEmail(svf.getEmail()); validatePhone(svf.getPhone());
                                 validateCompanyFullName(svf.getCompanyFullName());
+                                validateLocation();
 
 
                             }
@@ -154,11 +180,21 @@ public class FormController implements Control{
                     if(validator.stream().reduce(true, (acc, next)->acc && next)){
                         if(form.getRegistrationForm() instanceof ServiceProviderForm){
                             Tools.alertWarning(form, generateWarningMessage(), "Your status is pendent");
+
                             ServiceProvider service = new ServiceProvider();
                             service.withPassword(svf.getPassword()); service.withEmail(svf.getEmail());
                             service.withDateCreated(new Date(System.currentTimeMillis()));
                             service.withPhone(svf.getPhone()); service.withCompanyFullName(svf.getCompanyFullName());
                             service.withApprovedStatus("pendent");
+
+                            Location newLocation = new Location();
+                            newLocation.withFirstLineAddress(svf.getFirstLineAddress());
+                            newLocation.withSecondLineAddress(svf.getFirstLineAddress());
+                            newLocation.withCity(svf.getCity());
+                            newLocation.withEirCode(svf.getEircode());
+
+                            service.withLocation(newLocation);
+
                             try {
                                 sRep.addToDB(service);
                             } catch (SQLException e1) {
@@ -234,6 +270,8 @@ public class FormController implements Control{
         });
 
     }
+
+
 
 
 
