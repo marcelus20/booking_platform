@@ -34,7 +34,7 @@ public class LoginController implements Control{
             public void actionPerformed(ActionEvent e) {
                 try {
                     Database db = new Database();
-                    AbstraticUser user = db.login(login.getEmail(), login.getPassword());
+                    AbstraticUser user = db.login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
                     if(user == null){
                         Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
                     }else{

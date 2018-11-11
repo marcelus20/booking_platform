@@ -1,7 +1,6 @@
 package main;
 
 import controllers.Application;
-import models.utils.Tools;
 
 public class Main {
 

@@ -2,6 +2,7 @@ package models.repositories;
 
 import models.Database;
 import models.entitiesRepresentation.ServiceProvider;
+import models.utils.Tools;
 
 import java.sql.SQLException;
 
@@ -16,6 +17,8 @@ public class ServiceProviderRepository extends Database implements Repository{
     public void addToDB(Object obj) throws SQLException {
         init();
         ServiceProvider s = (ServiceProvider)obj;
+
+        s.withPassword(Tools.hashingPassword(s.getPassword()));
 
         String query = new StringBuilder()
                 .append("INSERT INTO service_provider (password, email, date_of_account_creation,")

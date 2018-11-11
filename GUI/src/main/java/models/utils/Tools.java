@@ -3,19 +3,13 @@ package models.utils;
 import models.entitiesRepresentation.Admin;
 import models.entitiesRepresentation.Customer;
 import models.entitiesRepresentation.ServiceProvider;
-import views.customComponents.InputPanel;
-import views.forms.CustomerForm;
-import views.forms.SignUp;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class Tools {
@@ -74,7 +68,7 @@ public class Tools {
     }
 
     public static Boolean validatePasswordCriteria(String pass){
-        return pass.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})");
+        return pass.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,20})");
     }
 
 
@@ -90,5 +84,10 @@ public class Tools {
     public static Boolean validateNotNumericStrings(String str){
 
         return str.matches("[A-Za-z ]+") && validateStringsNonSmallerEqualsThan3(str);
+    }
+
+    //Hashing password to MD5 using the DigestUtils from apache.commons
+    public static String hashingPassword(String pass){
+        return DigestUtils.md5Hex(pass).toUpperCase();
     }
 }

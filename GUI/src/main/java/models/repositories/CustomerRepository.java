@@ -2,6 +2,7 @@ package models.repositories;
 
 import models.Database;
 import models.entitiesRepresentation.Customer;
+import models.utils.Tools;
 
 import java.sql.SQLException;
 
@@ -15,6 +16,8 @@ public class CustomerRepository extends Database implements Repository {
     public void addToDB(Object obj) throws SQLException {
         init();
         Customer c = (Customer)obj;
+
+        c.withPassword(Tools.hashingPassword(c.getPassword()));
 
         String query = new StringBuilder()
                 .append("INSERT INTO customers (password, email,")
