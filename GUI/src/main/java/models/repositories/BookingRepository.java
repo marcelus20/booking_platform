@@ -65,7 +65,7 @@ public class BookingRepository extends Database implements Repository {
         close();
     }
 
-    public List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>selectAllBookings(String customerId) throws SQLException {
+    public List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> selectAllBookingsFromCustomer(String customerId) throws SQLException {
 
         List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>result= new ArrayList<>();
         init();
@@ -118,6 +118,48 @@ public class BookingRepository extends Database implements Repository {
                 + id.get_1() + "' AND customer_id = '" + id.get_2() + "' AND s_id = '" +id.get_3() + "' ;");
 
 
+        close();
+    }
+
+    public List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>selectAllBookingsFromServiceProvider(String serviceId) throws SQLException {
+
+        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>result= new ArrayList<>();
+        init();
+
+        String query = new StringBuilder().append("SELECT b.time_stamp, b.s_id, b.customer_id, c.first_name, ")
+                .append("c.last_name, c.phone, b.booking_status FROM booking b ")
+                .append("JOIN service_provider s ON b.s_id = s.s_id JOIN customers c ON ")
+                .append("b.customer_id = c.customer_id WHERE b.s_id = '"+serviceId+"' ")
+                .append(" AND booking_status = 'NOT COMPLETE' ORDER BY time_stamp;").toString();
+        System.out.println(query);
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()){
+            mapResultSetToList(rs, result);
+        }
+
+        close();
+        return result;
+    }
+
+    private void mapResultSetToList(ResultSet rs, List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> result) throws SQLException {
+        List<String> line = new ArrayList<>();
+        TupleOf3Elements<String, String, String> t;
+        t = TupleOf3Elements.tupleOf3Elements(
+                rs.getString("b.time_stamp"), rs.getString("b.s_id"), rs.getString("b.customer_id"));
+        line.add(rs.getString("time_stamp"));
+        line.add(rs.getString("first_name"));
+        line.add(rs.getString("last_name"));
+        line.add(rs.getString("phone"));
+        line.add(rs.getString("booking_status"));
+
+        result.add(Tuple.tuple(t,line));
+    }
+
+    public void updateABookingStatus(TupleOf3Elements<String, String, String> id) throws SQLException {
+        init();
+        System.out.println(id);
+        stmt.executeUpdate("UPDATE booking SET booking_status = 'COMPLETE' WHERE time_stamp = '"
+                + id.get_1() + "' AND customer_id = '" + id.get_3() + "' AND s_id = '" +id.get_2() + "' ;");
         close();
     }
 }

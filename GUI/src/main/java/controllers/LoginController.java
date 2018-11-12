@@ -1,7 +1,10 @@
 package controllers;
 
-import controllers.dashboards.DashboardController;
+import controllers.dashboards.CustomerDashboardController;
+import controllers.dashboards.ServiceDashBoardController;
 import models.Database;
+import models.entitiesRepresentation.Customer;
+import models.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import models.users.AbstraticUser;
 import views.login.Login;
@@ -44,7 +47,13 @@ public class LoginController implements Control{
                     }else{
                         login.dispose();
                         app.setUser(user);
-                        redirectToDashboard(app);
+                        if(user instanceof Customer) {
+                            redirectToCustomerDashboard(app);
+                        }else if (user instanceof ServiceProvider){
+                            redirectToServiceDashboard(app);
+                        }else{
+                            //DO NOTHING FOR NOW
+                        }
                     }
                 } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
                     e1.printStackTrace();
@@ -53,8 +62,13 @@ public class LoginController implements Control{
         });
     }
 
-    private void redirectToDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-        app.setDashboardController(new DashboardController(app));
+    private void redirectToCustomerDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        app.setCustomerDashboardController(new CustomerDashboardController(app));
+    }
+
+    private void redirectToServiceDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        app.setCustomerDashboardController(null);
+        app.setServiceDashBoardController(new ServiceDashBoardController(app));
     }
 
     private void assignSignUpAButtonAFunction(){

@@ -1,19 +1,21 @@
 package controllers;
 
-import controllers.dashboards.DashboardController;
+import controllers.dashboards.CustomerDashboardController;
+import controllers.dashboards.ServiceDashBoardController;
 import models.users.AbstraticUser;
 
 public class Application {
 
     private LoginController loginController;
     private FormController formController;
-    private DashboardController dashboardController;
+    private CustomerDashboardController customerDashboardController;
+    private ServiceDashBoardController serviceDashBoardController;
 
     private AbstraticUser user;
 
     public Application() {
         this.loginController = new LoginController(this);
-        //dashboardController = new DashboardController(this);
+        //customerDashboardController = new CustomerDashboardController(this);
 
     }
 
@@ -29,8 +31,12 @@ public class Application {
         this.formController = formController;
     }
 
-    public void setDashboardController(DashboardController dashboardController) {
-        this.dashboardController = dashboardController;
+    public void setCustomerDashboardController(CustomerDashboardController customerDashboardController) {
+        this.customerDashboardController = customerDashboardController;
+    }
+
+    public void setServiceDashBoardController(ServiceDashBoardController serviceDashBoardController) {
+        this.serviceDashBoardController = serviceDashBoardController;
     }
 
     public void login() {

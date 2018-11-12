@@ -5,7 +5,6 @@ import controllers.Control;
 import models.Database;
 import models.entitiesRepresentation.*;
 import models.repositories.BookingRepository;
-import models.repositories.BookingSlotRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
 import models.tuples.Tuple;
@@ -13,7 +12,6 @@ import models.tuples.TupleOf3Elements;
 import models.users.AbstraticUser;
 import models.utils.Tools;
 import views.customComponents.MyCustomJButton;
-import views.customComponents.MyCustomJPanel;
 import views.dashboard.Dashboard;
 import views.dashboard.customer.*;
 
@@ -25,10 +23,9 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-public class DashboardController implements Control {
+public class CustomerDashboardController implements Control {
 
     private Dashboard dashboard;
     private Application app;
@@ -43,7 +40,7 @@ public class DashboardController implements Control {
     }
 
 
-    public DashboardController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public CustomerDashboardController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         this.app = app;
         user = app.getUser();
         bRep = new BookingRepository();
@@ -92,7 +89,7 @@ public class DashboardController implements Control {
     private void logout(){
         dashboard.dispose();
         app.setUser(null);
-        app.setDashboardController(null);
+        app.setCustomerDashboardController(null);
         app.login();
     }
 
@@ -308,7 +305,7 @@ public class DashboardController implements Control {
 
     private ConsoleManageBookings createConsoleManageBookings() throws SQLException {
 
-        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings = ((BookingRepository)bRep).selectAllBookings(user.getId());
+        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings = ((BookingRepository)bRep).selectAllBookingsFromCustomer(user.getId());
 
         List<List<String>> listOfBookings = Tools.brakeListOfTuplesToTuple_2(bookings);
 
