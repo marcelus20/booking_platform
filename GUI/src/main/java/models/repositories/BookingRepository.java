@@ -8,6 +8,7 @@ import models.tuples.TupleOf3Elements;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class BookingRepository extends Database implements Repository {
 
@@ -38,6 +39,11 @@ public class BookingRepository extends Database implements Repository {
         close();
 
         return b;
+    }
+
+    @Override
+    public List<Booking> selectAll() {
+        return null;
     }
 
     public void addBook(TupleOf3Elements<String, String, String> tuple, BookingSlots b) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {

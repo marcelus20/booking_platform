@@ -6,6 +6,7 @@ import models.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class CustomerRepository extends Database implements Repository {
 
@@ -43,5 +44,10 @@ public class CustomerRepository extends Database implements Repository {
 
         close();
         return customer;
+    }
+
+    @Override
+    public List<Customer> selectAll() {
+        return null;
     }
 }

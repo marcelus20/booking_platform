@@ -9,6 +9,7 @@ import models.users.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class BookingSlotRepository extends Database implements Repository {
 
@@ -49,6 +50,11 @@ public class BookingSlotRepository extends Database implements Repository {
         close();
 
         return slot;
+    }
+
+    @Override
+    public List<BookingSlots> selectAll() {
+        return null;
     }
 
     public void updateBookingSlotAvailability(Tuple<String, String> id, Boolean status) throws SQLException {
