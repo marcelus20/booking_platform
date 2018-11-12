@@ -32,6 +32,13 @@ public class MyCustomJField<T extends JTextComponent>{
         input.setFont(new MyCustomFont(fontSize).getFont());
     }
 
+    public MyCustomJField(final T input, final Integer width, final Integer height){
+        this.input = input;
+        input.setFont(new MyCustomFont(15).getFont());
+        this.input.setPreferredSize(new Dimension(width, height));
+    }
+
+
     public MyCustomJField(T input) {
         this.input = input;
         input.setFont(new MyCustomFont().getFont());

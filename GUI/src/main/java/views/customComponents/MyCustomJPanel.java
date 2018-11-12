@@ -10,7 +10,7 @@ public class MyCustomJPanel extends JPanel{
     private final Border border;
     private final Dimension size;
     private final JPanel header;
-    private final JPanel content;
+    private JPanel content;
 
     public MyCustomJPanel(String title, Integer width, Integer height) {
         this.title = new MyCustomJLabel(title); this.title.setFontToWhite();
@@ -28,6 +28,11 @@ public class MyCustomJPanel extends JPanel{
 
     public JPanel getContent() {
         return content;
+    }
+
+    public MyCustomJPanel withContent(JPanel content){
+        this.content = content;
+        return this;
     }
 
     public void setTitle(String title){

@@ -15,10 +15,8 @@ import models.utils.Tools;
 import views.customComponents.MyCustomJButton;
 import views.customComponents.MyCustomJPanel;
 import views.dashboard.Dashboard;
-import views.dashboard.customer.BookingPanel;
-import views.dashboard.customer.ConsoleManageBookings;
-import views.dashboard.customer.ConsoleSearch;
-import views.dashboard.customer.CustomerDashboard;
+import views.dashboard.customer.*;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -225,11 +223,17 @@ public class DashboardController implements Control {
         b.getButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getActionCommand().contains("earch")){
+                if(e.getActionCommand().contains("earch")){ // IF BUTTON IS SEARCH FOR BARBERS
                     goToSearchEngine();
-                }else if (e.getActionCommand().contains("bookings")){
+                }else if (e.getActionCommand().contains("bookings")){//IF BUTTONS IS MANAGING BOOKINGS
                     try {
                         goToViewBookings();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }else if(e.getActionCommand().contains("omplain")){//IF BUTTON IS MAKE A COMPLAINT
+                    try {
+                        goToComplaintPanel();
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
@@ -237,6 +241,57 @@ public class DashboardController implements Control {
                 addButtonsAFunction();//<-THIS THING WILL UPDATE THE LISTENER TO THE BUTTONS
             }
         });
+    }
+
+    private void goToComplaintPanel() throws SQLException {
+        ((CustomerDashboard) dashboard).setConsoleSearch(new ConsoleSearch());
+
+        ComplaintPanel complaintPanel = new ComplaintPanel();
+//        complaintPanel.showComplaintContainer();
+
+        List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> shortenedListOfBookings =
+                db.getShortenedListOfBookings(user.getId());
+
+
+        List<List<String>> tableAsList = Tools.brakeListOfTuplesToTuple_2(shortenedListOfBookings);
+
+
+        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
+
+
+        complaintPanel.withListofBookingPanel(table, new String[] {"Date And Time", "Barber/Hairdresser"});
+
+        JTable t = complaintPanel.getTable();
+        t.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()){
+                    complaintPanel.showComplaintContainer();
+                    dashboard.validadeAndRepaint();
+
+                    complaintPanel.getSubmit().getButton().addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                ((BookingRepository)bRep)
+                                        .updateAComplaint(shortenedListOfBookings.get(t
+                                                .getSelectedRow()).get_1(),complaintPanel.getField().getText());
+                                Tools.alertConfirm(dashboard, "Your Complaint has been submitted succesfully");
+                            } catch (SQLException e1) {
+                                e1.printStackTrace();
+                            }
+                            goToSearchEngine();
+                        }
+                    });
+                }
+            }
+        });
+
+
+        dashboard.validadeAndRepaint();
+        ((CustomerDashboard) dashboard).setComplaintPanel(complaintPanel);
+
+        ((CustomerDashboard)dashboard).withOutput(((CustomerDashboard) dashboard).getComplaintPanel());
     }
 
     private void goToSearchEngine(){
