@@ -4,6 +4,8 @@ import models.entitiesRepresentation.Admin;
 import models.entitiesRepresentation.BookingSlots;
 import models.entitiesRepresentation.Customer;
 import models.entitiesRepresentation.ServiceProvider;
+import models.tuples.Tuple;
+import models.tuples.TupleOf3Elements;
 import org.apache.commons.codec.digest.DigestUtils;
 import views.dashboard.Dashboard;
 
@@ -108,6 +110,9 @@ public class Tools {
     }
 
     public static String[][] convert2DlistTo2DArray(List<List<String>> _2Dlist){
+        if(_2Dlist.size() == 0){
+            return new String[0][0];
+        }
         final Integer rows = _2Dlist.size();
         final Integer cols = _2Dlist.get(0).size();
         final String[][] table = new String[rows][cols];
@@ -147,4 +152,28 @@ public class Tools {
 
     return serviceProvider;
     }
+
+    public static String[][] convertListOfBookingToArray(List<BookingSlots> slots) {
+
+        String[][] table = new String[slots.size()][4];
+        for(int i = 0; i < slots.size(); i++){
+            for(int j = 0; j < 2; j++){
+                table[i][0]  = String.valueOf(slots.get(i).getTimestamp());
+                table[i][3] = slots.get(i).getBooking().getCustomerId();
+                table[i][1] = slots.get(i).getServiceId();
+                table[i][2] = String.valueOf(slots.get(i).getBooking().getBookingStatus());
+
+            }
+        }
+        return table;
+    }
+
+    public static List<List<String>> brakeListOfTuplesToTuple_2(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
+
+        List<List<String>> table = new ArrayList<>();
+
+        bookings.forEach(tuple->table.add(tuple.get_2()));
+        return table;
+    }
+
 }

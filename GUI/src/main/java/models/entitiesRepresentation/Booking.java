@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Booking {
 
+    private String customerId;
     private String bookingStatus;
     private String complaint;
 
@@ -23,6 +24,10 @@ public class Booking {
         return complaint;
     }
 
+    public String getCustomerId() {
+        return customerId;
+    }
+
     public Booking withBookingStatus(String newStatus){
         bookingStatus = newStatus;
         return this;
@@ -30,6 +35,11 @@ public class Booking {
 
     public Booking withComplaint(String newComplaint){
         complaint = newComplaint;
+        return this;
+    }
+
+    public Booking withCustomerId(String customer_id) {
+        customerId = customer_id;
         return this;
     }
 
@@ -54,4 +64,6 @@ public class Booking {
                 ", complaint='" + complaint + '\'' +
                 '}';
     }
+
+
 }
