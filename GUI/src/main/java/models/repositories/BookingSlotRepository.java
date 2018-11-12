@@ -52,17 +52,14 @@ public class BookingSlotRepository extends Database implements Repository {
         return slot;
     }
 
-    @Override
-    public List<BookingSlots> selectAll() {
-        return null;
-    }
+
 
     public void updateBookingSlotAvailability(Tuple<String, String> id, Boolean status) throws SQLException {
         init();
 
         Integer i = 0;
 
-        if(status.equals(true)){
+        if(status){
             i = 1;
         }
         System.out.println(i);

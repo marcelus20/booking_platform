@@ -24,7 +24,7 @@ public class CustomerDashboard extends Dashboard implements ButtonPanelContainer
         viewBookings = new MyCustomJButton("View your bookings");
         placeComplaint = new MyCustomJButton("Place a complaint");
         consoleSearch = new ConsoleSearch();
-        consoleManageBookings = new ConsoleManageBookings();
+        //consoleManageBookings = new ConsoleManageBookings(b);
 
         getSideBar().setLayout(new GridLayout(20,1));
         getButtonsPanel().forEach(b-> getSideBar().add(b.getButton()));

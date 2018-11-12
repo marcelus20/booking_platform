@@ -46,8 +46,5 @@ public class CustomerRepository extends Database implements Repository {
         return customer;
     }
 
-    @Override
-    public List<Customer> selectAll() {
-        return null;
-    }
+
 }

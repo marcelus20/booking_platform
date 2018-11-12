@@ -11,5 +11,4 @@ public interface Repository <T>{
 
     Object selectObjById(Object id) throws SQLException;
 
-    List<Object> selectAll();
 }

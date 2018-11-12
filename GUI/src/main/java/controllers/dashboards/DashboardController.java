@@ -5,6 +5,7 @@ import controllers.Control;
 import models.Database;
 import models.entitiesRepresentation.*;
 import models.repositories.BookingRepository;
+import models.repositories.BookingSlotRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
 import models.tuples.Tuple;
@@ -15,6 +16,7 @@ import views.customComponents.MyCustomJButton;
 import views.customComponents.MyCustomJPanel;
 import views.dashboard.Dashboard;
 import views.dashboard.customer.BookingPanel;
+import views.dashboard.customer.ConsoleManageBookings;
 import views.dashboard.customer.ConsoleSearch;
 import views.dashboard.customer.CustomerDashboard;
 import javax.swing.*;
@@ -25,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class DashboardController implements Control {
@@ -225,7 +228,11 @@ public class DashboardController implements Control {
                 if(e.getActionCommand().contains("earch")){
                     goToSearchEngine();
                 }else if (e.getActionCommand().contains("bookings")){
-                    goToViewBookings();
+                    try {
+                        goToViewBookings();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
                 }
                 addButtonsAFunction();//<-THIS THING WILL UPDATE THE LISTENER TO THE BUTTONS
             }
@@ -239,8 +246,53 @@ public class DashboardController implements Control {
 
     }
 
-    public void goToViewBookings(){
-        ((CustomerDashboard)dashboard).withOutput(new MyCustomJPanel("test", 700,500));
+    public void goToViewBookings() throws SQLException {
+        ConsoleManageBookings consoleManageBookings = createConsoleManageBookings();
+        ((CustomerDashboard)dashboard).withOutput(consoleManageBookings);
+    }
+
+    private ConsoleManageBookings createConsoleManageBookings() throws SQLException {
+
+        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings = ((BookingRepository)bRep).selectAllBookings(user.getId());
+
+        List<List<String>> listOfBookings = Tools.brakeListOfTuplesToTuple_2(bookings);
+
+
+
+        String[][] b = Tools.convert2DlistTo2DArray(listOfBookings);
+
+        ConsoleManageBookings consoleManageBookings = new ConsoleManageBookings(b, new String[]{"Date and Time", "Hairdresser/Barber","Address", "City", "status" });
+
+        JTable table = consoleManageBookings.getTableOfMyBookings();
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()){
+
+                    TupleOf3Elements id = bookings.get(table.getSelectedRow()).get_1();
+
+                    Integer n = Tools.alertConfirm(dashboard,"Are you sure you want to cancel this booking?");
+
+                    if(n.equals(0)){
+                        try {
+                            ((BookingRepository)bRep).cancelBooking(id);
+                        } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e1) {
+                            e1.printStackTrace();
+                        }
+                        try {
+                            goToViewBookings();
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    }else{
+
+                    }
+                }
+            }
+
+        });
+
+        return consoleManageBookings;
     }
 
 
