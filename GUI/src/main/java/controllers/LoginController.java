@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.dashboards.DashboardController;
 import models.Database;
 import models.utils.Tools;
 import models.users.AbstraticUser;
@@ -40,7 +41,7 @@ public class LoginController implements Control{
                     }else{
                         login.dispose();
                         app.setUser(user);
-                        System.out.println(app.getUser());
+                        redirectToDashboard(app);
                     }
                 } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
                     e1.printStackTrace();
@@ -48,6 +49,11 @@ public class LoginController implements Control{
             }
         });
     }
+
+    private void redirectToDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        app.setDashboardController(new DashboardController(app));
+    }
+
     private void assignSignUpAButtonAFunction(){
         login.getSignUp().addActionListener(new ActionListener() {
             @Override

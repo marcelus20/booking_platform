@@ -2,6 +2,7 @@ package models.repositories;
 
 import models.Database;
 import models.entitiesRepresentation.Customer;
+import models.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 
 import java.sql.SQLException;
@@ -31,5 +32,16 @@ public class CustomerRepository extends Database implements Repository {
         stmt.executeUpdate(query);
 
         close();
+    }
+
+    @Override
+    public Customer selectObjById(Object id) throws SQLException {
+        Customer customer = new Customer();
+        init();
+
+
+
+        close();
+        return customer;
     }
 }

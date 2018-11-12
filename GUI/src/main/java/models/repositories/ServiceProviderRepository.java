@@ -1,12 +1,16 @@
 package models.repositories;
 
 import models.Database;
+import models.entitiesRepresentation.BookingSlots;
 import models.entitiesRepresentation.Location;
 import models.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServiceProviderRepository extends Database implements Repository{
 
@@ -58,4 +62,45 @@ public class ServiceProviderRepository extends Database implements Repository{
 
         close();
     }
+
+    @Override
+    public ServiceProvider selectObjById(Object id) throws SQLException {
+        ServiceProvider serviceProvider = new ServiceProvider();
+        Location location = new Location();
+
+        List<BookingSlots> bookingSlots = new ArrayList<>();
+
+        init();
+
+        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider s JOIN location l ON s.s_id = l.s_id WHERE s.s_id = "+ id +";");
+
+        while(rs.next()){
+            serviceProvider.withId((String)id); serviceProvider.withEmail(rs.getString("email"));
+            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
+            serviceProvider.withPhone(rs.getString("phone"));
+            serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
+            serviceProvider.withApprovedStatus(rs.getString("approved_status"));
+            location.withFirstLineAddress(rs.getString("first_line_address"));
+            location.withEirCode(rs.getString("eir_code"));
+            location.withCity(rs.getString("city")); location.withSecondLineAddress(rs.getString("second_line_address"));
+
+        }
+
+        serviceProvider.withLocation(location);
+
+        rs = stmt.executeQuery("SELECT * FROM service_provider s JOIN booking_slots b ON s.s_id = b.s_id WHERE s.s_id = "+id+";");
+        while (rs.next()){
+            BookingSlots b = new BookingSlots();
+            b.withTimestamp(rs.getTimestamp("timestamp"));
+            b.withServiceId((String)id);
+            b.withAvailability(rs.getBoolean("availability"));
+            bookingSlots.add(b);
+        }
+
+        serviceProvider.withBookingSlots(bookingSlots);
+
+        close();
+        return serviceProvider;
+    }
+
 }

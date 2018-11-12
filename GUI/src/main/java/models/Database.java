@@ -5,6 +5,9 @@ import models.utils.Tools;
 
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Database {
 
@@ -37,8 +40,8 @@ public class Database {
 
         for(String table : tables){
             String query  = new StringBuilder().append("SELECT * FROM ").append(table)
-                    .append(" WHERE email = ").append("'").append(email).append("'")
-                    .append(" AND password = '").append(password).append("' ;").toString();
+                    .append(" WHERE email = ").append("'").append("marcelus20felipe@gmail.com"/*email*/).append("'")
+                    .append(" AND password = '").append("646E613EFCFC1317061B1DF9340E3726"/*password*/).append("' ;").toString();
 
             ResultSet rs = stmt.executeQuery(query);
 
@@ -54,6 +57,38 @@ public class Database {
         }
         close();
         return user;
+    }
+
+    public List<String>getListOfCities() throws SQLException {
+        init();
+        List<String> cities = new ArrayList<>();
+
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT city FROM location");
+
+        while (rs.next()){
+            cities.add(rs.getString("city"));
+        }
+        close();
+        return cities;
+    }
+
+    public List<List<String>>getListOfBarbersByCity(String city) throws SQLException {
+        init();
+        List<List<String>> barbers = new ArrayList<>();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider AS b JOIN location AS l ON b.s_id = l.s_id;");
+
+        while (rs.next()){
+            List<String> line = new ArrayList<>();
+            line.add(rs.getString("s_id"));
+            line.add(rs.getString("email"));
+            line.add(rs.getString("phone"));
+            line.add(rs.getString("company_full_name"));
+            line.add(rs.getString("first_line_address"));
+            line.add(rs.getString("city"));
+            barbers.add(line);
+        }
+        close();
+        return barbers;
     }
 
 }

@@ -15,7 +15,7 @@ public class Tuple<T, G> {
     private final G _2;
 
     //private constructor: the creation of the object is by using the Factory static method tuple()
-    private Tuple(final T _1, final G _2) {
+    protected Tuple(final T _1, final G _2) {
         this._1 = _1;
         this._2 = _2;
     }

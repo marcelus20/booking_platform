@@ -1,13 +1,12 @@
-package views;
+package views.dashboard;
 
 import views.customComponents.MyCustomJFrame;
-import views.customComponents.MyCustomJLabel;
 import views.customComponents.MyCustomJPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Dashboard extends MyCustomJFrame {
+public class Dashboard <T extends Dashboard> extends MyCustomJFrame {
 
     private final JMenuBar menuBar;
     private final JMenuItem menuItem;
@@ -29,10 +28,20 @@ public class Dashboard extends MyCustomJFrame {
         sideBar = new MyCustomJPanel("Toggle Buttons", 450,600);
         output = new MyCustomJPanel("Console",800,600);
 
-        sideBar.getContent().add(new MyCustomJLabel("side Bar", 50).getLabel());
-        output.getContent().add(new MyCustomJLabel("output", 50).getLabel());
         getFramePanel().setLayout(new BorderLayout());
         getFramePanel().add(menuBar, BorderLayout.NORTH);
         getFramePanel().add(sideBar, BorderLayout.LINE_START); getFramePanel().add(output, BorderLayout.LINE_END);
+    }
+
+    public JPanel getOutput() {
+        return output.getContent();
+    }
+
+    public MyCustomJPanel getSideBar() {
+        return sideBar;
+    }
+
+    public JMenuItem getMenuItem() {
+        return menuItem;
     }
 }
