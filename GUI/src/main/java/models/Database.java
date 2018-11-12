@@ -1,5 +1,7 @@
 package models;
 
+import models.tuples.Tuple;
+import models.tuples.TupleOf3Elements;
 import models.users.AbstraticUser;
 import models.utils.Tools;
 
@@ -89,6 +91,30 @@ public class Database {
         }
         close();
         return barbers;
+    }
+
+    public List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> getShortenedListOfBookings(String customerId) throws SQLException {
+
+
+        List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> result = new ArrayList<>();
+
+
+        init();
+        ResultSet rs = stmt.executeQuery("SELECT b.time_stamp, b.s_id, b.customer_id ,s.company_full_name "+
+                "FROM booking b JOIN service_provider s ON b.s_id = s.s_id WHERE b.customer_id = " + customerId + ";");
+
+        while(rs.next()){
+            List<String> line = new ArrayList<>();
+            TupleOf3Elements<String, String, String> id = TupleOf3Elements
+                    .tupleOf3Elements(rs.getString("time_stamp") , rs.getString("customer_id"), rs.getString("s_id"));
+
+           line.add(rs.getString("time_stamp"));
+           line.add(rs.getString("company_full_name"));
+
+           result.add(Tuple.tuple(id, line));
+        }
+        close();
+        return result;
     }
 
 }

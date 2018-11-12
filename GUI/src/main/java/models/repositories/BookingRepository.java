@@ -109,4 +109,15 @@ public class BookingRepository extends Database implements Repository {
 
         close();
     }
+
+    public void updateAComplaint(TupleOf3Elements<String, String, String> id, String complaint) throws SQLException {
+
+        init();
+
+        stmt.executeUpdate("UPDATE booking SET complaint = '"+complaint+"' WHERE time_stamp = '"
+                + id.get_1() + "' AND customer_id = '" + id.get_2() + "' AND s_id = '" +id.get_3() + "' ;");
+
+
+        close();
+    }
 }

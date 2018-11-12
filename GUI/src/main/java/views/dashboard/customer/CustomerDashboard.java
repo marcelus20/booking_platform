@@ -17,6 +17,7 @@ public class CustomerDashboard extends Dashboard implements ButtonPanelContainer
     private ConsoleSearch consoleSearch;
     private ConsoleManageBookings consoleManageBookings;
     private BookingPanel bookingPanel;
+    private MyCustomJPanel complaintPanel;
 
     public CustomerDashboard() {
         super();
@@ -31,6 +32,8 @@ public class CustomerDashboard extends Dashboard implements ButtonPanelContainer
         //getOutput().add(consoleSearch);
 
     }
+
+
 
     public JButton getSearchServices() {
         return searchServices.getButton();
@@ -60,6 +63,10 @@ public class CustomerDashboard extends Dashboard implements ButtonPanelContainer
         bookingPanel = bp;
     }
 
+    public void setComplaintPanel(MyCustomJPanel complaintPanel) {
+        this.complaintPanel = complaintPanel;
+    }
+
     public void withOutput(MyCustomJPanel p){
         getOutput().removeAll();
         getOutput().add(p);
@@ -76,5 +83,9 @@ public class CustomerDashboard extends Dashboard implements ButtonPanelContainer
     public List<MyCustomJButton> getButtonsPanel() {
         return new ArrayListBuilder<MyCustomJButton>()
                 .add(searchServices).add(viewBookings).add(placeComplaint).build();
+    }
+
+    public MyCustomJPanel getComplaintPanel() {
+        return complaintPanel;
     }
 }
