@@ -29,4 +29,8 @@ public class MyCustomJPanel extends JPanel{
     public JPanel getContent() {
         return content;
     }
+
+    public void setTitle(String title){
+        this.title.getLabel().setText(title);
+    }
 }
