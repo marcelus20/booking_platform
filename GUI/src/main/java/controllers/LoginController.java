@@ -5,6 +5,8 @@ import models.Database;
 import models.utils.Tools;
 import models.users.AbstraticUser;
 import views.login.Login;
+
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
@@ -26,6 +28,7 @@ public class LoginController implements Control{
         switchOffLoginButton();
         addButtonsAFunction();
         addInputsAListener();
+        login.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
 
