@@ -1,9 +1,9 @@
 package models.utils;
 
-import models.entitiesRepresentation.Admin;
-import models.entitiesRepresentation.BookingSlots;
-import models.entitiesRepresentation.Customer;
-import models.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.Admin;
+import models.tuples.entitiesRepresentation.BookingSlots;
+import models.tuples.entitiesRepresentation.Customer;
+import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Tools {
 

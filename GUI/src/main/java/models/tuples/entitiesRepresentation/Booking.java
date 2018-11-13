@@ -1,4 +1,4 @@
-package models.entitiesRepresentation;
+package models.tuples.entitiesRepresentation;
 
 import java.util.Objects;
 

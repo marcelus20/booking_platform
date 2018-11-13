@@ -1,6 +1,6 @@
 package views.dashboard.customer;
 
-import models.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import views.customComponents.MyCustomJLabel;
 import views.customComponents.MyCustomJPanel;

@@ -1,4 +1,4 @@
-package models.entitiesRepresentation;
+package models.tuples.entitiesRepresentation;
 
 import java.sql.Timestamp;
 import java.util.Objects;

@@ -1,8 +1,8 @@
 package controllers;
 
-import models.entitiesRepresentation.Customer;
-import models.entitiesRepresentation.Location;
-import models.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.Customer;
+import models.tuples.entitiesRepresentation.Location;
+import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.repositories.CustomerRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 

@@ -3,7 +3,7 @@ package controllers.dashboards;
 import controllers.Application;
 import controllers.Control;
 import models.Database;
-import models.entitiesRepresentation.*;
+import models.tuples.entitiesRepresentation.*;
 import models.repositories.BookingRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
