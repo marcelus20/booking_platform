@@ -178,113 +178,6 @@ public class ServiceDashBoardController implements Control {
         });
     }
 
-//    private void switchDashboardPanelSetBookings() throws SQLException {
-//        List<String> bookingStatusList = bRep.selectDistinctsBookingStatus();
-//        dashboard.withSetBookingStatusView(new SetBookingStatusView());
-//        generateTableOfBookingStatus(bookingStatusList);
-//    }
-//
-//    private void generateTableOfBookingStatus(List<String> bookingStatusList) throws SQLException {
-//
-//        String[] bookingsType = bookingStatusList.toArray(new String[]{});
-//
-//        drawStatusPanel(bookingsType);
-//
-//        JTable table =  createJTableCompnent();
-//
-//        dashboard.getSetBookingStatusView().withBookingsTable(table);
-//        dashboard.getSetBookingStatusView().getContent().add(dashboard
-//                .getSetBookingStatusView().getBookingsTable(), BorderLayout.CENTER);
-//
-//    }
-//
-//    private JTable createJTableCompnent() throws SQLException {
-//        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> listOfBookings = getListOfBookings();
-//
-//        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(listOfBookings);
-//
-//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
-//
-//
-//
-//        JTable jTable = new JTable(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
-//        addComboBoxAListener(listOfBookings, jTable);
-//        giveTableAnActionListener(jTable, listOfBookings);
-//        return jTable;
-//
-//    }
-//
-//    private void giveTableAnActionListener(JTable table, List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> listOfBookings) {
-//        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//            @Override
-//            public void valueChanged(ListSelectionEvent e) {
-//                if(!e.getValueIsAdjusting()){
-//                    Integer rowIndex = table.getSelectedRow();
-//                    System.out.println(listOfBookings.get(rowIndex).get_1());
-//
-//                }
-//            }
-//        });
-//    }
-//
-//    private List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> getListOfBookings() throws SQLException {
-//        return bRep
-//                .selectAllBookingsFromServiceProvider(user.getId(),
-//                        Tools.mapBookingStatusStringToEnum(String.valueOf(dashboard
-//                                .getSetBookingStatusView().getBookingStatesFilter().getSelectedItem())));
-//    }
-//
-//    private void drawStatusPanel(String[] bookingsType) {
-//        dashboard.getSetBookingStatusView().withBookingStatesFilter(bookingsType);
-//        dashboard.getOutput().removeAll();
-//        dashboard.getOutput().add(dashboard.getSetBookingStatusView());
-//        dashboard.validadeAndRepaint();
-//    }
-//
-//    private void addComboBoxAListener(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> listOfBookings, JTable jTable) {
-//        dashboard.getSetBookingStatusView().getBookingStatesFilter().addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String selectedItem = String.valueOf(dashboard.getSetBookingStatusView().getBookingStatesFilter().getSelectedItem());
-//                try {
-//                    drawTableBasedOnFilterComboBoxValue(selectedItem);
-//
-////                    generateTableOfBookingStatus(selectedItem);
-//                } catch (SQLException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//        });
-//    }
-//
-//    private void drawTableBasedOnFilterComboBoxValue(String selectedItem) throws SQLException {
-//        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> listOfBookings = getListOfBookings(selectedItem);
-//
-//        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(listOfBookings);
-//        System.out.println(tableAsList  );
-//
-//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
-//
-//        dashboard.getSetBookingStatusView().getContent().removeAll();
-//        dashboard.getSetBookingStatusView().withBookingsTable(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
-//
-//        dashboard.getSetBookingStatusView().getContent().add(dashboard.getSetBookingStatusView()
-//                .getComBoBoxFilterPanel(), BorderLayout.NORTH);
-//        dashboard.getSetBookingStatusView().getContent().add(dashboard
-//                .getSetBookingStatusView().getBookingsTable(), BorderLayout.CENTER);
-//
-//        dashboard.validadeAndRepaint();
-//    }
-//
-//
-//
-//    private List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> getListOfBookings(String selectedItem) throws SQLException {
-//        return bRep
-//                .selectAllBookingsFromServiceProvider(user.getId(),
-//                        Tools.mapBookingStatusStringToEnum(selectedItem));
-//    }
-
-
     private void goToSlotsManagement() {
         switchDashboardPanelToSlotsManagement();
     }
@@ -452,6 +345,17 @@ public class ServiceDashBoardController implements Control {
 
     @Override
     public void addInputsAListener() {
+        dashboard.getMenuItem().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logout();
+            }
+        });
+    }
 
+    private void logout() {
+        dashboard.dispose();
+        app.setUser(null);
+        app.login();
     }
 }
