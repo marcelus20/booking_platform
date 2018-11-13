@@ -3,6 +3,7 @@ package views.dashboard.serviceProvider;
 import views.customComponents.MyCustomJPanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class UpComingBookingsPanel extends MyCustomJPanel{
 
@@ -13,6 +14,7 @@ public class UpComingBookingsPanel extends MyCustomJPanel{
 
         upcomingBookingsTable = new JTable(t, colNames);
         JScrollPane jScrollPane = new JScrollPane(upcomingBookingsTable);
+        upcomingBookingsTable.setPreferredScrollableViewportSize(new Dimension(650,400));
         getContent().add(jScrollPane);
     }
 

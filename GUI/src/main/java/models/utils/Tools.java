@@ -1,9 +1,7 @@
 package models.utils;
 
-import models.tuples.entitiesRepresentation.Admin;
-import models.tuples.entitiesRepresentation.BookingSlots;
-import models.tuples.entitiesRepresentation.Customer;
-import models.tuples.entitiesRepresentation.ServiceProvider;
+import models.BookingStatus;
+import models.tuples.entitiesRepresentation.*;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -97,9 +95,9 @@ public class Tools {
         return DigestUtils.md5Hex(pass).toUpperCase();
     }
 
-    public static String alertComboBox(Dashboard d, String[] options){
-        return (String) JOptionPane.showInputDialog(d, "Choose The city: ",
-                "city search engine", JOptionPane.PLAIN_MESSAGE, null,  options, "Dublin");
+    public static String alertComboBox(Dashboard d, String[] options, String msg, String title){
+        return (String) JOptionPane.showInputDialog(d, msg,
+                title, JOptionPane.PLAIN_MESSAGE, null,  options, "Dublin");
     }
 
     public static Integer alertConfirm(Dashboard d, String msg){
@@ -166,12 +164,34 @@ public class Tools {
         return table;
     }
 
-    public static List<List<String>> brakeListOfTuplesToTuple_2(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
+    public static List<List<String>> breakListOfTuplesToTuple_2(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
 
         List<List<String>> table = new ArrayList<>();
 
         bookings.forEach(tuple->table.add(tuple.get_2()));
         return table;
+    }
+
+    public static BookingStatus mapBookingStatusStringToEnum(String newStatus){
+        if(newStatus.equals(String.valueOf(BookingStatus.CONFIRMED))){
+            return BookingStatus.CONFIRMED;
+        }else if(newStatus.equals(String.valueOf(BookingStatus.PENDENT))){
+            return BookingStatus.PENDENT;
+        }else if (newStatus.equals(String.valueOf(BookingStatus.USER_DID_NOT_ARRIVE)) || newStatus.contains("arrive")){
+            return BookingStatus.USER_DID_NOT_ARRIVE;
+        }else if(newStatus.equals(String.valueOf(BookingStatus.COMPLETE))){
+            return BookingStatus.COMPLETE;
+        }else{
+            return BookingStatus.PENDENT;
+        }
+    }
+
+    public static List<String>getStringListOfAllBookingStatus(){
+        return new ArrayListBuilder<String>()
+                .add(String.valueOf(BookingStatus.PENDENT))
+                .add(String.valueOf(BookingStatus.CONFIRMED))
+                .add(String.valueOf(BookingStatus.COMPLETE))
+                .add(String.valueOf(BookingStatus.USER_DID_NOT_ARRIVE)).build();
     }
 
 }

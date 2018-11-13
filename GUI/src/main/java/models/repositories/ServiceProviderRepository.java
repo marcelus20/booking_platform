@@ -1,9 +1,9 @@
 package models.repositories;
 
 import models.Database;
-import models.entitiesRepresentation.BookingSlots;
-import models.entitiesRepresentation.Location;
-import models.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.BookingSlots;
+import models.tuples.entitiesRepresentation.Location;
+import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 
 import java.sql.Date;

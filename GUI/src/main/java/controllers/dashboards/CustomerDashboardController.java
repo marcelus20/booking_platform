@@ -2,6 +2,7 @@ package controllers.dashboards;
 
 import controllers.Application;
 import controllers.Control;
+import models.BookingStatus;
 import models.Database;
 import models.tuples.entitiesRepresentation.*;
 import models.repositories.BookingRepository;
@@ -119,7 +120,7 @@ public class CustomerDashboardController implements Control {
                         } catch (SQLException e1) {
                             e1.printStackTrace();
                         }
-                        String chosenCity = Tools.alertComboBox(dashboard, cities);
+                        String chosenCity = Tools.alertComboBox(dashboard, cities, "choose sity", "City search engine");
                         try {
                             mountTable(db.getListOfBarbersByCity(chosenCity));
 
@@ -194,7 +195,7 @@ public class CustomerDashboardController implements Control {
                     Integer n = Tools.alertConfirm(dashboard, "Do you want to book this available slot?");
 
                     Booking b = new Booking();
-                    b.withBookingStatus("NOT COMPLETE"); b.withComplaint("");
+                    b.withBookingStatus(BookingStatus.PENDENT); b.withComplaint("");
 
                     serviceProvider.addBookingToSlot(b, Timestamp.valueOf(id_.get_1()));
 
@@ -206,7 +207,6 @@ public class CustomerDashboardController implements Control {
                             e1.printStackTrace();
                         }
                     }
-                    System.out.println(n);
 
                 }
             }
@@ -250,7 +250,7 @@ public class CustomerDashboardController implements Control {
                 db.getShortenedListOfBookings(user.getId());
 
 
-        List<List<String>> tableAsList = Tools.brakeListOfTuplesToTuple_2(shortenedListOfBookings);
+        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(shortenedListOfBookings);
 
 
         String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
@@ -307,7 +307,7 @@ public class CustomerDashboardController implements Control {
 
         List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings = ((BookingRepository)bRep).selectAllBookingsFromCustomer(user.getId());
 
-        List<List<String>> listOfBookings = Tools.brakeListOfTuplesToTuple_2(bookings);
+        List<List<String>> listOfBookings = Tools.breakListOfTuplesToTuple_2(bookings);
 
 
 

@@ -1,8 +1,8 @@
 package models.repositories;
 
 import models.Database;
-import models.entitiesRepresentation.Booking;
-import models.entitiesRepresentation.BookingSlots;
+import models.tuples.entitiesRepresentation.Booking;
+import models.tuples.entitiesRepresentation.BookingSlots;
 import models.tuples.Tuple;
 import models.utils.MyCustomDateAndTime;
 

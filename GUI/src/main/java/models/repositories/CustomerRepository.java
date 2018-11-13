@@ -1,12 +1,10 @@
 package models.repositories;
 
 import models.Database;
-import models.entitiesRepresentation.Customer;
-import models.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.Customer;
 import models.utils.Tools;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class CustomerRepository extends Database implements Repository {
 

@@ -2,7 +2,10 @@ package controllers;
 
 import controllers.dashboards.CustomerDashboardController;
 import controllers.dashboards.ServiceDashBoardController;
+import models.Database;
 import models.users.AbstraticUser;
+
+import java.sql.SQLException;
 
 public class Application {
 
@@ -13,9 +16,11 @@ public class Application {
 
     private AbstraticUser user;
 
-    public Application() {
+    public Application() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         this.loginController = new LoginController(this);
         //customerDashboardController = new CustomerDashboardController(this);
+//        user = new Database().login("saraH@gmail.com", "646E613EFCFC1317061B1DF9340E3726");
+//        new ServiceDashBoardController(this);
 
     }
 

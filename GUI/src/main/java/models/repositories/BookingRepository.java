@@ -1,10 +1,12 @@
 package models.repositories;
 
+import models.BookingStatus;
 import models.Database;
-import models.entitiesRepresentation.Booking;
-import models.entitiesRepresentation.BookingSlots;
+import models.tuples.entitiesRepresentation.Booking;
+import models.tuples.entitiesRepresentation.BookingSlots;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
+import models.utils.Tools;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,7 +35,7 @@ public class BookingRepository extends Database implements Repository {
                         +((Tuple)id).get_2()+" AND time_stamp = "+((Tuple) id).get_1()+";");
 
         while (rs.next()){
-            b.withBookingStatus(rs.getString("booking_status"));
+            b.withBookingStatus(Tools.mapBookingStatusStringToEnum(rs.getString("booking_status")));
             b.withComplaint(rs.getString("complaint"));
         }
 
@@ -102,7 +104,6 @@ public class BookingRepository extends Database implements Repository {
 
         Repository<BookingSlotRepository> bRep = new BookingSlotRepository();
 
-        System.out.println(id);
 
         ((BookingSlotRepository) bRep).updateBookingSlotAvailability(Tuple
                 .tuple((String) id.get_1(), (String) id.get_2()), true);
@@ -126,11 +127,14 @@ public class BookingRepository extends Database implements Repository {
         List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>result= new ArrayList<>();
         init();
 
+
+
         String query = new StringBuilder().append("SELECT b.time_stamp, b.s_id, b.customer_id, c.first_name, ")
                 .append("c.last_name, c.phone, b.booking_status FROM booking b ")
                 .append("JOIN service_provider s ON b.s_id = s.s_id JOIN customers c ON ")
                 .append("b.customer_id = c.customer_id WHERE b.s_id = '"+serviceId+"' ")
-                .append(" AND booking_status = 'NOT COMPLETE' ORDER BY time_stamp;").toString();
+                .append(" AND booking_status = '"+BookingStatus.PENDENT+"' OR booking_status = '" +BookingStatus.CONFIRMED+
+                        "' ORDER BY time_stamp;").toString();
         System.out.println(query);
         ResultSet rs = stmt.executeQuery(query);
         while (rs.next()){
@@ -140,6 +144,28 @@ public class BookingRepository extends Database implements Repository {
         close();
         return result;
     }
+
+    public List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>selectAllBookingsFromServiceProvider(String serviceId, BookingStatus bookingStatus) throws SQLException {
+
+        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>result= new ArrayList<>();
+        init();
+
+        String query = new StringBuilder().append("SELECT b.time_stamp, b.s_id, b.customer_id, c.first_name, ")
+                .append("c.last_name, c.phone, b.booking_status FROM booking b ")
+                .append("JOIN service_provider s ON b.s_id = s.s_id JOIN customers c ON ")
+                .append("b.customer_id = c.customer_id WHERE b.s_id = '"+serviceId+"' ")
+                .append(" AND booking_status = '"+bookingStatus+"' ORDER BY time_stamp;").toString();
+        System.out.println(query);
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()){
+            mapResultSetToList(rs, result);
+        }
+
+        close();
+        return result;
+    }
+
+
 
     private void mapResultSetToList(ResultSet rs, List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> result) throws SQLException {
         List<String> line = new ArrayList<>();
@@ -155,11 +181,26 @@ public class BookingRepository extends Database implements Repository {
         result.add(Tuple.tuple(t,line));
     }
 
-    public void updateABookingStatus(TupleOf3Elements<String, String, String> id) throws SQLException {
+    public void updateABookingStatus(TupleOf3Elements<String, String, String> id, String bStatus) throws SQLException {
         init();
-        System.out.println(id);
-        stmt.executeUpdate("UPDATE booking SET booking_status = 'COMPLETE' WHERE time_stamp = '"
+
+        BookingStatus status = Tools.mapBookingStatusStringToEnum(bStatus);
+        System.out.println(status);
+        stmt.executeUpdate("UPDATE booking SET booking_status = '"+status+"' WHERE time_stamp = '"
                 + id.get_1() + "' AND customer_id = '" + id.get_3() + "' AND s_id = '" +id.get_2() + "' ;");
         close();
     }
+
+    public List<String> selectDistinctsBookingStatus() throws SQLException {
+        List<String> result = new ArrayList<>();
+        init();
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT booking_status FROM booking;");
+        while(rs.next()){
+            result.add(rs.getString("booking_status"));
+        }
+        close();
+        return result;
+    }
+
+
 }
