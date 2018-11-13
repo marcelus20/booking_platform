@@ -4,11 +4,10 @@ import models.Database;
 import models.entitiesRepresentation.Booking;
 import models.entitiesRepresentation.BookingSlots;
 import models.tuples.Tuple;
-import models.users.User;
+import models.utils.MyCustomDateAndTime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class BookingSlotRepository extends Database implements Repository {
@@ -69,6 +68,22 @@ public class BookingSlotRepository extends Database implements Repository {
         System.out.println(query);
 
             stmt.executeUpdate(query);
+
+        close();
+    }
+
+    public void addSlotsToDB(String id, List<MyCustomDateAndTime> selectedSlots) throws SQLException {
+        init();
+
+
+        selectedSlots.forEach(selectedSlot->{
+            try {
+                stmt.executeUpdate("INSERT INTO booking_slots values('"
+                        +selectedSlot.getTimestamp()+"', "+ id +", '1') ;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
 
         close();
     }

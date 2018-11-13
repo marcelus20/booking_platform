@@ -13,6 +13,7 @@ public class ServiceDashboard extends Dashboard implements ButtonPanelContainer 
     private final MyCustomJButton setAvailability;
     private final MyCustomJButton setStatusOfApppointment;
     private UpComingBookingsPanel upComingBookingsPanel;
+    private SlotManagementPanel slotManagementPanel;
 
     public ServiceDashboard() {
         viewUpcommingBookings = new MyCustomJButton("View Upcoming bookings");
@@ -32,8 +33,16 @@ public class ServiceDashboard extends Dashboard implements ButtonPanelContainer 
         return this;
     }
 
+    public SlotManagementPanel getSlotManagementPanel() {
+        return slotManagementPanel;
+    }
+
     public UpComingBookingsPanel getUpComingBookingsPanel() {
         return upComingBookingsPanel;
     }
 
+    public ServiceDashboard withSlotsManagementPanel(SlotManagementPanel slotManagementPanel) {
+        this.slotManagementPanel = slotManagementPanel;
+        return this;
+    }
 }
