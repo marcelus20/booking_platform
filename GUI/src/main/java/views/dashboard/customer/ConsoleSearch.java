@@ -4,6 +4,7 @@ import views.customComponents.MyCustomJButton;
 import views.customComponents.MyCustomJPanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ConsoleSearch extends MyCustomJPanel {
 
@@ -15,7 +16,8 @@ public class ConsoleSearch extends MyCustomJPanel {
 
         searchByCity = new MyCustomJButton("Search By City");
         container = new MyCustomJPanel("Results", 650, 450);
-        getContent().add(searchByCity.getButton());getContent().add(container);
+        getContent().setLayout(new BorderLayout());
+        getContent().add(searchByCity.getButton(), BorderLayout.NORTH);getContent().add(container, BorderLayout.CENTER);
     }
 
     public JButton getSearchByCity() {

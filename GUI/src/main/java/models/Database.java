@@ -42,8 +42,8 @@ public class Database {
 
         for(String table : tables){
             String query  = new StringBuilder().append("SELECT * FROM ").append(table)
-                    .append(" WHERE email = ").append("'").append("saraH@gmail.com"/*email*/).append("'")
-                    .append(" AND password = '").append("646E613EFCFC1317061B1DF9340E3726"/*password*/).append("' ;").toString();
+                    .append(" WHERE email = ").append("'").append(email).append("'")
+                    .append(" AND password = '").append(password).append("' ;").toString();
 
             ResultSet rs = stmt.executeQuery(query);
 
