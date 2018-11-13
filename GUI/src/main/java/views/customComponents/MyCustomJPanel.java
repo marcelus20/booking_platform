@@ -20,7 +20,7 @@ public class MyCustomJPanel extends JPanel{
         content = new JPanel();
         header.add(this.title.getLabel());
         setLayout(new BorderLayout());
-        add(header, BorderLayout.NORTH); add(content, BorderLayout.CENTER);
+        add(header, BorderLayout.NORTH); add(new JScrollPane(content), BorderLayout.CENTER);
         header.setBackground(Color.DARK_GRAY);
         content.setBackground(Color.LIGHT_GRAY);
         setPreferredSize(size); setBorder(border);
