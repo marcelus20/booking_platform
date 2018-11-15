@@ -1,7 +1,7 @@
 package models.tuples.entitiesRepresentation;
 
-import models.ServiceProviderStatus;
-import models.utils.UserType;
+import models.enums.ServiceProviderStatus;
+import models.enums.UserType;
 
 import java.sql.Date;
 import java.util.List;

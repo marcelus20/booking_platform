@@ -1,6 +1,7 @@
 package models.tuples.entitiesRepresentation;
 
-import models.BookingStatus;
+import models.enums.BookingReview;
+import models.enums.BookingStatus;
 
 import java.util.Objects;
 
@@ -8,11 +9,11 @@ public class Booking {
 
     private String customerId;
     private BookingStatus bookingStatus;
-    private String complaint;
+    private BookingReview review;
 
-    public Booking(BookingStatus bookingStatus, String complaint) {
+    public Booking(BookingStatus bookingStatus, BookingReview review) {
         this.bookingStatus = bookingStatus;
-        this.complaint = complaint;
+        this.review = review;
     }
 
     public Booking() {
@@ -22,8 +23,8 @@ public class Booking {
         return bookingStatus;
     }
 
-    public String getComplaint() {
-        return complaint;
+    public BookingReview getReview() {
+        return review;
     }
 
     public String getCustomerId() {
@@ -35,8 +36,8 @@ public class Booking {
         return this;
     }
 
-    public Booking withComplaint(String newComplaint){
-        complaint = newComplaint;
+    public Booking withReview(BookingReview newReview){
+        review = newReview;
         return this;
     }
 
@@ -51,19 +52,19 @@ public class Booking {
         if (o == null || getClass() != o.getClass()) return false;
         Booking booking = (Booking) o;
         return Objects.equals(bookingStatus, booking.bookingStatus) &&
-                Objects.equals(complaint, booking.complaint);
+                Objects.equals(review, booking.review);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingStatus, complaint);
+        return Objects.hash(bookingStatus, review);
     }
 
     @Override
     public String toString() {
         return "Booking{" +
                 "bookingStatus='" + bookingStatus + '\'' +
-                ", complaint='" + complaint + '\'' +
+                ", review='" + review + '\'' +
                 '}';
     }
 

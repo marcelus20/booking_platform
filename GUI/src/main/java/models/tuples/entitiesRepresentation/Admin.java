@@ -1,6 +1,6 @@
 package models.tuples.entitiesRepresentation;
 
-import models.utils.UserType;
+import models.enums.UserType;
 
 import java.sql.Date;
 import java.util.List;
