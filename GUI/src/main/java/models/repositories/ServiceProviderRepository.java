@@ -1,6 +1,8 @@
 package models.repositories;
 
 import models.Database;
+import models.ServiceProviderStatus;
+import models.tuples.Tuple;
 import models.tuples.entitiesRepresentation.BookingSlots;
 import models.tuples.entitiesRepresentation.Location;
 import models.tuples.entitiesRepresentation.ServiceProvider;
@@ -79,7 +81,7 @@ public class ServiceProviderRepository extends Database implements Repository{
             serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
             serviceProvider.withPhone(rs.getString("phone"));
             serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
-            serviceProvider.withApprovedStatus(rs.getString("approved_status"));
+            serviceProvider.withApprovedStatus(ServiceProviderStatus.valueOf(rs.getString("approved_status").toUpperCase()));
             location.withFirstLineAddress(rs.getString("first_line_address"));
             location.withEirCode(rs.getString("eir_code"));
             location.withCity(rs.getString("city")); location.withSecondLineAddress(rs.getString("second_line_address"));
@@ -103,4 +105,40 @@ public class ServiceProviderRepository extends Database implements Repository{
         return serviceProvider;
     }
 
+    public List<Tuple<String, List<String>>> selectListOfServiceProvidersByStatus(ServiceProviderStatus status) throws SQLException {
+        init();
+
+        List <Tuple<String, List<String>>> listOfResults = new ArrayList<>();
+
+        String query = "SELECT s.s_id, s.email, s.phone, s.company_full_name, approved_status," +
+                " l.first_line_address, l.second_line_address, l.city FROM service_provider s" +
+                " JOIN location l ON s.s_id = l.s_id WHERE s.approved_status = '"+status+"';";
+
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()){
+            List<String> line = new ArrayList<>();
+            String id = rs.getString("s_id");
+            line.add(rs.getString("s_id"));
+            line.add(rs.getString("email"));
+            line.add(rs.getString("phone"));
+            line.add(rs.getString("company_full_name"));
+            line.add(rs.getString("approved_status"));
+            line.add(rs.getString("first_line_address"));
+            line.add(rs.getString("second_line_address"));
+            line.add(rs.getString("city"));
+            listOfResults.add(Tuple.tuple(id, line));
+        }
+
+        close();
+        return listOfResults;
+    }
+
+    public void updateServiceProviderStatus(ServiceProviderStatus status, String serviceId) throws SQLException {
+        init();
+
+        stmt.executeUpdate("UPDATE service_provider SET approved_status = '"+status+"'" +
+                " WHERE  s_id = '"+serviceId+"'");
+
+        close();
+    }
 }

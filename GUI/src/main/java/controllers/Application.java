@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.dashboards.AdminDashboardController;
 import controllers.dashboards.CustomerDashboardController;
 import controllers.dashboards.ServiceDashBoardController;
 import models.Database;
@@ -15,12 +16,12 @@ public class Application {
     private ServiceDashBoardController serviceDashBoardController;
 
     private AbstraticUser user;
+    private AdminDashboardController adminDashboardController;
 
     public Application() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         this.loginController = new LoginController(this);
-        //customerDashboardController = new CustomerDashboardController(this);
-//        user = new Database().login("saraH@gmail.com", "646E613EFCFC1317061B1DF9340E3726");
-//        new ServiceDashBoardController(this);
+
+
 
     }
 
@@ -46,5 +47,9 @@ public class Application {
 
     public void login() {
         loginController = new LoginController(this);
+    }
+
+    public void setAdminDashboardController(AdminDashboardController adminDashboardController) {
+        this.adminDashboardController = adminDashboardController;
     }
 }

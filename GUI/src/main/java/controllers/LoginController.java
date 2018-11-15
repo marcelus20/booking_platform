@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.dashboards.AdminDashboardController;
 import controllers.dashboards.CustomerDashboardController;
 import controllers.dashboards.ServiceDashBoardController;
 import models.Database;
@@ -52,7 +53,7 @@ public class LoginController implements Control{
                         }else if (user instanceof ServiceProvider){
                             redirectToServiceDashboard(app);
                         }else{
-                            //DO NOTHING FOR NOW
+                            redirectToAdminDashboard(app);
                         }
                     }
                 } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
@@ -60,6 +61,10 @@ public class LoginController implements Control{
                 }
             }
         });
+    }
+
+    private void redirectToAdminDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        app.setAdminDashboardController(new AdminDashboardController(app));
     }
 
     private void redirectToCustomerDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {

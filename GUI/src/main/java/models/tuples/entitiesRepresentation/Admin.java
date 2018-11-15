@@ -26,7 +26,7 @@ public class Admin extends AbstraticUser {
 
     @Override
     public AbstraticUser withPassword(String newPassword) {
-
+        password = newPassword;
         return this;
     }
 }

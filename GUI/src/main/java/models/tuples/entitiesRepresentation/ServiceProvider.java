@@ -1,5 +1,6 @@
 package models.tuples.entitiesRepresentation;
 
+import models.ServiceProviderStatus;
 import models.users.User;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -9,12 +10,12 @@ import java.util.Objects;
 public class ServiceProvider extends User {
 
     private String companyFullName;
-    private String approvedStatus;
+    private ServiceProviderStatus approvedStatus;
     private Location location;
     private List<BookingSlots> bookingSlots;
 
 
-    public ServiceProvider(String id, String name, String password, String phone, Date dateCreated, String companyFullName, String approvedStatus, Location location, List<BookingSlots> bookingSlots) {
+    public ServiceProvider(String id, String name, String password, String phone, Date dateCreated, String companyFullName, ServiceProviderStatus approvedStatus, Location location, List<BookingSlots> bookingSlots) {
         super(id, name, password, phone, dateCreated);
         this.companyFullName = companyFullName;
         this.approvedStatus = approvedStatus;
@@ -29,7 +30,7 @@ public class ServiceProvider extends User {
         return companyFullName;
     }
 
-    public String getApprovedStatus() {
+    public ServiceProviderStatus getApprovedStatus() {
         return approvedStatus;
     }
 
@@ -46,7 +47,7 @@ public class ServiceProvider extends User {
         return this;
     }
 
-    public ServiceProvider withApprovedStatus(String newStatus) {
+    public ServiceProvider withApprovedStatus(ServiceProviderStatus newStatus) {
         approvedStatus = newStatus;
         return this;
     }

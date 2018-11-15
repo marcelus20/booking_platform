@@ -1,5 +1,6 @@
 package controllers;
 
+import models.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.Location;
 import models.tuples.entitiesRepresentation.ServiceProvider;
@@ -184,7 +185,7 @@ public class FormController implements Control{
                             service.withPassword(svf.getPassword()); service.withEmail(svf.getEmail());
                             service.withDateCreated(new Date(System.currentTimeMillis()));
                             service.withPhone(svf.getPhone()); service.withCompanyFullName(svf.getCompanyFullName());
-                            service.withApprovedStatus("pendent");
+                            service.withApprovedStatus(ServiceProviderStatus.PENDENT);
 
                             Location newLocation = new Location();
                             newLocation.withFirstLineAddress(svf.getFirstLineAddress());

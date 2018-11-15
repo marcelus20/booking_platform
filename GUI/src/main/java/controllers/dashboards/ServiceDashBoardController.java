@@ -6,6 +6,7 @@ import com.github.lgooddatepicker.zinternaltools.CalendarSelectionEvent;
 import controllers.Application;
 import controllers.Control;
 import models.BookingStatus;
+import models.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.repositories.BookingRepository;
 import models.repositories.BookingSlotRepository;
@@ -15,6 +16,8 @@ import models.utils.MyCustomDateAndTime;
 import models.utils.Tools;
 import views.customComponents.MyCustomFont;
 import views.customComponents.MyCustomJButton;
+import views.customComponents.MyCustomJLabel;
+import views.customComponents.MyCustomJPanel;
 import views.dashboard.serviceProvider.ServiceDashboard;
 import views.dashboard.serviceProvider.SetBookingStatusView;
 import views.dashboard.serviceProvider.SlotManagementPanel;
@@ -50,6 +53,11 @@ public class ServiceDashBoardController implements Control {
         this.app = app;
         user = (ServiceProvider) app.getUser();
 
+        blockAllButtonsIfNotApproved();
+
+        showMessageOnHomePage();
+
+
         setSideBarDashboardLayout();
         dashboard.getButtonsPanel().forEach(b->dashboard.getSideBar().add(b.getButton()));
         greetUser();
@@ -60,6 +68,39 @@ public class ServiceDashBoardController implements Control {
         bRep = new BookingRepository();
         selectedSlots = new ArrayList<>();
         bsRep = new BookingSlotRepository();
+    }
+
+    private void blockAllButtonsIfNotApproved() {
+        dashboard.getButtonsPanel().forEach(b->{
+            if(!(user.getApprovedStatus() == ServiceProviderStatus.APPROVED)){
+                b.getButton().setEnabled(false);
+            }
+        });
+
+    }
+
+    private void showMessageOnHomePage() {
+        String msg = "";
+
+        if(user.getApprovedStatus() == ServiceProviderStatus.APPROVED){
+            msg = "Congratulations, your subscription has been approved<br>" +
+                    "use the side bar buttons to browse through the system!";
+        }else if(user.getApprovedStatus() == ServiceProviderStatus.REJECTED){
+            msg = "Unfortunately you have been rejected by one of the<br> administrators<br>" +
+                    "Your datails seemed to be not genuine and discrepant";
+        }else{
+            msg = "It worked! What do I do now? Soon, one of our administrators<br> will give you some feedback" +
+                    "about your subscription status.<br> As this is a verification step, all options of the system will be " +
+                    "blocked until status is changed!";
+
+
+        }
+        MyCustomJPanel panel = new MyCustomJPanel("Message", 700,700);
+        panel.getContent().add(new MyCustomJLabel(msg, 20).getLabel());
+        dashboard.getOutput().add(panel);
+
+
+
     }
 
     private void setSideBarDashboardLayout(){
@@ -93,6 +134,8 @@ public class ServiceDashBoardController implements Control {
                         } catch (SQLException e1) {
                             e1.printStackTrace();
                         }
+
+
                     }
                 }
             });
@@ -358,4 +401,5 @@ public class ServiceDashBoardController implements Control {
         app.setUser(null);
         app.login();
     }
+
 }

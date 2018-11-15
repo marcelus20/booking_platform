@@ -1,6 +1,7 @@
 package models.utils;
 
 import models.BookingStatus;
+import models.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.*;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class Tools {
 
@@ -26,10 +28,14 @@ public class Tools {
             serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
             serviceProvider.withPhone("phone");
             serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
-            serviceProvider.withApprovedStatus(rs.getString("approved_status"));
+            serviceProvider.withApprovedStatus(ServiceProviderStatus.valueOf(rs
+                    .getString("approved_status").toUpperCase()));
 
         return serviceProvider;
     }
+
+
+
 
     public static Admin adminMapper(ResultSet rs) throws SQLException {
         Admin admin = new Admin();
@@ -194,4 +200,16 @@ public class Tools {
                 .add(String.valueOf(BookingStatus.USER_DID_NOT_ARRIVE)).build();
     }
 
+    public static String[] getStringLIstOfAllServiceProviderStatus() {
+
+        return new String[]{String.valueOf(ServiceProviderStatus.APPROVED)
+                , String.valueOf(ServiceProviderStatus.REJECTED),
+                String.valueOf(ServiceProviderStatus.PENDENT)};
+    }
+
+    public static String wrapStringWithHtml(String str){
+
+
+        return "<html><body>"+str+"</body></html>";
+    }
 }

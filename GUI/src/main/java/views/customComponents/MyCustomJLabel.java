@@ -1,6 +1,8 @@
 package views.customComponents;
 
 
+import models.utils.Tools;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,22 +18,22 @@ public class MyCustomJLabel{
 
     public MyCustomJLabel(final String label, final Font font) {
 
-        this.label = new JLabel(label, SwingConstants.CENTER);
+        this.label = new JLabel(Tools.wrapStringWithHtml(label), SwingConstants.CENTER);
         this.label.setFont(font);
     }
 
     public MyCustomJLabel(final String label, final String fontType, final Integer fontSize) {
-        this.label = new JLabel(label, SwingConstants.CENTER);
+        this.label = new JLabel(Tools.wrapStringWithHtml(label), SwingConstants.CENTER);
         this.label.setFont(new Font(fontType, Font.PLAIN, fontSize));
     }
 
     public MyCustomJLabel(final String label) {
-        this.label = new JLabel(label, SwingConstants.CENTER);
+        this.label = new JLabel(Tools.wrapStringWithHtml(label), SwingConstants.CENTER);
         this.label.setFont(new MyCustomFont().getFont());
     }
 
     public MyCustomJLabel(final String label, final Integer fontSize) {
-        this.label = new JLabel(label, SwingConstants.CENTER);
+        this.label = new JLabel(Tools.wrapStringWithHtml(label), SwingConstants.CENTER);
         this.label.setFont(new MyCustomFont(fontSize).getFont());
     }
 

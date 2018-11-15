@@ -16,9 +16,9 @@ import static models.utils.ArrayListBuilder.arrayListBuilder;
 public class SignUp extends JPanel implements InputPanelContainer {
 
     private final MyCustomJLabel titlePage;
-    private final InputPanel email;
-    private final InputPanel password;
-    private final InputPanel confirmPassword;
+    protected final InputPanel email;
+    protected final InputPanel password;
+    protected final InputPanel confirmPassword;
     private final InputPanel phone;
     private final ButtonPanel submit;
     private final ButtonPanel cancel;

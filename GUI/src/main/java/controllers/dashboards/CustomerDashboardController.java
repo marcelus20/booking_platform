@@ -152,6 +152,7 @@ public class CustomerDashboardController implements Control {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()){
+                    System.out.println("hey");
                     String id = table.getValueAt(table.getSelectedRow(), 0).toString();
 
                     try {

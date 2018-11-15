@@ -1,14 +1,16 @@
 package models.tuples.entitiesRepresentation;
 
+import models.BookingStatus;
+
 import java.util.Objects;
 
 public class Booking {
 
     private String customerId;
-    private String bookingStatus;
+    private BookingStatus bookingStatus;
     private String complaint;
 
-    public Booking(String bookingStatus, String complaint) {
+    public Booking(BookingStatus bookingStatus, String complaint) {
         this.bookingStatus = bookingStatus;
         this.complaint = complaint;
     }
@@ -16,7 +18,7 @@ public class Booking {
     public Booking() {
     }
 
-    public String getBookingStatus() {
+    public BookingStatus getBookingStatus() {
         return bookingStatus;
     }
 
@@ -28,7 +30,7 @@ public class Booking {
         return customerId;
     }
 
-    public Booking withBookingStatus(String newStatus){
+    public Booking withBookingStatus(BookingStatus newStatus){
         bookingStatus = newStatus;
         return this;
     }
