@@ -1,4 +1,4 @@
-package models.users;
+package models.tuples.entitiesRepresentation;
 
 import models.utils.UserType;
 
@@ -48,7 +48,7 @@ public abstract class AbstraticUser {
     public abstract AbstraticUser withId(String newId);
     public abstract AbstraticUser withEmail(String newEmail);
     public abstract AbstraticUser withPassword(String newPassword);
-    public abstract AbstraticUser withUserType(UserType newPassword);
+    public abstract AbstraticUser withUserType(UserType userType);
     public abstract AbstraticUser withUserCreated(Date newDateCreated);
 
 
@@ -59,12 +59,14 @@ public abstract class AbstraticUser {
         AbstraticUser that = (AbstraticUser) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(email, that.email) &&
-                Objects.equals(password, that.password);
+                Objects.equals(password, that.password) &&
+                userType == that.userType &&
+                Objects.equals(dateCreated, that.dateCreated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password);
+        return Objects.hash(id, email, password, userType, dateCreated);
     }
 
     @Override
@@ -73,6 +75,8 @@ public abstract class AbstraticUser {
                 "id='" + id + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", userType=" + userType +
+                ", dateCreated=" + dateCreated +
                 '}';
     }
 }
