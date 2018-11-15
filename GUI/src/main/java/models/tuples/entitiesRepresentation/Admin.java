@@ -3,47 +3,62 @@ package models.tuples.entitiesRepresentation;
 import models.utils.UserType;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Admin extends AbstraticUser {
 
     public Admin (){
         super();
-        withUserType(UserType.ADMIN);
-        withUserCreated(new Date(System.currentTimeMillis()));
+        userType = UserType.ADMIN;
+        dateCreated = new Date(System.currentTimeMillis());
     }
 
-    public Admin(String id, String email, String password) {
-        super(id, email, password, UserType.ADMIN, new Date(System.currentTimeMillis()));
+    public Admin(String id, String email, String password, List<Log> listOfLogs, List<Phone> phones) {
+        super(id, email, password, UserType.ADMIN, new Date(System.currentTimeMillis()), listOfLogs, phones);
     }
 
     @Override
-    public AbstraticUser withId(String newId) {
+    public Admin withId(String newId) {
         id = newId;
         return this;
     }
 
     @Override
-    public AbstraticUser withEmail(String newEmail) {
+    public Admin withEmail(String newEmail) {
         email = newEmail;
         return this;
     }
 
     @Override
-    public AbstraticUser withPassword(String newPassword) {
+    public Admin withPassword(String newPassword) {
         password = newPassword;
         return this;
     }
 
     @Override
-    public AbstraticUser withUserType(UserType userType) {
+    public  Admin withUserType(UserType userType) {
         this.userType = userType;
         return this;
     }
 
     @Override
-    public AbstraticUser withUserCreated(Date newDateCreated) {
+    public  Admin withUserCreated(Date newDateCreated) {
         dateCreated = newDateCreated;
         return this;
     }
+
+    @Override
+    public Admin withListOfLogs(List<Log> newListOfLog) {
+        listOfLogs = newListOfLog;
+        return this;
+    }
+
+    @Override
+    public Admin withListOfPhones(List<Phone> newListOfPhones) {
+        this.phones = newListOfPhones;
+        return this;
+    }
+
+
 
 }

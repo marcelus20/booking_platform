@@ -3,6 +3,7 @@ package models.tuples.entitiesRepresentation;
 import models.utils.UserType;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstraticUser {
@@ -12,13 +13,17 @@ public abstract class AbstraticUser {
     protected String password;
     protected UserType userType;
     protected Date dateCreated;
+    protected List<Log> listOfLogs;
+    protected List<Phone> phones;
 
-    public AbstraticUser(String id, String email, String password, UserType userType, Date dateCreated) {
+    public AbstraticUser(String id, String email, String password, UserType userType, Date dateCreated, List<Log> listOfLogs, List<Phone> phones) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.userType = userType;
         this.dateCreated = dateCreated;
+        this.listOfLogs = listOfLogs;
+        this.phones = phones;
     }
 
     public AbstraticUser() {
@@ -45,12 +50,21 @@ public abstract class AbstraticUser {
         return dateCreated;
     }
 
+    public List<Log> getListOfLogs() {
+        return listOfLogs;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
     public abstract AbstraticUser withId(String newId);
     public abstract AbstraticUser withEmail(String newEmail);
     public abstract AbstraticUser withPassword(String newPassword);
     public abstract AbstraticUser withUserType(UserType userType);
     public abstract AbstraticUser withUserCreated(Date newDateCreated);
-
+    public abstract AbstraticUser withListOfLogs(List<Log> newListOfLog);
+    public abstract AbstraticUser withListOfPhones(List<Phone> newListOfPhones);
 
     @Override
     public boolean equals(Object o) {
@@ -61,12 +75,14 @@ public abstract class AbstraticUser {
                 Objects.equals(email, that.email) &&
                 Objects.equals(password, that.password) &&
                 userType == that.userType &&
-                Objects.equals(dateCreated, that.dateCreated);
+                Objects.equals(dateCreated, that.dateCreated) &&
+                Objects.equals(listOfLogs, that.listOfLogs) &&
+                Objects.equals(phones, that.phones);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, userType, dateCreated);
+        return Objects.hash(id, email, password, userType, dateCreated, listOfLogs, phones);
     }
 
     @Override
@@ -77,6 +93,8 @@ public abstract class AbstraticUser {
                 ", password='" + password + '\'' +
                 ", userType=" + userType +
                 ", dateCreated=" + dateCreated +
+                ", listOfLogs=" + listOfLogs +
+                ", phones=" + phones +
                 '}';
     }
 }

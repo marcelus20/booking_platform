@@ -1,37 +1,42 @@
 package models.tuples.entitiesRepresentation;
 
 import models.ServiceProviderStatus;
-import models.users.User;
+import models.utils.UserType;
+
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
-public class ServiceProvider extends User {
+public class ServiceProvider extends AbstraticUser {
 
     private String companyFullName;
-    private ServiceProviderStatus approvedStatus;
+    private ServiceProviderStatus status;
     private Location location;
     private List<BookingSlots> bookingSlots;
 
-
-    public ServiceProvider(String id, String name, String password, String phone, Date dateCreated, String companyFullName, ServiceProviderStatus approvedStatus, Location location, List<BookingSlots> bookingSlots) {
-        super(id, name, password, phone, dateCreated);
+    public ServiceProvider(String id, String email, String password, Date dateCreated,
+                           String companyFullName, ServiceProviderStatus status,
+                           Location location, List<BookingSlots> bookingSlots,
+                           List<Log> listOfLogs,  List<Phone> phones
+    ) {
+        super(id, email, password, UserType.SERVICE, dateCreated, listOfLogs, phones);
         this.companyFullName = companyFullName;
-        this.approvedStatus = approvedStatus;
+        this.status = status;
         this.location = location;
         this.bookingSlots = bookingSlots;
     }
 
     public ServiceProvider() {
+        userType = UserType.SERVICE;
+        dateCreated = new Date(System.currentTimeMillis());
     }
 
     public String getCompanyFullName() {
         return companyFullName;
     }
 
-    public ServiceProviderStatus getApprovedStatus() {
-        return approvedStatus;
+    public ServiceProviderStatus getStatus() {
+        return status;
     }
 
     public Location getLocation() {
@@ -42,52 +47,58 @@ public class ServiceProvider extends User {
         return bookingSlots;
     }
 
+
+    @Override
+    public ServiceProvider withId(String newId) {
+        id = newId;
+        return this;
+    }
+
+    @Override
+    public ServiceProvider withEmail(String newEmail) {
+        email = newEmail;
+        return this;
+    }
+
+    @Override
+    public ServiceProvider withPassword(String newPassword) {
+        password = newPassword;
+        return this;
+    }
+
+    @Override
+    public ServiceProvider withUserType(UserType userType) {
+        this.userType = userType;
+        return this;
+    }
+
+    @Override
+    public ServiceProvider withUserCreated(Date newDateCreated) {
+        dateCreated = newDateCreated;
+        return this;
+    }
+
+    @Override
+    public ServiceProvider withListOfLogs(List<Log> newListOfLog) {
+        listOfLogs = newListOfLog;
+        return this;
+    }
+
+    @Override
+    public ServiceProvider withListOfPhones(List<Phone> newListOfPhones) {
+        phones = newListOfPhones;
+        return this;
+    }
+
     public ServiceProvider withCompanyFullName(String newName) {
         companyFullName = newName;
         return this;
     }
 
-    public ServiceProvider withApprovedStatus(ServiceProviderStatus newStatus) {
-        approvedStatus = newStatus;
+    public ServiceProvider withServiceProviderStatus(ServiceProviderStatus newStatus) {
+        status = newStatus;
         return this;
     }
-
-    public ServiceProvider withLocation(Location newLocation) {
-        location = newLocation;
-        return this;
-    }
-
-    public ServiceProvider withBookingSlots(List<BookingSlots> bookingSlots) {
-        this.bookingSlots = bookingSlots;
-        return this;
-    }
-
-    public ServiceProvider withBookingSlots(BookingSlots bookingSlots) {
-        this.bookingSlots.add(bookingSlots);
-        return this;
-    }
-
-    public BookingSlots getBookingByTimestamp(Timestamp timestamp){
-        BookingSlots b = null;
-
-        for(BookingSlots slot: bookingSlots){
-            if(slot.getTimestamp().equals(timestamp)){
-                b = slot;
-            }
-        }
-        System.out.println(b);
-
-        return b;
-    }
-
-    public void addBookingToSlot(Booking b, Timestamp t){
-        bookingSlots.forEach(slot -> {
-            if(slot.getTimestamp().equals(t)){
-                slot.withBooking(b);
-            }
-        });
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -96,21 +107,21 @@ public class ServiceProvider extends User {
         if (!super.equals(o)) return false;
         ServiceProvider that = (ServiceProvider) o;
         return Objects.equals(companyFullName, that.companyFullName) &&
-                Objects.equals(approvedStatus, that.approvedStatus) &&
+                status == that.status &&
                 Objects.equals(location, that.location) &&
                 Objects.equals(bookingSlots, that.bookingSlots);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), companyFullName, approvedStatus, location, bookingSlots);
+        return Objects.hash(super.hashCode(), companyFullName, status, location, bookingSlots);
     }
 
     @Override
     public String toString() {
         return "ServiceProvider{" +
                 "companyFullName='" + companyFullName + '\'' +
-                ", approvedStatus='" + approvedStatus + '\'' +
+                ", status=" + status +
                 ", location=" + location +
                 ", bookingSlots=" + bookingSlots +
                 '}';
