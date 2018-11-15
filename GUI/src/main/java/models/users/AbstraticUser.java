@@ -1,5 +1,8 @@
 package models.users;
 
+import models.utils.UserType;
+
+import java.sql.Date;
 import java.util.Objects;
 
 public abstract class AbstraticUser {
@@ -7,11 +10,15 @@ public abstract class AbstraticUser {
     protected String id;
     protected String email;
     protected String password;
+    protected UserType userType;
+    protected Date dateCreated;
 
-    public AbstraticUser(String id, String email, String password) {
+    public AbstraticUser(String id, String email, String password, UserType userType, Date dateCreated) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.userType = userType;
+        this.dateCreated = dateCreated;
     }
 
     public AbstraticUser() {
@@ -29,9 +36,21 @@ public abstract class AbstraticUser {
         return password;
     }
 
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
     public abstract AbstraticUser withId(String newId);
     public abstract AbstraticUser withEmail(String newEmail);
     public abstract AbstraticUser withPassword(String newPassword);
+    public abstract AbstraticUser withUserType(UserType newPassword);
+    public abstract AbstraticUser withUserCreated(Date newDateCreated);
+
 
     @Override
     public boolean equals(Object o) {
