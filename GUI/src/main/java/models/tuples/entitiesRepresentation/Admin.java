@@ -1,15 +1,19 @@
 package models.tuples.entitiesRepresentation;
 
-import models.users.AbstraticUser;
+import models.utils.UserType;
+
+import java.sql.Date;
 
 public class Admin extends AbstraticUser {
 
     public Admin (){
-
+        super();
+        withUserType(UserType.ADMIN);
+        withUserCreated(new Date(System.currentTimeMillis()));
     }
 
     public Admin(String id, String email, String password) {
-        super(id, email, password);
+        super(id, email, password, UserType.ADMIN, new Date(System.currentTimeMillis()));
     }
 
     @Override
@@ -29,4 +33,17 @@ public class Admin extends AbstraticUser {
         password = newPassword;
         return this;
     }
+
+    @Override
+    public AbstraticUser withUserType(UserType userType) {
+        this.userType = userType;
+        return this;
+    }
+
+    @Override
+    public AbstraticUser withUserCreated(Date newDateCreated) {
+        dateCreated = newDateCreated;
+        return this;
+    }
+
 }
