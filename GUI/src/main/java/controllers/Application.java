@@ -3,8 +3,7 @@ package controllers;
 import controllers.dashboards.AdminDashboardController;
 import controllers.dashboards.CustomerDashboardController;
 import controllers.dashboards.ServiceDashBoardController;
-import models.Database;
-import models.users.AbstraticUser;
+import models.tuples.entitiesRepresentation.AbstraticUser;
 
 import java.sql.SQLException;
 

@@ -1,33 +1,41 @@
 package models.repositories;
 
 import models.Database;
+import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.Customer;
 import models.utils.Tools;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
-public class CustomerRepository extends Database implements Repository {
+public class CustomerRepository extends Database implements Repository<Customer>{
 
     public CustomerRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
     }
 
 
     @Override
-    public void addToDB(Object obj) throws SQLException {
+    public void addToDB(Customer obj) throws SQLException {
         init();
-        Customer c = (Customer)obj;
+        Customer c = obj;
 
         c.withPassword(Tools.hashingPassword(c.getPassword()));
 
-        String query = new StringBuilder()
-                .append("INSERT INTO customers (password, email,")
-                .append(" phone, first_name, last_name, date_of_account_creation) VALUES ( ")
-                .append("'").append(c.getPassword()).append("', ")
-                .append("'").append(c.getEmail()).append("', ")
-                .append("'").append(c.getPhone()).append("', ")
-                .append("'").append(c.getFirstName()).append("', ")
-                .append("'").append(c.getLastName()).append("', ")
-                .append("'").append(c.getDateCreated()).append("'); ").toString();
+        String query = "INSERT INTO users (user_type, email, password, date_created)" +
+                "VALUES ('"+c.getUserType()+"','"+c.getEmail()+"','"+c.getPassword()+"','"+c.getDateCreated()+"')";
+
+        stmt.executeUpdate(query);
+
+        String id = selectIdOfUser(c.getEmail());
+
+        query = "INSERT INTO customers ( c_id, first_name, last_name) " +
+                "VALUES ('"+id+"','"+c.getFirstName()+"','"+c.getLastName()+"');";
+
+        stmt.executeUpdate(query);
+
+        query = "INSERT INTO phone_list VALUES ('"+id+"','"+c.getPhone().getPhone()+"')";
+
         stmt.executeUpdate(query);
 
         close();
@@ -42,6 +50,24 @@ public class CustomerRepository extends Database implements Repository {
 
         close();
         return customer;
+    }
+
+    @Override
+    public String selectIdOfUser(String email) throws SQLException {
+        init();
+
+        ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE email = '"+email+"'");
+        while (rs.next()){
+            return rs.getString("id");
+        }
+
+        close();
+        return null;
+    }
+
+    @Override
+    public List<Customer> getList(AbstraticUser user) throws SQLException {
+        return null;
     }
 
 

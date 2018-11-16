@@ -70,7 +70,7 @@ public class Customer extends AbstraticUser {
     }
 
     @Override
-    public Customer withUserCreated(Date newDateCreated) {
+    public Customer withDateCreated(Date newDateCreated) {
         dateCreated = newDateCreated;
         return this;
     }

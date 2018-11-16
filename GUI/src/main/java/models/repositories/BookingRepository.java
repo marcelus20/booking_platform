@@ -1,11 +1,15 @@
 package models.repositories;
 
-import models.BookingStatus;
+import models.enums.BookingReview;
+import models.enums.BookingStatus;
 import models.Database;
+import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.Booking;
 import models.tuples.entitiesRepresentation.BookingSlots;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
+import models.tuples.entitiesRepresentation.Customer;
+import models.tuples.joinedEntities.ManageBookingView;
 import models.utils.Tools;
 
 import java.sql.ResultSet;
@@ -13,13 +17,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookingRepository extends Database implements Repository {
+public class BookingRepository extends Database implements Repository<Booking> {
 
     public BookingRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
     }
 
+
     @Override
-    public void addToDB(Object obj) throws SQLException {
+    public void addToDB(Booking obj) throws SQLException {
 
     }
 
@@ -36,7 +41,7 @@ public class BookingRepository extends Database implements Repository {
 
         while (rs.next()){
             b.withBookingStatus(Tools.mapBookingStatusStringToEnum(rs.getString("booking_status")));
-            b.withComplaint(rs.getString("complaint"));
+            b.withReview(BookingReview.valueOf(rs.getString("complaint")));
         }
 
         close();
@@ -44,79 +49,86 @@ public class BookingRepository extends Database implements Repository {
         return b;
     }
 
+    @Override
+    public String selectIdOfUser(String email) throws SQLException {
+        return null;
+    }
 
 
-    public void addBook(TupleOf3Elements<String, String, String> tuple, BookingSlots b) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void addBook(BookingSlots slot, Customer user) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         init();
-        System.out.println(b);
+
 
         String query = new StringBuilder().append("INSERT INTO booking VALUES (")
-                .append("'").append(tuple.get_1()).append("', ")
-                .append("'").append(tuple.get_2()).append("', ")
-                .append("'").append(tuple.get_3()).append("', ")
-                .append("'").append(b.getBooking().getBookingStatus()).append("', ")
-                .append("'").append(b.getBooking().getComplaint()).append("'); ").toString();
+                .append("'").append(slot.getTimestamp()).append("', ")
+                .append("'").append(slot.getServiceId()).append("', ")
+                .append("'").append(user.getId()).append("', ")
+                .append("'").append(BookingStatus.PENDENT).append("', ")
+                .append("'").append(BookingReview.NO_REVIEW_ADDED).append("'); ").toString();
 
         stmt.executeUpdate(query);
 
-        Repository<BookingSlotRepository> bRep = new BookingSlotRepository();
+        Repository<BookingSlots> bRep = new BookingSlotRepository();
 
-        ((BookingSlotRepository) bRep).updateBookingSlotAvailability(Tuple
-                .tuple((String) tuple.get_1(), (String) tuple.get_3()), !b.getAvailability());
+        ((BookingSlotRepository) bRep).updateBookingSlotAvailability(slot.getTimestamp(), slot.getServiceId(), false);
 
         close();
     }
 
-    public List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> selectAllBookingsFromCustomer(String customerId) throws SQLException {
-
-        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>>result= new ArrayList<>();
+    @Override
+    public List<Booking> getList(AbstraticUser customer) throws SQLException {
+        List<Booking> bookings = new ArrayList<>();
         init();
 
-        String query = new StringBuilder().append("SELECT b.time_stamp, b.s_id, b.customer_id, s.company_full_name, ")
-                .append("l.first_line_address, l.city, b.booking_status FROM booking b ")
-                .append("JOIN service_provider s ON b.s_id = s.s_id JOIN location l ON ")
-                .append("l.s_id = s.s_id WHERE b.customer_id = '"+customerId+"';").toString();
+        String query = "SELECT * FROM booking WHERE id = "+customer.getId()+";";
 
-        ResultSet rs = stmt.executeQuery(query);
+        ResultSet rs = stmt.executeQuery("query");
+
         while (rs.next()){
-            List<String> line = new ArrayList<>();
-            TupleOf3Elements<String, String, String> t;
-            t = TupleOf3Elements.tupleOf3Elements(
-                    rs.getString("b.time_stamp"), rs.getString("b.s_id"), rs.getString("b.customer_id"));
-
-            line.add(rs.getString("time_stamp"));
-            line.add(rs.getString("company_full_name"));
-            line.add(rs.getString("first_line_address"));
-            line.add(rs.getString("city"));
-            line.add(rs.getString("booking_status"));
-
-            result.add(Tuple.tuple(t,line));
+            Booking booking = new Booking();
+            booking.withCustomerId(customer.getId());
+            booking.withBookingStatus(BookingStatus.valueOf(rs.getString("booking_status")));
+            booking.withReview(BookingReview.valueOf(rs.getString("booking_review")));
         }
 
+//
+//        ((Customer)customer)
+
+
+//        String query = new StringBuilder().append("SELECT b.time_stamp, b.s_id, b.customer_id, s.company_full_name, ")
+//                .append("l.first_line_address, l.city, b.booking_status FROM booking b ")
+//                .append("JOIN service_provider s ON b.s_id = s.s_id JOIN location l ON ")
+//                .append("l.s_id = s.s_id WHERE b.customer_id = '"+customerId+"';").toString();
+//
+//        ResultSet rs = stmt.executeQuery(query);
+//        while (rs.next()){
+//            List<String> line = new ArrayList<>();
+//            TupleOf3Elements<String, String, String> t;
+//            t = TupleOf3Elements.tupleOf3Elements(
+//                    rs.getString("b.time_stamp"), rs.getString("b.s_id"), rs.getString("b.customer_id"));
+//
+//            line.add(rs.getString("time_stamp"));
+//            line.add(rs.getString("company_full_name"));
+//            line.add(rs.getString("first_line_address"));
+//            line.add(rs.getString("city"));
+//            line.add(rs.getString("booking_status"));
+//
+//            result.add(Tuple.tuple(t,line));
+//        }
+//
         close();
-        return result;
+        return bookings;
     }
 
-    public void cancelBooking(TupleOf3Elements<String, String, String> id) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        init();
 
-        stmt.executeUpdate("DELETE FROM booking WHERE time_stamp ='"+ id.get_1()+"' AND "+id.get_3()+ " AND "+ id.get_2()+";");
-
-        Repository<BookingSlotRepository> bRep = new BookingSlotRepository();
-
-
-        ((BookingSlotRepository) bRep).updateBookingSlotAvailability(Tuple
-                .tuple((String) id.get_1(), (String) id.get_2()), true);
-
-        close();
-    }
-
-    public void updateAComplaint(TupleOf3Elements<String, String, String> id, String complaint) throws SQLException {
+    public void updateAReview(ManageBookingView manageBookingView, String review) throws SQLException {
 
         init();
 
-        stmt.executeUpdate("UPDATE booking SET complaint = '"+complaint+"' WHERE time_stamp = '"
-                + id.get_1() + "' AND customer_id = '" + id.get_2() + "' AND s_id = '" +id.get_3() + "' ;");
+        stmt.executeUpdate("UPDATE booking SET review = '"+review+"' WHERE time_stamp = '"
+                + manageBookingView.getTimestamp() + "' AND c_id = '"
+                + manageBookingView.getCustomerId() + "' AND s_id = '"
+                +manageBookingView.getServiceId() + "' ;");
 
 
         close();
@@ -203,4 +215,19 @@ public class BookingRepository extends Database implements Repository {
     }
 
 
+    public void cancelBooking(ManageBookingView manageBookingView) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        init();
+
+        stmt.executeUpdate("DELETE FROM booking WHERE time_stamp ='"+ manageBookingView.getTimestamp()+
+                "' AND s_id = "+manageBookingView.getServiceId()+ " AND c_id = "
+                + manageBookingView.getCustomerId()+";");
+
+        Repository<BookingSlots> bRep = new BookingSlotRepository();
+
+
+        ((BookingSlotRepository) bRep).updateBookingSlotAvailability(manageBookingView
+                .getTimestamp(), manageBookingView.getServiceId(), true);
+
+        close();
+    }
 }

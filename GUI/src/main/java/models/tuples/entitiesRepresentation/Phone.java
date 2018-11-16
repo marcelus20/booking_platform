@@ -11,6 +11,9 @@ public class Phone {
         this.phone = phone;
     }
 
+    public Phone() {
+    }
+
     public String getUserId() {
         return userId;
     }

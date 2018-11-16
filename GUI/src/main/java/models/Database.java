@@ -1,14 +1,18 @@
 package models;
 
+import models.enums.BookingReview;
+import models.enums.BookingStatus;
+import models.enums.ServiceProviderStatus;
+import models.enums.UserType;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
-import models.users.AbstraticUser;
-import models.utils.Tools;
+import models.tuples.entitiesRepresentation.*;
+import models.tuples.joinedEntities.ManageBookingView;
+import models.tuples.joinedEntities.ServiceProviderTableView;
 
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Database {
@@ -37,27 +41,62 @@ public class Database {
         init();
         AbstraticUser user = null;
 
-        String[] tables = {"admin", "customers", "service_provider"};
+        String query  = new StringBuilder().append("SELECT * FROM ").append("users")
+                .append(" WHERE email = ").append("'").append(email).append("'")
+                .append(" AND password = '").append(password).append("' ;").toString();
 
+        ResultSet rs = stmt.executeQuery(query);
 
-        for(String table : tables){
-            String query  = new StringBuilder().append("SELECT * FROM ").append(table)
-                    .append(" WHERE email = ").append("'").append(email).append("'")
-                    .append(" AND password = '").append(password).append("' ;").toString();
+        while (rs.next()){
+            System.out.println(rs.getString("user_type"));
+             if(rs.getString("user_type").equalsIgnoreCase("ADMIN")){
+                 user = new Admin();
+                 user.withUserType(UserType.ADMIN);
+             }else if (rs.getString("user_type").equalsIgnoreCase("SERVICE_PROVIDER")){
+                 user = new ServiceProvider();
+                 user.withUserType(UserType.SERVICE_PROVIDER);
+             }else{
+                 user = new Customer();
+                 user.withUserType(UserType.CUSTOMER);
+             }
 
-            ResultSet rs = stmt.executeQuery(query);
+             user.withId(rs.getString("id"));
+             user.withEmail(rs.getString("email"));
+             user.withPassword(rs.getString("password"));
+             user.withDateCreated(rs.getDate("date_created"));
+        }
 
-            while (rs.next()){
-                if(table.equalsIgnoreCase("admin")){
-                    user = Tools.adminMapper(rs);
-                }else if (table.equalsIgnoreCase("customers")){
-                    user = Tools.customerMapper(rs);
-                }else {
-                    user = Tools.serviceProviderMapper(rs);
-                }
+        if(!user.getUserType().equals(UserType.ADMIN)){
+            user = populateTheRestofAttributes(user);
+        }
+
+        close();
+        return user;
+    }
+
+    private AbstraticUser populateTheRestofAttributes(AbstraticUser user) throws SQLException {
+        String query = "";
+        if(user.getUserType().equals(UserType.CUSTOMER)){
+            query = "SELECT * FROM customers WHERE c_id = '"+user.getId()+"'";
+        }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
+            query = "SELECT * FROM service_provider WHERE s_id = '"+user.getId()+"'";
+        }
+        init();
+
+        ResultSet rs = stmt.executeQuery(query);
+        while(rs.next()){
+            if(user.getUserType().equals(UserType.CUSTOMER)){
+                ((Customer) user).withFirstName(rs.getString("first_name"));
+                ((Customer) user).withLastName(rs.getString("last_name"));
+            }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
+                ((ServiceProvider) user).withCompanyFullName(rs.getString("company_full_name"));
+                ((ServiceProvider) user).withServiceProviderStatus(ServiceProviderStatus
+                        .valueOf(rs.getString("approved_status")));
             }
         }
+
         close();
+
         return user;
     }
 
@@ -74,23 +113,30 @@ public class Database {
         return cities;
     }
 
-    public List<List<String>>getListOfBarbersByCity(String city) throws SQLException {
+    public List<ServiceProviderTableView>getListOfBarbersByCity(String city) throws SQLException {
         init();
-        List<List<String>> barbers = new ArrayList<>();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider AS b JOIN location AS l ON b.s_id = l.s_id;");
+//        List<List<String>> barbers = new ArrayList<>();
+//        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider AS b JOIN location AS l ON b.s_id = l.s_id;");
+        ResultSet rs = stmt.executeQuery("SELECT u.id, u.email, s.company_full_name, l.first_line_address, l.city, p.phone " +
+                "FROM users u JOIN service_provider s ON u.id = s.s_id JOIN location l ON u.id = l.s_id  " +
+                " JOIN phone_list p ON u.id = p.id WHERE l.city = '"+city+"';");
+        List<ServiceProviderTableView> tableListOfBarbers= new ArrayList<>();
+
+
 
         while (rs.next()){
-            List<String> line = new ArrayList<>();
-            line.add(rs.getString("s_id"));
-            line.add(rs.getString("email"));
-            line.add(rs.getString("phone"));
-            line.add(rs.getString("company_full_name"));
-            line.add(rs.getString("first_line_address"));
-            line.add(rs.getString("city"));
-            barbers.add(line);
+            ServiceProviderTableView serviceProviderTableView = new ServiceProviderTableView();
+            serviceProviderTableView.setServiceId(rs.getString("id"));
+            serviceProviderTableView.setServiceEmail(rs.getString("email"));
+            serviceProviderTableView.setServiceName(rs.getString("company_full_name"));
+            serviceProviderTableView.setAddress(rs.getString("first_line_address"));
+            serviceProviderTableView.setCity(rs.getString("city"));
+            serviceProviderTableView.setPhone(rs.getString("phone"));
+            tableListOfBarbers.add(serviceProviderTableView);
         }
+        System.out.println(tableListOfBarbers);
         close();
-        return barbers;
+        return tableListOfBarbers;
     }
 
     public List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> getShortenedListOfBookings(String customerId) throws SQLException {
@@ -117,4 +163,31 @@ public class Database {
         return result;
     }
 
+    public List<ManageBookingView> generateBookingView(AbstraticUser user) throws SQLException {
+        List<ManageBookingView> manageBookingViews = new ArrayList<>();
+
+        init();
+
+        String query = "select * from booking b join service_provider s on b.s_id = s.s_id" +
+                " join phone_list p on p.id = b.s_id where b.c_id = "+user.getId()+";";
+
+        ResultSet rs = stmt.executeQuery(query);
+
+        while(rs.next()){
+            ManageBookingView manageBookingView = new ManageBookingView();
+            manageBookingView.setTimestamp(rs.getTimestamp("time_stamp"));
+            manageBookingView.setServiceId(rs.getString("s_id"));
+            manageBookingView.setCustomerId(rs.getString("c_id"));
+            manageBookingView.setReview(BookingReview.valueOf(rs.getString("review")));
+            manageBookingView.setCompanyName(rs.getString("company_full_name"));
+            manageBookingView.setBookingStatus(BookingStatus.valueOf(rs.getString("booking_status")));
+            manageBookingView.setPhone(rs.getString("phone"));
+
+            manageBookingViews.add(manageBookingView);
+        }
+
+        close();
+
+        return manageBookingViews;
+    }
 }

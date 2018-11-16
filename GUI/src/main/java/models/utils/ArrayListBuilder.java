@@ -24,6 +24,13 @@ public class ArrayListBuilder <T> {
         return new ArrayListBuilder<T>(arrayList);
     }
 
+    public ArrayListBuilder<T> add(T... elements){
+        for(T element : elements){
+            arrayList.add(element);
+        }
+        return new ArrayListBuilder<T>(arrayList);
+    }
+
     public List<T> build(){
         return arrayList;
     }

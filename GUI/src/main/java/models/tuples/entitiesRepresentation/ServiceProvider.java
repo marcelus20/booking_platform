@@ -4,6 +4,7 @@ import models.enums.ServiceProviderStatus;
 import models.enums.UserType;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class ServiceProvider extends AbstraticUser {
                            Location location, List<BookingSlots> bookingSlots,
                            List<Log> listOfLogs,  List<Phone> phones
     ) {
-        super(id, email, password, UserType.SERVICE, dateCreated, listOfLogs, phones);
+        super(id, email, password, UserType.SERVICE_PROVIDER, dateCreated, listOfLogs, phones);
         this.companyFullName = companyFullName;
         this.status = status;
         this.location = location;
@@ -27,7 +28,7 @@ public class ServiceProvider extends AbstraticUser {
     }
 
     public ServiceProvider() {
-        userType = UserType.SERVICE;
+        userType = UserType.SERVICE_PROVIDER;
         dateCreated = new Date(System.currentTimeMillis());
     }
 
@@ -73,7 +74,7 @@ public class ServiceProvider extends AbstraticUser {
     }
 
     @Override
-    public ServiceProvider withUserCreated(Date newDateCreated) {
+    public ServiceProvider withDateCreated(Date newDateCreated) {
         dateCreated = newDateCreated;
         return this;
     }
@@ -97,6 +98,16 @@ public class ServiceProvider extends AbstraticUser {
 
     public ServiceProvider withServiceProviderStatus(ServiceProviderStatus newStatus) {
         status = newStatus;
+        return this;
+    }
+
+    public ServiceProvider withBookingSlots(List<BookingSlots> bookingSlots) {
+        this.bookingSlots = bookingSlots;
+        return this;
+    }
+
+    public ServiceProvider withLocation(Location newLocation) {
+        this.location = newLocation;
         return this;
     }
 
@@ -126,4 +137,26 @@ public class ServiceProvider extends AbstraticUser {
                 ", bookingSlots=" + bookingSlots +
                 '}';
     }
+
+
+    public BookingSlots getBookingByTimestamp(Timestamp timestamp) {
+
+        for (BookingSlots slot :
+                bookingSlots) {
+            if (slot.getTimestamp().equals(timestamp)){
+                return slot;
+            }
+        }
+        return null;
+    }
+
+    public void addBookingToSlot(Booking b, Timestamp timestamp) {
+        bookingSlots.forEach(slot -> {
+            if(slot.getTimestamp().equals(timestamp)){
+                slot.withBooking(b);
+            }
+        });
+    }
+
+
 }

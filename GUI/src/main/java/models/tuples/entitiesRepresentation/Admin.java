@@ -36,13 +36,13 @@ public class Admin extends AbstraticUser {
     }
 
     @Override
-    public  Admin withUserType(UserType userType) {
+    public Admin withUserType(UserType userType) {
         this.userType = userType;
         return this;
     }
 
     @Override
-    public  Admin withUserCreated(Date newDateCreated) {
+    public  Admin withDateCreated(Date newDateCreated) {
         dateCreated = newDateCreated;
         return this;
     }

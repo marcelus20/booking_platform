@@ -7,7 +7,7 @@ import models.Database;
 import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
-import models.users.AbstraticUser;
+import models.tuples.entitiesRepresentation.AbstraticUser;
 import views.login.Login;
 
 import javax.swing.*;

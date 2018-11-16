@@ -1,6 +1,7 @@
 package models.repositories;
 
 import models.Database;
+import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.Booking;
 import models.tuples.entitiesRepresentation.BookingSlots;
 import models.tuples.Tuple;
@@ -8,19 +9,22 @@ import models.utils.MyCustomDateAndTime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
-public class BookingSlotRepository extends Database implements Repository {
+public class BookingSlotRepository extends Database implements Repository<BookingSlots> {
 
 
-    private Repository<BookingRepository> bRep;
+    private Repository<Booking> bRep;
 
     public BookingSlotRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         bRep = new BookingRepository();
     }
 
+
     @Override
-    public void addToDB(Object obj) throws SQLException {
+    public void addToDB(BookingSlots obj) throws SQLException {
 
     }
 
@@ -51,6 +55,15 @@ public class BookingSlotRepository extends Database implements Repository {
         return slot;
     }
 
+    @Override
+    public String selectIdOfUser(String email) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public List<BookingSlots> getList(AbstraticUser user) throws SQLException {
+        return null;
+    }
 
 
     public void updateBookingSlotAvailability(Tuple<String, String> id, Boolean status) throws SQLException {
@@ -85,6 +98,31 @@ public class BookingSlotRepository extends Database implements Repository {
             }
         });
 
+        close();
+    }
+
+    public List<BookingSlots> getList(String id) throws SQLException {
+        List<BookingSlots> slots = new ArrayList<>();
+
+        init();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM booking_slots; ");
+        while (rs.next()){
+            BookingSlots bookingSlots= new BookingSlots();
+            bookingSlots.withServiceId(id);
+            bookingSlots.withTimestamp(rs.getTimestamp("timestamp"));
+            bookingSlots.withAvailability(rs.getBoolean("availability"));
+            slots.add(bookingSlots);
+        }
+        close();
+
+        return slots;
+    }
+
+    public void updateBookingSlotAvailability(Timestamp timestamp, String serviceId, boolean b) throws SQLException {
+
+        init();
+        stmt.executeUpdate("UPDATE booking_slots SET availability = "+b+" WHERE timestamp = " +
+                "'"+timestamp+"' AND s_id = '"+serviceId+"' ;");
         close();
     }
 }

@@ -2,7 +2,8 @@ package controllers.dashboards;
 
 import controllers.Application;
 import controllers.Control;
-import models.ServiceProviderStatus;
+import models.enums.ServiceProviderStatus;
+import models.enums.UserType;
 import models.repositories.AdminRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
@@ -20,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,6 +95,8 @@ public class AdminDashboardController implements Control {
                 Admin admin = new Admin();
                 admin.withEmail(adminForm.get_2().getEmail());
                 admin.withPassword(Tools.hashingPassword(adminForm.get_2().getConfirmPassword()));
+                admin.withUserType(UserType.ADMIN);
+                admin.withDateCreated(new Date(System.currentTimeMillis()));
                 System.out.println(admin);
                 Repository<Admin> admRep = null;
                 try {
@@ -183,11 +187,11 @@ public class AdminDashboardController implements Control {
 
         Map<Integer, String> rowIndexToIdMap = new HashMap<>();
 
-        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
+//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
 
-        JTable tableOfServices = new JTable(table, new String[]{"id","email", "phone", "company name", "status", "Address", "second line address", "city"});
+//        JTable tableOfServices = new JTable(table, new String[]{"id","email", "phone", "company name", "status", "Address", "second line address", "city"});
 
-        drawTableToView(tableOfServices, map);
+//        drawTableToView(tableOfServices, map);
     }
 
     private void drawTableToView(JTable tableOfServices, Map<String, List<String>> map) {

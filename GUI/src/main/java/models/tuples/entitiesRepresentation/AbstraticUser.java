@@ -3,6 +3,7 @@ package models.tuples.entitiesRepresentation;
 import models.enums.UserType;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,13 +59,27 @@ public abstract class AbstraticUser {
         return phones;
     }
 
+    public Phone getPhone(){
+        if(phones != null && phones.size() != 0){
+            return phones.get(0);
+        }
+        return null;
+    }
+
     public abstract AbstraticUser withId(String newId);
     public abstract AbstraticUser withEmail(String newEmail);
     public abstract AbstraticUser withPassword(String newPassword);
     public abstract AbstraticUser withUserType(UserType userType);
-    public abstract AbstraticUser withUserCreated(Date newDateCreated);
+    public abstract AbstraticUser withDateCreated(Date newDateCreated);
     public abstract AbstraticUser withListOfLogs(List<Log> newListOfLog);
     public abstract AbstraticUser withListOfPhones(List<Phone> newListOfPhones);
+    public AbstraticUser withPhone(Phone phone) {
+        if(phones == null){
+            phones = new ArrayList<>();
+        }
+        phones.add(phone);
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -97,4 +112,6 @@ public abstract class AbstraticUser {
                 ", phones=" + phones +
                 '}';
     }
+
+
 }

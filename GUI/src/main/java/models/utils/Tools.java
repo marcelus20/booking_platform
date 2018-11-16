@@ -1,10 +1,13 @@
 package models.utils;
 
-import models.BookingStatus;
-import models.ServiceProviderStatus;
+import models.enums.BookingReview;
+import models.enums.BookingStatus;
+import models.enums.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.*;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
+import models.tuples.joinedEntities.ManageBookingView;
+import models.tuples.joinedEntities.ServiceProviderTableView;
 import org.apache.commons.codec.digest.DigestUtils;
 import views.dashboard.Dashboard;
 
@@ -13,10 +16,11 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 public class Tools {
 
@@ -25,10 +29,9 @@ public class Tools {
 
             serviceProvider.withId(rs.getString("s_id"));
             serviceProvider.withEmail(rs.getString("email"));
-            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
-            serviceProvider.withPhone("phone");
+            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_created")));
             serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
-            serviceProvider.withApprovedStatus(ServiceProviderStatus.valueOf(rs
+            serviceProvider.withServiceProviderStatus(ServiceProviderStatus.valueOf(rs
                     .getString("approved_status").toUpperCase()));
 
         return serviceProvider;
@@ -48,7 +51,7 @@ public class Tools {
         Customer customer = new Customer();
         customer.withId(rs.getString("customer_id"));
         customer.withEmail(rs.getString("email"));
-        customer.withPhone(rs.getString("Phone"));
+//        customer.withPho(rs.getString("Phone"));
         customer.withFirstName(rs.getString("first_name"));
         customer.withLastName(rs.getString("last_name"));
         customer.withDateCreated(rs.getDate("date_of_account_creation"));
@@ -111,20 +114,23 @@ public class Tools {
                 "Booking", JOptionPane.YES_NO_OPTION);
     }
 
-    public static String[][] convert2DlistTo2DArray(List<List<String>> _2Dlist){
-        if(_2Dlist.size() == 0){
-            return new String[0][0];
-        }
-        final Integer rows = _2Dlist.size();
-        final Integer cols = _2Dlist.get(0).size();
-        final String[][] table = new String[rows][cols];
+    public static Map<List<String>, ServiceProviderTableView>  convertArrayOfBarberTableViewToListOfString(List<ServiceProviderTableView> tableViewList){
+        Map<List<String>, ServiceProviderTableView> map = new HashMap();
+        List<List<String>> barberTableViewList = new ArrayList<>();
 
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < cols; j++){
-                table[i][j] = _2Dlist.get(i).get(j);
-            }
-        }
-        return table;
+        tableViewList.forEach(barber->{
+            List<String> line = new ArrayList<>();
+            line.add(barber.getServiceId());
+            line.add(barber.getServiceEmail());
+            line.add(barber.getServiceName());
+            line.add(barber.getAddress());
+            line.add(barber.getCity());
+            line.add(barber.getPhone());
+            barberTableViewList.add(line);
+            map.put(line, barber);
+        });
+
+        return map;
 
     }
 
@@ -140,19 +146,18 @@ public class Tools {
         return table;
     }
 
-    public static ServiceProvider filterServiceProviderToOnlyAvailableSlots(ServiceProvider serviceProvider) {
-    List<BookingSlots> bookingSlots = new ArrayList<>();
-
-    serviceProvider.getBookingSlots().forEach(slot->{
+    public static List<BookingSlots> filterBookingsToJustAvailables(List<BookingSlots> fullBookingSlots) {
+    List<BookingSlots> filteredBookingSlots = new ArrayList<>();
+    fullBookingSlots.forEach(slot->{
         if(slot.getAvailability()){
 
-            bookingSlots.add(slot);
+            filteredBookingSlots.add(slot);
         }
-        System.out.println(slot);
-    });
-    serviceProvider.withBookingSlots(bookingSlots);
 
-    return serviceProvider;
+    });
+
+
+    return filteredBookingSlots;
     }
 
     public static String[][] convertListOfBookingToArray(List<BookingSlots> slots) {
@@ -211,5 +216,67 @@ public class Tools {
 
 
         return "<html><body>"+str+"</body></html>";
+    }
+
+    public static String[][] convert2DlistTo2DArray(List<ServiceProviderTableView> results) {
+        String[][] table;
+        try{
+            table = new String[results.size()][results.get(0).getClass().getDeclaredFields().length];
+        }catch (Exception e){
+            return new String[0][0];
+        }
+
+        for(int i = 0; i < results.size(); i++){
+            table[i][0] = results.get(i).getServiceId();
+            table[i][1] = results.get(i).getServiceEmail();
+            table[i][2] = results.get(i).getServiceName();
+            table[i][3] = results.get(i).getAddress();
+            table[i][4] = results.get(i).getCity();
+            table[i][5] = results.get(i).getPhone();
+        }
+        return table;
+    }
+
+    public static String[][] mapManageBookingViewsListToArray(List<ManageBookingView> manageBookingViewList) {
+        String[][] table;
+        try{
+            table = new String[manageBookingViewList.size()][manageBookingViewList.get(0).getClass().getDeclaredFields().length];
+        }catch (Exception e){
+            return new String[0][0];
+        }
+
+        for(int i = 0; i < manageBookingViewList.size(); i++){
+            table[i][0] = String.valueOf(manageBookingViewList.get(i).getTimestamp());
+            table[i][1] = manageBookingViewList.get(i).getCompanyName();
+            table[i][2] = String.valueOf(manageBookingViewList.get(i).getBookingStatus());
+            table[i][3] = manageBookingViewList.get(i).getPhone();
+            table[i][4] = String.valueOf(manageBookingViewList.get(i).getReview());
+        }
+
+        return table;
+    }
+
+    public static String[][] mapManageBookingViewsListToArrayShortened(List<ManageBookingView> shortenedBookingViewList) {
+        String[][] table;
+        try{
+            table = new String[shortenedBookingViewList.size()][3];
+        }catch (Exception e){
+            return new String[0][0];
+        }
+
+        for(int i = 0; i < shortenedBookingViewList.size(); i++){
+            table[i][0] = String.valueOf(shortenedBookingViewList.get(i).getTimestamp());
+            table[i][1] = shortenedBookingViewList.get(i).getCompanyName();
+            table[i][2] = String.valueOf(shortenedBookingViewList.get(i).getReview());
+        }
+        return table;
+    }
+
+    public static BookingReview[] generateArrayOfBookingReview() {
+
+        return new ArrayListBuilder<BookingReview>().add(BookingReview.NO_REVIEW_ADDED,
+                BookingReview.END_OF_THE_WORLD, BookingReview.TERRIBLE, BookingReview.BAD,
+                BookingReview.MEH, BookingReview.OK, BookingReview.GOOD, BookingReview.VERY_GOOD,
+                BookingReview.SUPERB, BookingReview.PERFECT).build().toArray(new BookingReview[]{});
     }
 }

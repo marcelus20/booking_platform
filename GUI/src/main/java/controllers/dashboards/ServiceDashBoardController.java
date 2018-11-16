@@ -5,8 +5,8 @@ import com.github.lgooddatepicker.optionalusertools.CalendarSelectionListener;
 import com.github.lgooddatepicker.zinternaltools.CalendarSelectionEvent;
 import controllers.Application;
 import controllers.Control;
-import models.BookingStatus;
-import models.ServiceProviderStatus;
+import models.enums.BookingStatus;
+import models.enums.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.repositories.BookingRepository;
 import models.repositories.BookingSlotRepository;
@@ -72,7 +72,7 @@ public class ServiceDashBoardController implements Control {
 
     private void blockAllButtonsIfNotApproved() {
         dashboard.getButtonsPanel().forEach(b->{
-            if(!(user.getApprovedStatus() == ServiceProviderStatus.APPROVED)){
+            if(!(user.getStatus() == ServiceProviderStatus.APPROVED)){
                 b.getButton().setEnabled(false);
             }
         });
@@ -82,10 +82,10 @@ public class ServiceDashBoardController implements Control {
     private void showMessageOnHomePage() {
         String msg = "";
 
-        if(user.getApprovedStatus() == ServiceProviderStatus.APPROVED){
+        if(user.getStatus() == ServiceProviderStatus.APPROVED){
             msg = "Congratulations, your subscription has been approved<br>" +
                     "use the side bar buttons to browse through the system!";
-        }else if(user.getApprovedStatus() == ServiceProviderStatus.REJECTED){
+        }else if(user.getStatus() == ServiceProviderStatus.REJECTED){
             msg = "Unfortunately you have been rejected by one of the<br> administrators<br>" +
                     "Your datails seemed to be not genuine and discrepant";
         }else{
@@ -171,9 +171,9 @@ public class ServiceDashBoardController implements Control {
 
     private void createJTable(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
         List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(bookings);
-        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
-        JTable jTable = new JTable(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
-        showTableToView(bookings, jTable);
+//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
+//        JTable jTable = new JTable(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
+//        showTableToView(bookings, jTable);
 
     }
 
@@ -351,9 +351,9 @@ public class ServiceDashBoardController implements Control {
 
         List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(listOfBookings);
 
-        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
+//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
 
-        dashboard.withUpcomingBookingsPanel(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
+//        dashboard.withUpcomingBookingsPanel(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
 
         addTableListener(dashboard.getUpComingBookingsPanel().getUpcomingBookingsTable(), listOfBookings);
 
@@ -370,12 +370,12 @@ public class ServiceDashBoardController implements Control {
                     TupleOf3Elements<String, String, String> id = listOfBookings.get(upcomingBookingsTable.getSelectedRow()).get_1();
                     Integer n = Tools.alertConfirm(dashboard, "Cancel Booking?");
                     if(n == 0){
-                        try {
-                            bRep.cancelBooking(id);
-                            goToUpComingBookings();
-                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
-                            e1.printStackTrace();
-                        }
+//                        try {
+////                            bRep.cancelBooking(id);
+//                            goToUpComingBookings();
+//                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
+//                            e1.printStackTrace();
+//                        }
                     }
                 }
             }

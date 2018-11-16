@@ -1,8 +1,9 @@
 package models.repositories;
 
 import models.Database;
-import models.ServiceProviderStatus;
+import models.enums.ServiceProviderStatus;
 import models.tuples.Tuple;
+import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.BookingSlots;
 import models.tuples.entitiesRepresentation.Location;
 import models.tuples.entitiesRepresentation.ServiceProvider;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceProviderRepository extends Database implements Repository{
+public class ServiceProviderRepository extends Database implements Repository<ServiceProvider>{
 
 
     public ServiceProviderRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
@@ -22,38 +23,42 @@ public class ServiceProviderRepository extends Database implements Repository{
     }
 
     @Override
-    public void addToDB(Object obj) throws SQLException {
+    public void addToDB(ServiceProvider obj) throws SQLException {
         init();
-        ServiceProvider s = (ServiceProvider)obj;
+        ServiceProvider s = obj;
         Location l = s.getLocation();
 
         s.withPassword(Tools.hashingPassword(s.getPassword()));
 
         //FOR THE NEW service provider
         String query = new StringBuilder()
-                .append("INSERT INTO service_provider (password, email, date_of_account_creation,")
-                .append(" phone, company_full_name, approved_status) VALUES ( ")
-                .append("'").append(s.getPassword()).append("', ")
+                .append("INSERT INTO users (user_type, email, password, date_created) VALUES ( ")
+                .append("'").append(s.getUserType()).append("', ")
                 .append("'").append(s.getEmail()).append("', ")
-                .append("'").append(s.getDateCreated()).append("', ")
-                .append("'").append(s.getPhone()).append("', ")
-                .append("'").append(s.getCompanyFullName()).append("', ")
-                .append("'").append(s.getApprovedStatus()).append("') ;").toString();
+                .append("'").append(s.getPassword()).append("', ")
+                .append("'").append(s.getDateCreated()).append("'")
+                .append(")").toString();
 
 
         stmt.executeUpdate(query);
 
-        String newId = "";
-        ResultSet rs = stmt.executeQuery("SELECT s_id FROM service_provider WHERE email = '"+s.getEmail() + "'; ");
-        while (rs.next()){
-            newId = rs.getString("s_id");
-        }
+        String id = selectIdOfUser(s.getEmail());
+        System.out.println(id);
+
+        query = "INSERT INTO phone_list (id, phone) VALUES ('"+id+"','"+s.getPhone().getPhone()+"')";
+
+        stmt.executeUpdate(query);
+
+        query = "INSERT  INTO service_provider (s_id, company_full_name, approved_status) " +
+                "VALUES ('"+id+"','"+s.getCompanyFullName()+"','"+s.getStatus()+"')";
+
+        stmt.executeUpdate(query);
 
         //FOR THE LOCATION WISE
         query = new StringBuilder()
                 .append("INSERT INTO location (s_id, first_line_address, eir_code,")
                 .append(" city, second_line_address) VALUES ( ")
-                .append("'").append(newId).append("', ")
+                .append("'").append(id).append("', ")
                 .append("'").append(l.getFirstLineAddress()).append("', ")
                 .append("'").append(l.getEirCode()).append("', ")
                 .append("'").append(l.getCity()).append("', ")
@@ -77,11 +82,11 @@ public class ServiceProviderRepository extends Database implements Repository{
         ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider s JOIN location l ON s.s_id = l.s_id WHERE s.s_id = "+ id +";");
 
         while(rs.next()){
-            serviceProvider.withId((String)id); serviceProvider.withEmail(rs.getString("email"));
-            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
-            serviceProvider.withPhone(rs.getString("phone"));
+            serviceProvider.withId((String)id); serviceProvider.withEmail(rs.getString("company_full_name"));
+//            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
+//            serviceProvider.withPhone(rs.getString("phone"));
             serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
-            serviceProvider.withApprovedStatus(ServiceProviderStatus.valueOf(rs.getString("approved_status").toUpperCase()));
+            serviceProvider.withServiceProviderStatus(ServiceProviderStatus.valueOf(rs.getString("approved_status").toUpperCase()));
             location.withFirstLineAddress(rs.getString("first_line_address"));
             location.withEirCode(rs.getString("eir_code"));
             location.withCity(rs.getString("city")); location.withSecondLineAddress(rs.getString("second_line_address"));
@@ -103,6 +108,24 @@ public class ServiceProviderRepository extends Database implements Repository{
 
         close();
         return serviceProvider;
+    }
+
+    @Override
+    public String selectIdOfUser(String email) throws SQLException {
+        init();
+
+        ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE email = '"+email+"'");
+        while (rs.next()){
+            return rs.getString("id");
+        }
+
+        close();
+        return null;
+    }
+
+    @Override
+    public List<ServiceProvider> getList(AbstraticUser user) throws SQLException {
+        return null;
     }
 
     public List<Tuple<String, List<String>>> selectListOfServiceProvidersByStatus(ServiceProviderStatus status) throws SQLException {
@@ -141,4 +164,5 @@ public class ServiceProviderRepository extends Database implements Repository{
 
         close();
     }
+
 }

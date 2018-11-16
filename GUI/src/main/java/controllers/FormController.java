@@ -1,8 +1,9 @@
 package controllers;
 
-import models.ServiceProviderStatus;
+import models.enums.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.Location;
+import models.tuples.entitiesRepresentation.Phone;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.repositories.CustomerRepository;
 import models.repositories.Repository;
@@ -29,8 +30,8 @@ public class FormController implements Control{
     private Form form;
     private Application app;
     private List<Boolean> validator;
-    private Repository<ServiceProviderRepository> sRep;
-    private Repository<CustomerRepository> cRep;
+    private Repository<ServiceProvider> sRep;
+    private Repository<Customer> cRep;
 
     public FormController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         CustomerForm cf = new CustomerForm();
@@ -184,8 +185,11 @@ public class FormController implements Control{
                             ServiceProvider service = new ServiceProvider();
                             service.withPassword(svf.getPassword()); service.withEmail(svf.getEmail());
                             service.withDateCreated(new Date(System.currentTimeMillis()));
-                            service.withPhone(svf.getPhone()); service.withCompanyFullName(svf.getCompanyFullName());
-                            service.withApprovedStatus(ServiceProviderStatus.PENDENT);
+                            Phone phone = new Phone();
+                            phone.setPhone(svf.getPhone());
+                            service.withPhone(phone);
+                            service.withCompanyFullName(svf.getCompanyFullName());
+                            service.withServiceProviderStatus(ServiceProviderStatus.PENDENT);
 
                             Location newLocation = new Location();
                             newLocation.withFirstLineAddress(svf.getFirstLineAddress());
@@ -207,7 +211,10 @@ public class FormController implements Control{
                             Tools.alertMsg(form, "You have just subscribed! You will be redirected to Login Page", "Success");
                             Customer customer = new Customer();
                             customer.withPassword(cf.getPassword()); customer.withEmail(cf.getEmail());
-                            customer.withPhone(cf.getPhone()); customer.withFirstName(cf.getFirstName());
+                            Phone phone = new Phone();
+                            phone.setPhone(cf.getPhone());
+                            customer.withPhone(phone);
+                            customer.withFirstName(cf.getFirstName());
                             customer.withLastName(cf.getLastName());
                             customer.withDateCreated(new Date(System.currentTimeMillis()));
                             try {

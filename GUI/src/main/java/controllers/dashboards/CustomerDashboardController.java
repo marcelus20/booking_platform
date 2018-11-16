@@ -2,15 +2,15 @@ package controllers.dashboards;
 
 import controllers.Application;
 import controllers.Control;
-import models.BookingStatus;
 import models.Database;
+import models.enums.UserType;
+import models.repositories.BookingSlotRepository;
 import models.tuples.entitiesRepresentation.*;
 import models.repositories.BookingRepository;
 import models.repositories.Repository;
-import models.repositories.ServiceProviderRepository;
-import models.tuples.Tuple;
-import models.tuples.TupleOf3Elements;
-import models.users.AbstraticUser;
+import models.tuples.entitiesRepresentation.AbstraticUser;
+import models.tuples.joinedEntities.ManageBookingView;
+import models.tuples.joinedEntities.ServiceProviderTableView;
 import models.utils.Tools;
 import views.customComponents.MyCustomJButton;
 import views.dashboard.Dashboard;
@@ -22,8 +22,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 
 public class CustomerDashboardController implements Control {
@@ -31,14 +33,12 @@ public class CustomerDashboardController implements Control {
     private Dashboard dashboard;
     private Application app;
     private AbstraticUser user;
-    private UserTypes userType;
+    private UserType userType;
     private Database db;
 
-    private Repository<BookingRepository> bRep;
+    private Repository<Booking> bRep;
 
-    public enum UserTypes{
-        ADMIN, CUSTOMER, SERVICE;
-    }
+
 
 
     public CustomerDashboardController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
@@ -61,12 +61,12 @@ public class CustomerDashboardController implements Control {
 
     public void initCurrentDashboardView(){
         if(user instanceof Admin){
-            userType = UserTypes.ADMIN;
+            userType = UserType.ADMIN;
 
         }else if (user instanceof ServiceProvider){
-            userType = UserTypes.SERVICE;
+            userType = UserType.SERVICE_PROVIDER;
         }else{
-            userType = UserTypes.CUSTOMER;
+            userType = UserType.CUSTOMER;
             dashboard = new CustomerDashboard();
         }
         displayMessage();
@@ -74,9 +74,9 @@ public class CustomerDashboardController implements Control {
 
     private void displayMessage(){
         String name = "";
-        if(userType == UserTypes.SERVICE){
+        if(userType == UserType.SERVICE_PROVIDER){
             name += ((ServiceProvider)user).getCompanyFullName();
-        }else if (userType == UserTypes.CUSTOMER){
+        }else if (userType == UserType.CUSTOMER){
             name += ((Customer)user).getFirstName();
         }else{
             name += user.getEmail();
@@ -104,7 +104,7 @@ public class CustomerDashboardController implements Control {
                 logout();
             }
         });
-        if(UserTypes.CUSTOMER == userType){
+        if(UserType.CUSTOMER == userType){
             ((CustomerDashboard)dashboard).getButtonsPanel().forEach(b->assignFunctionToButton(b));
         }
 
@@ -120,7 +120,7 @@ public class CustomerDashboardController implements Control {
                         } catch (SQLException e1) {
                             e1.printStackTrace();
                         }
-                        String chosenCity = Tools.alertComboBox(dashboard, cities, "choose sity", "City search engine");
+                        String chosenCity = Tools.alertComboBox(dashboard, cities, "choose city", "City search engine");
                         try {
                             mountTable(db.getListOfBarbersByCity(chosenCity));
 
@@ -132,9 +132,11 @@ public class CustomerDashboardController implements Control {
 
     }
 
-    private void mountTable(List<List<String>> results){
+    private void mountTable(List<ServiceProviderTableView> results){
 
-        String[] tableColumns = {"id", "email ", "phone", "Provider Name","address", "city"};
+        String[] tableColumns = {"id", "email ", "service name", "Address","city", "phone"};
+
+//        Map<List<String>, ServiceProviderTableView> map = Tools.convertArrayOfBarberTableViewToListOfString(results);
 
         String[][] tableArray = (Tools.convert2DlistTo2DArray(results));
 
@@ -142,21 +144,32 @@ public class CustomerDashboardController implements Control {
         JScrollPane jScrollPane = new JScrollPane(table);
         ((CustomerDashboard) dashboard).getConsoleSearch()
                 .getContainer().add(jScrollPane);
-
+//
         dashboard.validadeAndRepaint();
-        assignTableAListener(table);
+        Map <Integer, ServiceProviderTableView> map = mapLineOfTableWithObject(table, results);
+        assignTableAListener(table, map);
+
     }
 
-    private void assignTableAListener(JTable table) {
+    private Map<Integer, ServiceProviderTableView> mapLineOfTableWithObject(JTable table, List<ServiceProviderTableView> results) {
+        Map<Integer, ServiceProviderTableView> map = new HashMap<>();
+        IntStream.range(0, table.getRowCount()).forEach(index->map.put(index, results.get(index)));
+        return map;
+    }
+
+    private void assignTableAListener(JTable table, Map<Integer, ServiceProviderTableView> dictionary) {
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()){
-                    System.out.println("hey");
-                    String id = table.getValueAt(table.getSelectedRow(), 0).toString();
+
+                    Integer rowIndex = table.getSelectedRow();
+
+                    ServiceProviderTableView selectedService = dictionary.get(rowIndex);
+
 
                     try {
-                        selectServiceProvider(id);
+                        selectBookingsFromProvider(selectedService);
                     } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e1) {
                         e1.printStackTrace();
                     }
@@ -165,57 +178,73 @@ public class CustomerDashboardController implements Control {
         });
     }
 
-    private void selectServiceProvider(String id) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-        Repository<ServiceProviderRepository> rep = new ServiceProviderRepository();
+    private void selectBookingsFromProvider(ServiceProviderTableView serviceProviderTableView) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        Repository<BookingSlots> rep = new BookingSlotRepository();
 
-        ServiceProvider serviceProvider = Tools.filterServiceProviderToOnlyAvailableSlots((ServiceProvider) rep.selectObjById(id));
-        ((CustomerDashboard)dashboard).setBookingPanel(new BookingPanel(serviceProvider));
+        List<BookingSlots> bookingSlots = Tools.filterBookingsToJustAvailables(((BookingSlotRepository) rep).getList(serviceProviderTableView.getServiceId()));
 
-        System.out.println("clicou");
+        ((CustomerDashboard) dashboard).setBookingPanel(new BookingPanel(bookingSlots, serviceProviderTableView));
+
+
         ((CustomerDashboard) dashboard).withOutput(((CustomerDashboard) dashboard).getBookingPanel());
 
         JTable table = ((CustomerDashboard) dashboard).getBookingPanel().getTable();
+        Map<Integer, BookingSlots> map = mapLineOfTableWithBookingSlots(table, bookingSlots);
+        addBookingTableAListener(table, map);
+    }
 
+    private Map<Integer, BookingSlots> mapLineOfTableWithBookingSlots(JTable table, List<BookingSlots> bookingSlots) {
+        Map<Integer, BookingSlots> dictionary = new HashMap<>();
+        IntStream.range(0, table.getRowCount()).forEach(index->dictionary.put(index, bookingSlots.get(index)));
+        return dictionary;
+    }
 
-
+    private void addBookingTableAListener(JTable table, Map<Integer, BookingSlots> dictionary) {
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                System.out.println("It's been clicked");
                 if(!e.getValueIsAdjusting()){
 
+                    final Integer rowIndex = table.getSelectedRow();
 
-                    Tuple<String, String> id_ = Tuple.tuple("","");
-
-                    id_ = id_.withX((String)table.getValueAt(table.getSelectedRow(), 0));
-                    id_ = id_.withY((String)table.getValueAt(table.getSelectedRow(), 1));
-
-                    TupleOf3Elements<String, String, String> bookingId = TupleOf3Elements
-                            .tupleOf3Elements(id_.get_1(), user.getId() ,id_.get_2());
+                    BookingSlots chosenSlot = dictionary.get(rowIndex);
 
                     Integer n = Tools.alertConfirm(dashboard, "Do you want to book this available slot?");
 
-                    Booking b = new Booking();
-                    b.withBookingStatus(BookingStatus.PENDENT); b.withComplaint("");
-
-                    serviceProvider.addBookingToSlot(b, Timestamp.valueOf(id_.get_1()));
-
                     if(n.equals(0)){
                         try {
-                            ((BookingRepository)bRep).addBook(bookingId, serviceProvider.getBookingByTimestamp(Timestamp.valueOf(id_.get_1())));
+                            ((BookingRepository)bRep).addBook(chosenSlot, (Customer)user);
                             goToViewBookings();
                         } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e1) {
                             e1.printStackTrace();
                         }
                     }
 
+
+
+
+//                    Tuple<String, String> id_ = Tuple.tuple("","");
+//
+//                    id_ = id_.withX((String)table.getValueAt(table.getSelectedRow(), 0));
+//                    id_ = id_.withY((String)table.getValueAt(table.getSelectedRow(), 1));
+//
+//                    TupleOf3Elements<String, String, String> bookingId = TupleOf3Elements
+//                            .tupleOf3Elements(id_.get_1(), user.getId() ,id_.get_2());
+//
+
+//
+//                    Booking b = new Booking();
+//                    b.withBookingStatus(BookingStatus.PENDENT);
+//
+//                    serviceProvider.addBookingToSlot(b, Timestamp.valueOf(id_.get_1()));
+//
+
+
                 }
             }
         });
-
-
-
     }
+
 
     private void assignFunctionToButton(MyCustomJButton b) {
         b.getButton().addActionListener(new ActionListener() {
@@ -231,7 +260,7 @@ public class CustomerDashboardController implements Control {
                     }
                 }else if(e.getActionCommand().contains("omplain")){//IF BUTTON IS MAKE A COMPLAINT
                     try {
-                        goToComplaintPanel();
+                        goToReviewPanel();
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
@@ -241,46 +270,34 @@ public class CustomerDashboardController implements Control {
         });
     }
 
-    private void goToComplaintPanel() throws SQLException {
+    private void goToReviewPanel() throws SQLException {
         ((CustomerDashboard) dashboard).setConsoleSearch(new ConsoleSearch());
 
-        ComplaintPanel complaintPanel = new ComplaintPanel();
-//        complaintPanel.showComplaintContainer();
+        ComplaintPanel complaintPanel = new ComplaintPanel(Tools.generateArrayOfBookingReview());
 
-        List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> shortenedListOfBookings =
-                db.getShortenedListOfBookings(user.getId());
+        List<ManageBookingView> shortenedListOfBookings =
+                db.generateBookingView(user);
 
+        String[][] table = Tools.mapManageBookingViewsListToArrayShortened(shortenedListOfBookings);
 
-        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(shortenedListOfBookings);
+        JTable t = new JTable(table, new String[]{"Date and Time", "Service", "Review"});
 
+        Map<Integer, ManageBookingView> dictionary = mapLineOfTableWithManageBookingView(t, shortenedListOfBookings);
+        complaintPanel.withListofBookingPanel(t);
 
-        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
-
-
-        complaintPanel.withListofBookingPanel(table, new String[] {"Date And Time", "Barber/Hairdresser"});
-
-        JTable t = complaintPanel.getTable();
         t.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()){
                     complaintPanel.showComplaintContainer();
                     dashboard.validadeAndRepaint();
+                    giveSubmitComplaintAListener(complaintPanel, dictionary.get(t.getSelectedRow()));
+                    //
+//
+// complaintPanel.showComplaintContainer();
+//                    dashboard.validadeAndRepaint();
+//
 
-                    complaintPanel.getSubmit().getButton().addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            try {
-                                ((BookingRepository)bRep)
-                                        .updateAComplaint(shortenedListOfBookings.get(t
-                                                .getSelectedRow()).get_1(),complaintPanel.getField().getText());
-                                Tools.alertConfirm(dashboard, "Your Complaint has been submitted succesfully");
-                            } catch (SQLException e1) {
-                                e1.printStackTrace();
-                            }
-                            goToSearchEngine();
-                        }
-                    });
                 }
             }
         });
@@ -290,6 +307,23 @@ public class CustomerDashboardController implements Control {
         ((CustomerDashboard) dashboard).setComplaintPanel(complaintPanel);
 
         ((CustomerDashboard)dashboard).withOutput(((CustomerDashboard) dashboard).getComplaintPanel());
+    }
+
+    private void giveSubmitComplaintAListener(ComplaintPanel complaintPanel, ManageBookingView manageBookingView) {
+        complaintPanel.getSubmit().getButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ((BookingRepository)bRep)
+                            .updateAReview(manageBookingView,
+                                    String.valueOf(complaintPanel.getBookingReviewComboBox().getSelectedItem()));
+                    Tools.alertConfirm(dashboard, "Your review has been successfuly submitted");
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                goToSearchEngine();
+            }
+        });
     }
 
     private void goToSearchEngine(){
@@ -306,48 +340,45 @@ public class CustomerDashboardController implements Control {
 
     private ConsoleManageBookings createConsoleManageBookings() throws SQLException {
 
-        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings = ((BookingRepository)bRep).selectAllBookingsFromCustomer(user.getId());
+        List<ManageBookingView> manageBookingViewList = db.generateBookingView(user);
 
-        List<List<String>> listOfBookings = Tools.breakListOfTuplesToTuple_2(bookings);
+        String[][] table = Tools.mapManageBookingViewsListToArray(manageBookingViewList);
 
+        JTable jTable = new JTable(table, new String[]{"Date and Time", "Hairdresser/Barber", "Status", "phone", "review"});
 
+        ConsoleManageBookings consoleManageBookings = new ConsoleManageBookings(jTable);
 
-        String[][] b = Tools.convert2DlistTo2DArray(listOfBookings);
-
-        ConsoleManageBookings consoleManageBookings = new ConsoleManageBookings(b, new String[]{"Date and Time", "Hairdresser/Barber","Address", "City", "status" });
-
-        JTable table = consoleManageBookings.getTableOfMyBookings();
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if(!e.getValueIsAdjusting()){
-
-                    TupleOf3Elements id = bookings.get(table.getSelectedRow()).get_1();
-
-                    Integer n = Tools.alertConfirm(dashboard,"Are you sure you want to cancel this booking?");
-
-                    if(n.equals(0)){
-                        try {
-                            ((BookingRepository)bRep).cancelBooking(id);
-                        } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e1) {
-                            e1.printStackTrace();
-                        }
-                        try {
-                            goToViewBookings();
-                        } catch (SQLException e1) {
-                            e1.printStackTrace();
-                        }
-                    }else{
-
-                    }
-                }
-            }
-
-        });
-
+        Map<Integer, ManageBookingView> dictionary = mapLineOfTableWithManageBookingView(jTable, manageBookingViewList);
+        giveTableOfBookingAListener(jTable, dictionary);
+        dashboard.validadeAndRepaint();
         return consoleManageBookings;
     }
 
+    private void giveTableOfBookingAListener(JTable jTable, Map<Integer, ManageBookingView> dictionary) {
+        jTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()){
+                    final Integer n = Tools.alertConfirm(dashboard, "Do you want to cancel this booking?");
+
+                    if(n == 0){
+                        try {
+                            ((BookingRepository) bRep).cancelBooking(dictionary.get(jTable.getSelectedRow()));
+                            goToViewBookings();
+                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private Map<Integer, ManageBookingView> mapLineOfTableWithManageBookingView(JTable jTable, List<ManageBookingView> manageBookingViewList) {
+        Map<Integer, ManageBookingView> map = new HashMap<>();
+        IntStream.range(0,jTable.getRowCount()).forEach(index->map.put(index, manageBookingViewList.get(index)));
+        return map;
+    }
 
     @Override
     public void addInputsAListener() {
