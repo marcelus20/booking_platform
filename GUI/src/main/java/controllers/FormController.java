@@ -229,6 +229,7 @@ public class FormController implements Control{
                         String msg = generateFormErrorMessage();
                         Tools.alertError(form, msg, "Form not valid");
                     }
+                    System.out.println(validator);
                 }
             });
         });

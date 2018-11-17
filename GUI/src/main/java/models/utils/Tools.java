@@ -299,4 +299,28 @@ public class Tools {
 
         return table;
     }
+
+    public static String[][] mapListOfProvidersToArray(List<ServiceProvider> providers) {
+
+        String[][] table;
+        try{
+            table = new String[providers.size()][9];
+        }catch (Exception e){
+            return new String[0][0];
+        }
+//        "email", "company", "Date subscribed", "Status", "phone", "add line 1", "add line 2", "city", "eir code"
+        for(int i = 0; i < providers.size(); i++){
+            table[i][0] = String.valueOf(providers.get(i).getEmail());
+            table[i][1] = providers.get(i).getCompanyFullName();
+            table[i][2] = String.valueOf(providers.get(i).getDateCreated());
+            table[i][3] = String.valueOf(providers.get(i).getStatus());
+            table[i][4] = providers.get(i).getPhone().getPhone();
+            table[i][5] = String.valueOf(providers.get(i).getLocation().getFirstLineAddress());
+            table[i][6] = providers.get(i).getLocation().getSecondLineAddress();
+            table[i][7] = providers.get(i).getLocation().getCity();
+            table[i][8] = providers.get(i).getLocation().getEirCode();
+        }
+
+        return table;
+    }
 }

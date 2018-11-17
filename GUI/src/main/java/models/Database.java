@@ -52,25 +52,23 @@ public class Database {
 
         while (rs.next()){
             System.out.println(rs.getString("user_type"));
-             if(rs.getString("user_type").equalsIgnoreCase("ADMIN")){
+             if(UserType.valueOf(rs.getString("user_type")).equals(UserType.ADMIN)){
                  user = new Admin();
                  user.withUserType(UserType.ADMIN);
-             }else if (rs.getString("user_type").equalsIgnoreCase("SERVICE_PROVIDER")){
+             }else if (UserType.valueOf(rs.getString("user_type")).equals(UserType.SERVICE_PROVIDER)){
                  user = new ServiceProvider();
                  user.withUserType(UserType.SERVICE_PROVIDER);
-             }else{
+                 user = populateTheRestofAttributes(user);
+             }else if(UserType.valueOf(rs.getString("user_type")).equals(UserType.CUSTOMER)){
                  user = new Customer();
                  user.withUserType(UserType.CUSTOMER);
+                 user = populateTheRestofAttributes(user);
              }
 
              user.withId(rs.getString("id"));
              user.withEmail(rs.getString("email"));
              user.withPassword(rs.getString("password"));
              user.withDateCreated(rs.getDate("date_created"));
-        }
-
-        if(!user.getUserType().equals(UserType.ADMIN)){
-            user = populateTheRestofAttributes(user);
         }
 
         close();

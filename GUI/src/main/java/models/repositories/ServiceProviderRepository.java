@@ -2,14 +2,9 @@ package models.repositories;
 
 import models.Database;
 import models.enums.ServiceProviderStatus;
-import models.tuples.Tuple;
-import models.tuples.entitiesRepresentation.AbstraticUser;
-import models.tuples.entitiesRepresentation.BookingSlots;
-import models.tuples.entitiesRepresentation.Location;
-import models.tuples.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.*;
 import models.utils.Tools;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -111,12 +106,10 @@ public class ServiceProviderRepository extends Database implements Repository<Se
     @Override
     public String selectIdOfUser(String email) throws SQLException {
         init();
-
         ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE email = '"+email+"'");
         while (rs.next()){
             return rs.getString("id");
         }
-
         close();
         return null;
     }
@@ -126,39 +119,49 @@ public class ServiceProviderRepository extends Database implements Repository<Se
         return null;
     }
 
-    public List<Tuple<String, List<String>>> selectListOfServiceProvidersByStatus(ServiceProviderStatus status) throws SQLException {
+    public List<ServiceProvider> selectListOfServiceProvidersByStatus(ServiceProviderStatus status) throws SQLException {
         init();
 
-        List <Tuple<String, List<String>>> listOfResults = new ArrayList<>();
+        List <ServiceProvider> listOfProviders = new ArrayList<>();
+        String statusSentence = "";
+        if(status != null){
+            statusSentence = " WHERE s.approved_status = '"+status+"' ";
+        }
 
-        String query = "SELECT s.s_id, s.email, s.phone, s.company_full_name, approved_status," +
-                " l.first_line_address, l.second_line_address, l.city FROM service_provider s" +
-                " JOIN location l ON s.s_id = l.s_id WHERE s.approved_status = '"+status+"';";
+        String query = "SELECT * FROM users u JOIN location l ON u.id = l.s_id JOIN phone_list p ON u.id = p.id " +
+                "JOIN service_provider s ON s.s_id = u.id "+statusSentence+" ;";
+        System.out.println(query);
 
         ResultSet rs = stmt.executeQuery(query);
+
         while (rs.next()){
-            List<String> line = new ArrayList<>();
-            String id = rs.getString("s_id");
-            line.add(rs.getString("s_id"));
-            line.add(rs.getString("email"));
-            line.add(rs.getString("phone"));
-            line.add(rs.getString("company_full_name"));
-            line.add(rs.getString("approved_status"));
-            line.add(rs.getString("first_line_address"));
-            line.add(rs.getString("second_line_address"));
-            line.add(rs.getString("city"));
-            listOfResults.add(Tuple.tuple(id, line));
+            ServiceProvider serviceProvider = new ServiceProvider();
+            serviceProvider.withId(rs.getString("s_id"));
+            serviceProvider.withEmail(rs.getString("email"));
+            serviceProvider.withPhone(new Phone(serviceProvider.getId(), rs.getString("phone")));
+            serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
+            serviceProvider.withServiceProviderStatus(ServiceProviderStatus
+                    .valueOf(rs.getString("approved_status")));
+
+            Location location = new Location();
+            location.withServiceId(serviceProvider.getId());
+            location.withFirstLineAddress(rs.getString("first_line_address"));
+            location.withSecondLineAddress(rs.getString("second_line_address"));
+            location.withCity(rs.getString("city"));
+            location.withEirCode(rs.getString("eir_code"));
+            serviceProvider.withLocation(location);
+            listOfProviders.add(serviceProvider);
         }
 
         close();
-        return listOfResults;
+        return listOfProviders;
     }
 
-    public void updateServiceProviderStatus(ServiceProviderStatus status, String serviceId) throws SQLException {
+    public void updateServiceProviderStatus(ServiceProvider serviceProvider) throws SQLException {
         init();
 
-        stmt.executeUpdate("UPDATE service_provider SET approved_status = '"+status+"'" +
-                " WHERE  s_id = '"+serviceId+"'");
+        stmt.executeUpdate("UPDATE service_provider SET approved_status = '"+serviceProvider.getStatus()+"'" +
+                " WHERE  s_id = '"+serviceProvider.getId()+"'");
 
         close();
     }

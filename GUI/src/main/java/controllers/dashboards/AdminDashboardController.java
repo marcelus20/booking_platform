@@ -9,6 +9,7 @@ import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
 import models.tuples.Tuple;
 import models.tuples.entitiesRepresentation.Admin;
+import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import views.customComponents.MyCustomJPanel;
 import views.dashboard.admin.AdminDashboard;
@@ -19,6 +20,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class AdminDashboardController implements Control {
 
@@ -171,51 +174,50 @@ public class AdminDashboardController implements Control {
     }
 
     private void getServiceProvidersStatus() throws SQLException {
-        Map<String, List<String>> map = new HashMap<>();
 
-        List<Tuple<String, List<String>>> listOfResults = sRep
-                .selectListOfServiceProvidersByStatus(ServiceProviderStatus.PENDENT);
+        List<ServiceProvider> listOfProviders = sRep
+                .selectListOfServiceProvidersByStatus(null);
 
-        listOfResults.forEach(tuple->map.put(tuple.get_1(), tuple.get_2()));
 
-        creatingJTable(map);
+        String[][] table = Tools.mapListOfProvidersToArray(listOfProviders);
+
+        JTable jTable = new JTable(table, new String[]{"email", "company", "Date subscribed", "Status", "phone", "add line 1", "add line 2", "city", "eir code"});
+        Map<Integer, ServiceProvider> dictionary = mapTableWithServiceProviderList(jTable, listOfProviders);
+        drawTable(jTable, dictionary);
     }
 
-    private void creatingJTable(Map<String, List<String>> map) {
-        List<List<String>> tableAsList = new ArrayList<>();
-        map.forEach((key,value)->tableAsList.add(value));
-
-        Map<Integer, String> rowIndexToIdMap = new HashMap<>();
-
-//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
-
-//        JTable tableOfServices = new JTable(table, new String[]{"id","email", "phone", "company name", "status", "Address", "second line address", "city"});
-
-//        drawTableToView(tableOfServices, map);
+    private Map<Integer, ServiceProvider> mapTableWithServiceProviderList(JTable jTable, List<ServiceProvider> listOfProviders) {
+        Map<Integer, ServiceProvider> dictionary = new HashMap<>();
+        IntStream.range(0,jTable.getRowCount()).forEach(index -> dictionary.put(index, listOfProviders.get(index)));
+        return dictionary;
     }
 
-    private void drawTableToView(JTable tableOfServices, Map<String, List<String>> map) {
+    private void drawTable(JTable jTable, Map<Integer, ServiceProvider> dictionary) {
         dashboard.getOutput().removeAll();
-        dashboard.getServiceProviderVerification().withTableOfServices(tableOfServices);
-        dashboard.getServiceProviderVerification().getContent().add(dashboard.getServiceProviderVerification().getTableOfServices());
+        dashboard.getServiceProviderVerification().withTableOfServices(jTable);
+        dashboard.getServiceProviderVerification().getTableOfServices().setPreferredScrollableViewportSize(new Dimension(800,600));
+        dashboard.getServiceProviderVerification().getContent().removeAll();
+        dashboard.getServiceProviderVerification().getContent()
+                .add(new JScrollPane(dashboard.getServiceProviderVerification().getTableOfServices()));
         dashboard.getOutput().add(dashboard.getServiceProviderVerification());
         dashboard.validadeAndRepaint();
-        addTableAListener(dashboard.getServiceProviderVerification().getTableOfServices(),map);
+        addTableAListener(dashboard.getServiceProviderVerification().getTableOfServices(),dictionary);
     }
 
-    private void addTableAListener(JTable t, Map<String, List<String>> map) {
+    private void addTableAListener(JTable t, Map<Integer, ServiceProvider> dictionary) {
         t.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(e.getValueIsAdjusting()){
-                    String id = (String) t.getValueAt(t.getSelectedRow(), 0);
                     String[] statusArray = Tools.getStringLIstOfAllServiceProviderStatus();
                     String chosenOption = Tools.alertComboBox(dashboard, statusArray, "Pick a status", "Status changer");
-
                     try {
-                        sRep.updateServiceProviderStatus(ServiceProviderStatus.valueOf(chosenOption.toUpperCase()), id);
+                        ServiceProvider serviceProvider = dictionary.get(t.getSelectedRow());
+                        serviceProvider.withServiceProviderStatus(ServiceProviderStatus.valueOf(chosenOption));
+
+                        sRep.updateServiceProviderStatus(serviceProvider);
                         Tools.alertMsg(dashboard, "You have successfuly changed the status. " +
-                                "As this service provider is no longer pendent, it will not show in this table anymore!", "");
+                                "You can change his/her status at anytime later on!", "");
                         goToVerifyAServiceProviderView();
                     } catch (SQLException e1) {
                         e1.printStackTrace();
