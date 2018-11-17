@@ -9,10 +9,10 @@ public class UpComingBookingsPanel extends MyCustomJPanel{
 
     private final JTable upcomingBookingsTable;
 
-    public UpComingBookingsPanel(String[][] t, String[]colNames) {
+    public UpComingBookingsPanel(JTable jTable) {
         super("Upcoming bookings - Click on the table row to cancel a booking", 700,700);
 
-        upcomingBookingsTable = new JTable(t, colNames);
+        upcomingBookingsTable = jTable;
         JScrollPane jScrollPane = new JScrollPane(upcomingBookingsTable);
         upcomingBookingsTable.setPreferredScrollableViewportSize(new Dimension(650,400));
         getContent().add(jScrollPane);

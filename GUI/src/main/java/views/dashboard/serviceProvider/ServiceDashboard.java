@@ -5,6 +5,7 @@ import views.ButtonPanelContainer;
 import views.customComponents.MyCustomJButton;
 import views.dashboard.Dashboard;
 
+import javax.swing.*;
 import java.util.List;
 
 public class ServiceDashboard extends Dashboard implements ButtonPanelContainer {
@@ -29,8 +30,8 @@ public class ServiceDashboard extends Dashboard implements ButtonPanelContainer 
                 .add(setAvailability).add(setStatusOfApppointment).build();
     }
 
-    public ServiceDashboard withUpcomingBookingsPanel(String[][] table, String[] colsNames){
-        this.upComingBookingsPanel = new UpComingBookingsPanel(table, colsNames);
+    public ServiceDashboard withUpcomingBookingsPanel(JTable jTable){
+        this.upComingBookingsPanel = new UpComingBookingsPanel(jTable);
         return this;
     }
 
