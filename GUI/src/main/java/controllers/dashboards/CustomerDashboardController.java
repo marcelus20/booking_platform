@@ -15,7 +15,6 @@ import models.utils.Tools;
 import views.customComponents.MyCustomJButton;
 import views.dashboard.Dashboard;
 import views.dashboard.customer.*;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -219,27 +218,6 @@ public class CustomerDashboardController implements Control {
                             e1.printStackTrace();
                         }
                     }
-
-
-
-
-//                    Tuple<String, String> id_ = Tuple.tuple("","");
-//
-//                    id_ = id_.withX((String)table.getValueAt(table.getSelectedRow(), 0));
-//                    id_ = id_.withY((String)table.getValueAt(table.getSelectedRow(), 1));
-//
-//                    TupleOf3Elements<String, String, String> bookingId = TupleOf3Elements
-//                            .tupleOf3Elements(id_.get_1(), user.getId() ,id_.get_2());
-//
-
-//
-//                    Booking b = new Booking();
-//                    b.withBookingStatus(BookingStatus.PENDENT);
-//
-//                    serviceProvider.addBookingToSlot(b, Timestamp.valueOf(id_.get_1()));
-//
-
-
                 }
             }
         });
@@ -292,11 +270,6 @@ public class CustomerDashboardController implements Control {
                     complaintPanel.showComplaintContainer();
                     dashboard.validadeAndRepaint();
                     giveSubmitComplaintAListener(complaintPanel, dictionary.get(t.getSelectedRow()));
-                    //
-//
-// complaintPanel.showComplaintContainer();
-//                    dashboard.validadeAndRepaint();
-//
 
                 }
             }

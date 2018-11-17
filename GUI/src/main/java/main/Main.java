@@ -1,7 +1,6 @@
 package main;
 
 import controllers.Application;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.SQLException;
 

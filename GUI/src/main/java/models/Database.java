@@ -7,8 +7,6 @@ import models.enums.UserType;
 import models.repositories.CustomerRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
-import models.tuples.Tuple;
-import models.tuples.TupleOf3Elements;
 import models.tuples.entitiesRepresentation.*;
 import models.tuples.joinedEntities.ManageBookingView;
 import models.tuples.joinedEntities.ServiceProviderTableView;
@@ -123,8 +121,6 @@ public class Database {
                 " JOIN phone_list p ON u.id = p.id WHERE l.city = '"+city+"';");
         List<ServiceProviderTableView> tableListOfBarbers= new ArrayList<>();
 
-
-
         while (rs.next()){
             ServiceProviderTableView serviceProviderTableView = new ServiceProviderTableView();
             serviceProviderTableView.setServiceId(rs.getString("id"));
@@ -140,36 +136,10 @@ public class Database {
         return tableListOfBarbers;
     }
 
-//    public List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> getShortenedListOfBookings(String customerId) throws SQLException {
-//
-//
-//        List<Tuple<TupleOf3Elements<String, String, String>,List<String>>> result = new ArrayList<>();
-//
-//
-//        init();
-//        ResultSet rs = stmt.executeQuery("SELECT b.time_stamp, b.s_id, b.customer_id ,s.company_full_name "+
-//                "FROM booking b JOIN service_provider s ON b.s_id = s.s_id WHERE b.customer_id = " + customerId + ";");
-//
-//        while(rs.next()){
-//            List<String> line = new ArrayList<>();
-//            TupleOf3Elements<String, String, String> id = TupleOf3Elements
-//                    .tupleOf3Elements(rs.getString("time_stamp") , rs.getString("customer_id"), rs.getString("s_id"));
-//
-//           line.add(rs.getString("time_stamp"));
-//           line.add(rs.getString("company_full_name"));
-//
-//           result.add(Tuple.tuple(id, line));
-//        }
-//        close();
-//        return result;
-//    }
-
     public List<ManageBookingView> generateBookingView(AbstraticUser user, BookingStatus bookingStatus) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         List<ManageBookingView> manageBookingViews = new ArrayList<>();
         Repository<ServiceProvider> serviceProviderRepository = new ServiceProviderRepository();
         Repository<Customer> customerRepository = new CustomerRepository();
-
-
 
         init();
         String userString = "";

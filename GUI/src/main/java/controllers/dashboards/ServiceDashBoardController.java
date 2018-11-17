@@ -10,8 +10,6 @@ import models.enums.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.repositories.BookingRepository;
 import models.repositories.BookingSlotRepository;
-import models.tuples.Tuple;
-import models.tuples.TupleOf3Elements;
 import models.tuples.joinedEntities.ManageBookingView;
 import models.utils.MyCustomDateAndTime;
 import models.utils.Tools;

@@ -9,7 +9,6 @@ import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import models.tuples.entitiesRepresentation.AbstraticUser;
 import views.login.Login;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

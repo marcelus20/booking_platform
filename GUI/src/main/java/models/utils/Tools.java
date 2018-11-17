@@ -4,61 +4,17 @@ import models.enums.BookingReview;
 import models.enums.BookingStatus;
 import models.enums.ServiceProviderStatus;
 import models.tuples.entitiesRepresentation.*;
-import models.tuples.Tuple;
-import models.tuples.TupleOf3Elements;
 import models.tuples.joinedEntities.ManageBookingView;
 import models.tuples.joinedEntities.ServiceProviderTableView;
 import org.apache.commons.codec.digest.DigestUtils;
 import views.dashboard.Dashboard;
-
 import javax.swing.*;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 public class Tools {
-
-    public static ServiceProvider serviceProviderMapper(ResultSet rs) throws SQLException {
-        ServiceProvider serviceProvider = new ServiceProvider();
-
-            serviceProvider.withId(rs.getString("s_id"));
-            serviceProvider.withEmail(rs.getString("email"));
-            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_created")));
-            serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
-            serviceProvider.withServiceProviderStatus(ServiceProviderStatus.valueOf(rs
-                    .getString("approved_status").toUpperCase()));
-
-        return serviceProvider;
-    }
-
-
-
-
-    public static Admin adminMapper(ResultSet rs) throws SQLException {
-        Admin admin = new Admin();
-            admin.withId(rs.getString("id"));
-            admin.withEmail(rs.getString("email"));
-        return admin;
-    }
-
-    public static Customer customerMapper(ResultSet rs) throws SQLException {
-        Customer customer = new Customer();
-        customer.withId(rs.getString("customer_id"));
-        customer.withEmail(rs.getString("email"));
-//        customer.withPho(rs.getString("Phone"));
-        customer.withFirstName(rs.getString("first_name"));
-        customer.withLastName(rs.getString("last_name"));
-        customer.withDateCreated(rs.getDate("date_of_account_creation"));
-
-
-        return customer;
-    }
 
     public static void alertError(JFrame frame, String message, String title){
         JOptionPane.showMessageDialog(frame, message, title, JOptionPane.ERROR_MESSAGE);
@@ -114,26 +70,6 @@ public class Tools {
                 "Booking", JOptionPane.YES_NO_OPTION);
     }
 
-    public static Map<List<String>, ServiceProviderTableView>  convertArrayOfBarberTableViewToListOfString(List<ServiceProviderTableView> tableViewList){
-        Map<List<String>, ServiceProviderTableView> map = new HashMap();
-        List<List<String>> barberTableViewList = new ArrayList<>();
-
-        tableViewList.forEach(barber->{
-            List<String> line = new ArrayList<>();
-            line.add(barber.getServiceId());
-            line.add(barber.getServiceEmail());
-            line.add(barber.getServiceName());
-            line.add(barber.getAddress());
-            line.add(barber.getCity());
-            line.add(barber.getPhone());
-            barberTableViewList.add(line);
-            map.put(line, barber);
-        });
-
-        return map;
-
-    }
-
     public static String[][] convertListOfBookingSlotsToArray(List<BookingSlots> slots){
         String[][] table = new String[slots.size()][3];
         for(int i = 0; i < slots.size(); i++){
@@ -150,38 +86,13 @@ public class Tools {
     List<BookingSlots> filteredBookingSlots = new ArrayList<>();
     fullBookingSlots.forEach(slot->{
         if(slot.getAvailability()){
-
             filteredBookingSlots.add(slot);
         }
-
     });
-
 
     return filteredBookingSlots;
     }
 
-    public static String[][] convertListOfBookingToArray(List<BookingSlots> slots) {
-
-        String[][] table = new String[slots.size()][4];
-        for(int i = 0; i < slots.size(); i++){
-            for(int j = 0; j < 2; j++){
-                table[i][0]  = String.valueOf(slots.get(i).getTimestamp());
-                table[i][3] = slots.get(i).getBooking().getCustomerId();
-                table[i][1] = slots.get(i).getServiceId();
-                table[i][2] = String.valueOf(slots.get(i).getBooking().getBookingStatus());
-
-            }
-        }
-        return table;
-    }
-
-    public static List<List<String>> breakListOfTuplesToTuple_2(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
-
-        List<List<String>> table = new ArrayList<>();
-
-        bookings.forEach(tuple->table.add(tuple.get_2()));
-        return table;
-    }
 
     public static BookingStatus mapBookingStatusStringToEnum(String newStatus){
         if(newStatus.equals(String.valueOf(BookingStatus.CONFIRMED))){

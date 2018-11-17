@@ -5,10 +5,8 @@ import models.enums.BookingStatus;
 import models.Database;
 import models.tuples.entitiesRepresentation.*;
 import models.tuples.Tuple;
-import models.tuples.TupleOf3Elements;
 import models.tuples.joinedEntities.ManageBookingView;
 import models.utils.Tools;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
