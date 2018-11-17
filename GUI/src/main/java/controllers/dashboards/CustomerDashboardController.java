@@ -255,13 +255,13 @@ public class CustomerDashboardController implements Control {
                 }else if (e.getActionCommand().contains("bookings")){//IF BUTTONS IS MANAGING BOOKINGS
                     try {
                         goToViewBookings();
-                    } catch (SQLException e1) {
+                    } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e1) {
                         e1.printStackTrace();
                     }
                 }else if(e.getActionCommand().contains("omplain")){//IF BUTTON IS MAKE A COMPLAINT
                     try {
                         goToReviewPanel();
-                    } catch (SQLException e1) {
+                    } catch (SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException e1) {
                         e1.printStackTrace();
                     }
                 }
@@ -270,13 +270,13 @@ public class CustomerDashboardController implements Control {
         });
     }
 
-    private void goToReviewPanel() throws SQLException {
+    private void goToReviewPanel() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         ((CustomerDashboard) dashboard).setConsoleSearch(new ConsoleSearch());
 
         ComplaintPanel complaintPanel = new ComplaintPanel(Tools.generateArrayOfBookingReview());
 
         List<ManageBookingView> shortenedListOfBookings =
-                db.generateBookingView(user);
+                db.generateBookingView(user, null);
 
         String[][] table = Tools.mapManageBookingViewsListToArrayShortened(shortenedListOfBookings);
 
@@ -333,16 +333,16 @@ public class CustomerDashboardController implements Control {
 
     }
 
-    public void goToViewBookings() throws SQLException {
+    public void goToViewBookings() throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         ConsoleManageBookings consoleManageBookings = createConsoleManageBookings();
         ((CustomerDashboard)dashboard).withOutput(consoleManageBookings);
     }
 
-    private ConsoleManageBookings createConsoleManageBookings() throws SQLException {
+    private ConsoleManageBookings createConsoleManageBookings() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
 
-        List<ManageBookingView> manageBookingViewList = db.generateBookingView(user);
+        List<ManageBookingView> manageBookingViewList = db.generateBookingView(user, null);
 
-        String[][] table = Tools.mapManageBookingViewsListToArray(manageBookingViewList);
+        String[][] table = Tools.mapManageBookingCustomerViewsListToArray(manageBookingViewList);
 
         JTable jTable = new JTable(table, new String[]{"Date and Time", "Hairdresser/Barber", "Status", "phone", "review"});
 

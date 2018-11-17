@@ -237,7 +237,7 @@ public class Tools {
         return table;
     }
 
-    public static String[][] mapManageBookingViewsListToArray(List<ManageBookingView> manageBookingViewList) {
+    public static String[][] mapManageBookingCustomerViewsListToArray(List<ManageBookingView> manageBookingViewList) {
         String[][] table;
         try{
             table = new String[manageBookingViewList.size()][manageBookingViewList.get(0).getClass().getDeclaredFields().length];
@@ -278,5 +278,25 @@ public class Tools {
                 BookingReview.END_OF_THE_WORLD, BookingReview.TERRIBLE, BookingReview.BAD,
                 BookingReview.MEH, BookingReview.OK, BookingReview.GOOD, BookingReview.VERY_GOOD,
                 BookingReview.SUPERB, BookingReview.PERFECT).build().toArray(new BookingReview[]{});
+    }
+
+    public static String[][] mapManageBookingServiceViewsListToArray(List<ManageBookingView> manageBookingViewList) {
+        String[][] table;
+        try{
+            table = new String[manageBookingViewList.size()][manageBookingViewList.get(0).getClass().getDeclaredFields().length];
+        }catch (Exception e){
+            return new String[0][0];
+        }
+
+        for(int i = 0; i < manageBookingViewList.size(); i++){
+            table[i][0] = String.valueOf(manageBookingViewList.get(i).getTimestamp());
+            table[i][1] = manageBookingViewList.get(i).getCustomer().getFirstName();
+            table[i][2] = manageBookingViewList.get(i).getCustomer().getLastName();
+            table[i][3] = String.valueOf(manageBookingViewList.get(i).getBookingStatus());
+            table[i][4] = manageBookingViewList.get(i).getCustomer().getPhone().getPhone();
+            table[i][5] = String.valueOf(manageBookingViewList.get(i).getReview());
+        }
+
+        return table;
     }
 }

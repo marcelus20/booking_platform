@@ -3,6 +3,7 @@ package models.tuples.entitiesRepresentation;
 import models.enums.UserType;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -132,5 +133,13 @@ public class Customer extends AbstraticUser {
                 ", complaints=" + complaints +
                 ", bookings=" + bookings +
                 '}';
+    }
+
+    public Customer withListOfPhones(Phone phone) {
+        if(phones == null){
+            phones = new ArrayList<>();
+        }
+        phones.add(phone);
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import models.repositories.BookingRepository;
 import models.repositories.BookingSlotRepository;
 import models.tuples.Tuple;
 import models.tuples.TupleOf3Elements;
+import models.tuples.joinedEntities.ManageBookingView;
 import models.utils.MyCustomDateAndTime;
 import models.utils.Tools;
 import views.customComponents.MyCustomFont;
@@ -121,7 +122,7 @@ public class ServiceDashBoardController implements Control {
 //                        Tools.alertConfirm(dashboard, "upcomming");
                         try {
                             goToUpComingBookings();
-                        } catch (SQLException e1) {
+                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
                             e1.printStackTrace();
                         }
                     }else if (e.getActionCommand().contains("vailable")){
@@ -131,7 +132,7 @@ public class ServiceDashBoardController implements Control {
 //                        Tools.alertConfirm(dashboard, "complete");
                         try {
                             goToSetBookingStatus();
-                        } catch (SQLException e1) {
+                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
                             e1.printStackTrace();
                         }
 
@@ -143,11 +144,11 @@ public class ServiceDashBoardController implements Control {
 
     }
 
-    private void goToSetBookingStatus() throws SQLException {
+    private void goToSetBookingStatus() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         switchDashboardPanelSetBookings();
     }
 
-    private void switchDashboardPanelSetBookings() throws SQLException {
+    private void switchDashboardPanelSetBookings() throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         dashboard.getOutput().removeAll();
         dashboard.withSetBookingStatusView(new SetBookingStatusView());
         dashboard.getOutput().add(dashboard.getSetBookingStatusView());
@@ -155,51 +156,47 @@ public class ServiceDashBoardController implements Control {
         mountSetBookingStatusView();
     }
 
-    private void mountSetBookingStatusView() throws SQLException {
+    private void mountSetBookingStatusView() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         bookingStatusList = bRep.selectDistinctsBookingStatus();
         dashboard.getSetBookingStatusView().withBookingStatesFilter(new JComboBox(bookingStatusList.toArray()));
         selectedItem = String.valueOf(dashboard.getSetBookingStatusView().getBookingStatesFilter().getSelectedItem());
         retrieveBookingsFromDB(selectedItem);
     }
 
-    private void retrieveBookingsFromDB(String selectedItem) throws SQLException {
+    private void retrieveBookingsFromDB(String selectedItem) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         BookingStatus bookingStatus = Tools.mapBookingStatusStringToEnum(selectedItem);
-        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings = bRep.selectAllBookingsFromServiceProvider(user.getId(), bookingStatus);
-
+        List<ManageBookingView> bookings = bRep.selectAllBookingsFromServiceProvider(user, bookingStatus);
         createJTable(bookings);
     }
 
-    private void createJTable(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
-        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(bookings);
-//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
-//        JTable jTable = new JTable(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
-//        showTableToView(bookings, jTable);
-
+    private void createJTable(List<ManageBookingView> bookings) {
+        String[][] table = Tools.mapManageBookingServiceViewsListToArray(bookings);
+        JTable jTable = new JTable(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
+        Map<Integer, ManageBookingView> dictionary = mapTableWithManageBookingView(table, bookings);
+        showTableToView(jTable, dictionary);
     }
 
-    private void showTableToView(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings, JTable jTable) {
+    private void showTableToView(JTable jTable, Map<Integer, ManageBookingView> dictionary) {
         dashboard.getSetBookingStatusView().withBookingsTable(jTable);
         dashboard.validadeAndRepaint();
         addComboBoxAListener();
-        addTableAListener(bookings);
+        addTableAListener(jTable, dictionary);
     }
 
-    private void addTableAListener(List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> bookings) {
-        JTable table = dashboard.getSetBookingStatusView().getBookingsTable();
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    private void addTableAListener(JTable jTable, Map<Integer, ManageBookingView> dictionary) {
+        jTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()){
-                    Integer rowIndex = table.getSelectedRow();
-                    TupleOf3Elements<String, String, String> id = bookings.get(rowIndex).get_1();
+
 
                     String[] statusList = Tools.getStringListOfAllBookingStatus().toArray(new String[]{});
                     String chosenOption = Tools.alertComboBox(dashboard, statusList, "Set status to..." , "Booking Status Setting");
 
                     try {
-                        bRep.updateABookingStatus(id, chosenOption);
+                        bRep.updateABookingStatus(dictionary.get(jTable.getSelectedRow()), chosenOption);
                         goToSetBookingStatus();
-                    } catch (SQLException e1) {
+                    } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
                         e1.printStackTrace();
                     }
                 }
@@ -214,7 +211,7 @@ public class ServiceDashBoardController implements Control {
                 selectedItem = String.valueOf(dashboard.getSetBookingStatusView().getBookingStatesFilter().getSelectedItem());
                 try {
                     retrieveBookingsFromDB(selectedItem);
-                } catch (SQLException e1) {
+                } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
                     e1.printStackTrace();
                 }
             }
@@ -342,48 +339,58 @@ public class ServiceDashBoardController implements Control {
         return dateAndTimes.stream().map(dateAndTime -> dateAndTime.getTime()).collect(Collectors.toList());
     }
 
-    private void goToUpComingBookings() throws SQLException {
+    private void goToUpComingBookings() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         switchDashboardPanelToBookingList();
     }
 
-    private void switchDashboardPanelToBookingList() throws SQLException {
-        List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> listOfBookings = getAllBookings();
+    private void switchDashboardPanelToBookingList() throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        List<ManageBookingView> listOfBookings = getAllBookings();
+        System.out.println(listOfBookings);
+//        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(listOfBookings);
 
-        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(listOfBookings);
+        String[][] table = Tools.mapManageBookingServiceViewsListToArray(listOfBookings);
 
-//        String[][] table = Tools.convert2DlistTo2DArray(tableAsList);
+        JTable jTable = new JTable(table, new String[]{"Date and Time", "Customer Name","Customer Last name","status","phone", "review"});
+        dashboard.withUpcomingBookingsPanel(jTable);
 
-//        dashboard.withUpcomingBookingsPanel(table, new String[]{"Date and Time", "Customer Name", "Customer surname", "Customer phone", "Status"});
+        Map<Integer, ManageBookingView> dictionary = mapTableWithManageBookingView(table, listOfBookings);
 
-        addTableListener(dashboard.getUpComingBookingsPanel().getUpcomingBookingsTable(), listOfBookings);
+        addTableListener(jTable, dictionary);
 
         dashboard.getOutput().removeAll();
         dashboard.getOutput().add(dashboard.getUpComingBookingsPanel());
         dashboard.validadeAndRepaint();
     }
 
-    private void addTableListener(JTable upcomingBookingsTable, List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> listOfBookings) {
-        upcomingBookingsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    private Map<Integer, ManageBookingView> mapTableWithManageBookingView(String[][] table, List<ManageBookingView> listOfBookings) {
+        Map<Integer, ManageBookingView> dictionary = new HashMap<>();
+        IntStream.range(0, table.length).forEach(index-> dictionary.put(index, listOfBookings.get(index)));
+        return dictionary;
+    }
+
+    private void addTableListener(JTable table, Map<Integer, ManageBookingView> dictionary) {
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(e.getValueIsAdjusting()){
-                    TupleOf3Elements<String, String, String> id = listOfBookings.get(upcomingBookingsTable.getSelectedRow()).get_1();
                     Integer n = Tools.alertConfirm(dashboard, "Cancel Booking?");
+                    System.out.println(dictionary.get(table.getSelectedRow()));
                     if(n == 0){
-//                        try {
-////                            bRep.cancelBooking(id);
-//                            goToUpComingBookings();
-//                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
-//                            e1.printStackTrace();
-//                        }
+                        try {
+
+                            bRep.cancelBooking(dictionary.get(table.getSelectedRow()));
+                            goToUpComingBookings();
+                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
             }
         });
     }
 
-    private List<Tuple<TupleOf3Elements<String, String, String>, List<String>>> getAllBookings() throws SQLException {
-        return bRep.selectAllBookingsFromServiceProvider(user.getId());
+    private List<ManageBookingView> getAllBookings() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+        return bRep.selectAllBookingsFromServiceProvider(user);
     }
 
     @Override

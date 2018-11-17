@@ -2,10 +2,16 @@ package models.tuples.joinedEntities;
 
 import models.enums.BookingReview;
 import models.enums.BookingStatus;
+import models.tuples.entitiesRepresentation.Customer;
+import models.tuples.entitiesRepresentation.ServiceProvider;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
 public class ManageBookingView {
+
+    private ServiceProvider serviceProvider;
+    private Customer customer;
 
     private Timestamp timestamp;
     private String serviceId;
@@ -42,6 +48,14 @@ public class ManageBookingView {
         return phone;
     }
 
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
@@ -70,33 +84,47 @@ public class ManageBookingView {
         this.review = review;
     }
 
+    public void setServiceProvider(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ManageBookingView that = (ManageBookingView) o;
-        return Objects.equals(timestamp, that.timestamp) &&
+        return Objects.equals(serviceProvider, that.serviceProvider) &&
+                Objects.equals(customer, that.customer) &&
+                Objects.equals(timestamp, that.timestamp) &&
                 Objects.equals(serviceId, that.serviceId) &&
                 Objects.equals(customerId, that.customerId) &&
                 bookingStatus == that.bookingStatus &&
                 Objects.equals(companyName, that.companyName) &&
-                review == that.review;
+                review == that.review &&
+                Objects.equals(phone, that.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, serviceId, customerId, bookingStatus, companyName, review);
+        return Objects.hash(serviceProvider, customer, timestamp, serviceId, customerId, bookingStatus, companyName, review, phone);
     }
 
     @Override
     public String toString() {
         return "ManageBookingView{" +
-                "timestamp=" + timestamp +
+                "serviceProvider=" + serviceProvider +
+                ", customer=" + customer +
+                ", timestamp=" + timestamp +
                 ", serviceId='" + serviceId + '\'' +
                 ", customerId='" + customerId + '\'' +
                 ", bookingStatus=" + bookingStatus +
                 ", companyName='" + companyName + '\'' +
                 ", review=" + review +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 

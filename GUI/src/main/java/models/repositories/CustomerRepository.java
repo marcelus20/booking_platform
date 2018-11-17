@@ -1,12 +1,16 @@
 package models.repositories;
 
 import models.Database;
+import models.enums.BookingStatus;
+import models.enums.UserType;
 import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.Customer;
+import models.tuples.entitiesRepresentation.Phone;
 import models.utils.Tools;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 public class CustomerRepository extends Database implements Repository<Customer>{
@@ -45,6 +49,15 @@ public class CustomerRepository extends Database implements Repository<Customer>
     public Customer selectObjById(Object id) throws SQLException {
         Customer customer = new Customer();
         init();
+
+        ResultSet rs = stmt.executeQuery("SELECT * FROM customers c JOIN phone_list p ON c.c_id = p.id WHERE id = '"+id+"';");
+        while (rs.next()){
+            customer.withUserType(UserType.CUSTOMER);
+            customer.withId(rs.getString("c_id"));
+            customer.withFirstName(rs.getString("first_name"));
+            customer.withLastName(rs.getString("last_name"));
+            customer.withListOfPhones(new Phone((String) id,rs.getString("phone")));
+        }
 
 
 

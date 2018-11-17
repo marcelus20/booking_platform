@@ -83,8 +83,6 @@ public class ServiceProviderRepository extends Database implements Repository<Se
 
         while(rs.next()){
             serviceProvider.withId((String)id); serviceProvider.withEmail(rs.getString("company_full_name"));
-//            serviceProvider.withDateCreated(Date.valueOf(rs.getString("date_of_account_creation")));
-//            serviceProvider.withPhone(rs.getString("phone"));
             serviceProvider.withCompanyFullName(rs.getString("company_full_name"));
             serviceProvider.withServiceProviderStatus(ServiceProviderStatus.valueOf(rs.getString("approved_status").toUpperCase()));
             location.withFirstLineAddress(rs.getString("first_line_address"));
