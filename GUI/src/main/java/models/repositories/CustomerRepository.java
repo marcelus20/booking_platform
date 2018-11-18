@@ -38,7 +38,7 @@ public class CustomerRepository extends Database implements Repository<Customer>
 
         stmt.executeUpdate(query);
 
-        query = "INSERT INTO phone_list VALUES ('"+id+"','"+c.getPhone().getPhone()+"')";
+        query = "INSERT INTO phone_list (id, phone)VALUES ('"+id+"','"+c.getPhone().getPhone()+"')";
 
         stmt.executeUpdate(query);
 

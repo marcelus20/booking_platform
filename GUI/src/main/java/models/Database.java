@@ -49,21 +49,24 @@ public class Database {
         ResultSet rs = stmt.executeQuery(query);
 
         while (rs.next()){
-            System.out.println(rs.getString("user_type"));
-             if(UserType.valueOf(rs.getString("user_type")).equals(UserType.ADMIN)){
+
+
+            if(UserType.valueOf(rs.getString("user_type")).equals(UserType.ADMIN)){
                  user = new Admin();
+                user.withId(rs.getString("id"));
                  user.withUserType(UserType.ADMIN);
              }else if (UserType.valueOf(rs.getString("user_type")).equals(UserType.SERVICE_PROVIDER)){
                  user = new ServiceProvider();
+                user.withId(rs.getString("id"));
                  user.withUserType(UserType.SERVICE_PROVIDER);
                  user = populateTheRestofAttributes(user);
              }else if(UserType.valueOf(rs.getString("user_type")).equals(UserType.CUSTOMER)){
                  user = new Customer();
+                user.withId(rs.getString("id"));
                  user.withUserType(UserType.CUSTOMER);
                  user = populateTheRestofAttributes(user);
              }
 
-             user.withId(rs.getString("id"));
              user.withEmail(rs.getString("email"));
              user.withPassword(rs.getString("password"));
              user.withDateCreated(rs.getDate("date_created"));
