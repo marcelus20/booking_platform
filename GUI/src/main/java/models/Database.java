@@ -119,10 +119,12 @@ public class Database {
         init();
 //        List<List<String>> barbers = new ArrayList<>();
 //        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider AS b JOIN location AS l ON b.s_id = l.s_id;");
-        ResultSet rs = stmt.executeQuery("SELECT u.id, u.email, s.company_full_name, l.first_line_address, l.city, p.phone " +
+        String query = "SELECT u.id, u.email, s.company_full_name, l.first_line_address, l.city, p.phone " +
                 "FROM users u JOIN service_provider s ON u.id = s.s_id JOIN location l ON u.id = l.s_id  " +
-                " JOIN phone_list p ON u.id = p.id WHERE l.city = '"+city+"';");
+                " JOIN phone_list p ON u.id = p.id WHERE l.city = '"+city+"';";
+        ResultSet rs = stmt.executeQuery(query);
         List<ServiceProviderTableView> tableListOfBarbers= new ArrayList<>();
+
 
         while (rs.next()){
             ServiceProviderTableView serviceProviderTableView = new ServiceProviderTableView();
