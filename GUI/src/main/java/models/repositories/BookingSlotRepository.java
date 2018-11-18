@@ -105,7 +105,7 @@ public class BookingSlotRepository extends Database implements Repository<Bookin
         List<BookingSlots> slots = new ArrayList<>();
 
         init();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM booking_slots; ");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM booking_slots WHERE s_id = '"+id+"';");
         while (rs.next()){
             BookingSlots bookingSlots= new BookingSlots();
             bookingSlots.withServiceId(id);

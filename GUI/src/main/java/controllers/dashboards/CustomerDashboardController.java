@@ -164,6 +164,8 @@ public class CustomerDashboardController implements Control {
 
                     Integer rowIndex = table.getSelectedRow();
 
+                    System.out.println(dictionary.get(rowIndex));
+
                     ServiceProviderTableView selectedService = dictionary.get(rowIndex);
 
 

@@ -61,6 +61,8 @@ public class BookingRepository extends Database implements Repository<Booking> {
                 .append("'").append(BookingStatus.PENDENT).append("', ")
                 .append("'").append(BookingReview.NO_REVIEW_ADDED).append("'); ").toString();
 
+
+        System.out.println(query);
         stmt.executeUpdate(query);
 
         Repository<BookingSlots> bRep = new BookingSlotRepository();
