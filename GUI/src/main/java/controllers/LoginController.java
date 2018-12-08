@@ -4,6 +4,9 @@ import controllers.dashboards.AdminDashboardController;
 import controllers.dashboards.CustomerDashboardController;
 import controllers.dashboards.ServiceDashBoardController;
 import models.Database;
+import models.enums.ServiceProviderStatus;
+import models.enums.UserType;
+import models.tuples.entitiesRepresentation.Admin;
 import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
@@ -14,6 +17,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -41,8 +45,7 @@ public class LoginController implements Control{
             public void actionPerformed(ActionEvent e) {
                 if(login.getMyCaptcha().captchaIsValid(login.getMyCaptcha().getField())){
                     try {
-                        Database db = new Database();
-                        AbstraticUser user = db.login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
+                        AbstraticUser user = login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
                         if(user == null){
                             Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
                         }else{
@@ -65,6 +68,73 @@ public class LoginController implements Control{
 
             }
         });
+    }
+
+    public AbstraticUser login(String email, String password) throws SQLException {
+        AbstraticUser user = null;
+
+        String query  = new StringBuilder().append("SELECT * FROM ").append("users")
+                .append(" WHERE email = ").append("'").append(email).append("'")
+                .append(" AND password = '").append(password).append("' ;").toString();
+
+        ResultSet rs = Database.database().getStmt().executeQuery(query);
+
+
+        while (rs.next()){
+            if(UserType.valueOf(rs.getString("user_type")).equals(UserType.ADMIN)){
+                user = new Admin();
+                user.withId(rs.getString("id"));
+                user.withUserType(UserType.ADMIN);
+            }else if (UserType.valueOf(rs.getString("user_type")).equals(UserType.SERVICE_PROVIDER)){
+                user = new ServiceProvider();
+                user.withId(rs.getString("id"));
+                user.withUserType(UserType.SERVICE_PROVIDER);
+
+            }else if(UserType.valueOf(rs.getString("user_type")).equals(UserType.CUSTOMER)){
+                user = new Customer();
+                user.withId(rs.getString("id"));
+                user.withUserType(UserType.CUSTOMER);
+
+            }
+
+            user.withEmail(rs.getString("email"));
+            user.withPassword(rs.getString("password"));
+            user.withDateCreated(rs.getDate("date_created"));
+        }
+        System.out.println(user);
+
+        user = populateTheRestofAttributes(user);
+
+
+        return user;
+    }
+
+    private AbstraticUser populateTheRestofAttributes(AbstraticUser user) throws SQLException {
+        if(user.getUserType() == UserType.ADMIN){
+            return user;
+        }
+
+        String query = "";
+        if(user.getUserType().equals(UserType.CUSTOMER)){
+            query = "SELECT * FROM customers WHERE c_id = '"+user.getId()+"'";
+        }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
+            query = "SELECT * FROM service_provider WHERE s_id = '"+user.getId()+"'";
+        }
+
+
+        ResultSet rs = Database.database().getStmt().executeQuery(query);
+        while(rs.next()){
+            if(user.getUserType().equals(UserType.CUSTOMER)){
+                ((Customer) user).withFirstName(rs.getString("first_name"));
+                ((Customer) user).withLastName(rs.getString("last_name"));
+            }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
+                ((ServiceProvider) user).withCompanyFullName(rs.getString("company_full_name"));
+                ((ServiceProvider) user).withServiceProviderStatus(ServiceProviderStatus
+                        .valueOf(rs.getString("approved_status")));
+            }
+        }
+
+        return user;
     }
 
     private void redirectToAdminDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {

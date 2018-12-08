@@ -3,6 +3,7 @@ package models.repositories;
 import models.enums.BookingReview;
 import models.enums.BookingStatus;
 import models.Database;
+import models.enums.UserType;
 import models.tuples.entitiesRepresentation.*;
 import models.tuples.Tuple;
 import models.tuples.joinedEntities.ManageBookingView;
@@ -12,9 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookingRepository extends Database implements Repository<Booking> {
+public class BookingRepository implements Repository<Booking> {
 
-    public BookingRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public BookingRepository(){
     }
 
 
@@ -28,9 +29,7 @@ public class BookingRepository extends Database implements Repository<Booking> {
 
         Booking b = new Booking();
 
-        init();
-
-        ResultSet rs = stmt
+        ResultSet rs = Database.database().getStmt()
                 .executeQuery("SELECT * FROM booking_slots WHERE id = "
                         +((Tuple)id).get_2()+" AND time_stamp = "+((Tuple) id).get_1()+";");
 
@@ -38,8 +37,6 @@ public class BookingRepository extends Database implements Repository<Booking> {
             b.withBookingStatus(Tools.mapBookingStatusStringToEnum(rs.getString("booking_status")));
             b.withReview(BookingReview.valueOf(rs.getString("complaint")));
         }
-
-        close();
 
         return b;
     }
@@ -51,8 +48,6 @@ public class BookingRepository extends Database implements Repository<Booking> {
 
 
     public void addBook(BookingSlots slot, Customer user) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        init();
-
 
         String query = new StringBuilder().append("INSERT INTO booking VALUES (")
                 .append("'").append(slot.getTimestamp()).append("', ")
@@ -61,25 +56,22 @@ public class BookingRepository extends Database implements Repository<Booking> {
                 .append("'").append(BookingStatus.PENDENT).append("', ")
                 .append("'").append(BookingReview.NO_REVIEW_ADDED).append("'); ").toString();
 
+        Database.database().getStmt().executeUpdate(query);
 
-        System.out.println(query);
-        stmt.executeUpdate(query);
+        BookingSlotRepository bookingSlotsRepository = new BookingSlotRepository();
 
-        Repository<BookingSlots> bRep = new BookingSlotRepository();
+        bookingSlotsRepository.updateBookingSlotAvailability(slot.getTimestamp(), slot.getServiceId(), false);
 
-        ((BookingSlotRepository) bRep).updateBookingSlotAvailability(slot.getTimestamp(), slot.getServiceId(), false);
-
-        close();
     }
 
     @Override
     public List<Booking> getList(AbstraticUser customer) throws SQLException {
         List<Booking> bookings = new ArrayList<>();
-        init();
+
 
         String query = "SELECT * FROM booking WHERE id = "+customer.getId()+";";
 
-        ResultSet rs = stmt.executeQuery(query);
+        ResultSet rs = Database.database().getStmt().executeQuery(query);
 
         while (rs.next()){
             Booking booking = new Booking();
@@ -88,54 +80,46 @@ public class BookingRepository extends Database implements Repository<Booking> {
             booking.withReview(BookingReview.valueOf(rs.getString("booking_review")));
         }
 
-        close();
         return bookings;
     }
 
 
     public void updateAReview(ManageBookingView manageBookingView, String review) throws SQLException {
 
-        init();
-
-        stmt.executeUpdate("UPDATE booking SET review = '"+review+"' WHERE time_stamp = '"
+        Database.database().getStmt().executeUpdate("UPDATE booking SET review = '"+review+"' WHERE time_stamp = '"
                 + manageBookingView.getTimestamp() + "' AND c_id = '"
                 + manageBookingView.getCustomerId() + "' AND s_id = '"
                 +manageBookingView.getServiceId() + "' ;");
 
-
-        close();
     }
 
     public List<ManageBookingView> selectAllBookingsFromServiceProvider(ServiceProvider serviceProvider) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
 
-        return new Database().generateBookingView(serviceProvider, null);
+        return generateBookingView(serviceProvider, null);
     }
 
     public void updateABookingStatus(ManageBookingView manageBookingView, String bStatus) throws SQLException {
-        init();
+
         BookingStatus status = Tools.mapBookingStatusStringToEnum(bStatus);
         System.out.println(status);
-        stmt.executeUpdate("UPDATE booking SET booking_status = '"+status+"' WHERE time_stamp = '"
+        Database.database().getStmt().executeUpdate("UPDATE booking SET booking_status = '"+status+"' WHERE time_stamp = '"
                 + manageBookingView.getTimestamp() + "' AND c_id = '" + manageBookingView.getCustomerId() + "' AND s_id = '" +manageBookingView.getServiceId()+ "' ;");
-        close();
     }
 
     public List<String> selectDistinctsBookingStatus() throws SQLException {
         List<String> result = new ArrayList<>();
-        init();
-        ResultSet rs = stmt.executeQuery("SELECT DISTINCT booking_status FROM booking;");
+        ResultSet rs = Database.database().getStmt().executeQuery("SELECT DISTINCT booking_status FROM booking;");
         while(rs.next()){
             result.add(rs.getString("booking_status"));
         }
-        close();
         return result;
     }
 
 
     public void cancelBooking(ManageBookingView manageBookingView) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        init();
 
-        stmt.executeUpdate("DELETE FROM booking WHERE time_stamp ='"+ manageBookingView.getTimestamp()+
+
+        Database.database().getStmt().executeUpdate("DELETE FROM booking WHERE time_stamp ='"+ manageBookingView.getTimestamp()+
                 "' AND s_id = "+manageBookingView.getServiceId()+ " AND c_id = "
                 + manageBookingView.getCustomerId()+";");
 
@@ -145,11 +129,57 @@ public class BookingRepository extends Database implements Repository<Booking> {
         ((BookingSlotRepository) bRep).updateBookingSlotAvailability(manageBookingView
                 .getTimestamp(), manageBookingView.getServiceId(), true);
 
-        close();
     }
 
     public List<ManageBookingView> selectAllBookingsFromServiceProvider(ServiceProvider user, BookingStatus bookingStatus) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
 
-        return new Database().generateBookingView(user, bookingStatus);
+        return generateBookingView(user, bookingStatus);
+    }
+
+    public List<ManageBookingView> generateBookingView(AbstraticUser user, BookingStatus bookingStatus) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        List<ManageBookingView> manageBookingViews = new ArrayList<>();
+        Repository<ServiceProvider> serviceProviderRepository = new ServiceProviderRepository();
+        Repository<Customer> customerRepository = new CustomerRepository();
+
+        String userString = "";
+        if(user.getUserType().equals(UserType.CUSTOMER)){
+            userString = " b.c_id ";
+        }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
+            userString = " b.s_id ";
+        }
+
+        String bookingStatusSentence = "";
+        if(bookingStatus != null){
+            bookingStatusSentence += " AND booking_status = '"+bookingStatus+"' ";
+        }
+        String query = "select * from booking b join service_provider s on b.s_id = s.s_id" +
+                " join phone_list p on p.id = b.s_id where "+userString+"  = "+user.getId()+" " +
+                bookingStatusSentence+" ;";
+
+        ResultSet rs = Database.database().getStmt().executeQuery(query);
+
+        while(rs.next()){
+            System.out.println(customerRepository.selectObjById(rs.getString("c_id")));
+            ManageBookingView manageBookingView = new ManageBookingView();
+            manageBookingView.setServiceProvider(
+                    serviceProviderRepository.selectObjById(
+                            rs.getString("s_id")));
+
+            manageBookingView.setCustomer(
+                    customerRepository.selectObjById(
+                            rs.getString("c_id")));
+
+            manageBookingView.setTimestamp(rs.getTimestamp("time_stamp"));
+            manageBookingView.setServiceId(rs.getString("s_id"));
+            manageBookingView.setCustomerId(rs.getString("c_id"));
+            manageBookingView.setReview(BookingReview.valueOf(rs.getString("review")));
+            manageBookingView.setCompanyName(rs.getString("company_full_name"));
+            manageBookingView.setBookingStatus(BookingStatus.valueOf(rs.getString("booking_status")));
+            manageBookingView.setPhone(rs.getString("phone"));
+
+            manageBookingViews.add(manageBookingView);
+        }
+
+        return manageBookingViews;
     }
 }

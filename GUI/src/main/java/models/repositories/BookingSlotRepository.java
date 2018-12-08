@@ -13,12 +13,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookingSlotRepository extends Database implements Repository<BookingSlots> {
+public class BookingSlotRepository implements Repository<BookingSlots> {
 
 
     private Repository<Booking> bRep;
 
-    public BookingSlotRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public BookingSlotRepository(){
         bRep = new BookingRepository();
     }
 
@@ -34,9 +34,9 @@ public class BookingSlotRepository extends Database implements Repository<Bookin
         BookingSlots slot = new BookingSlots();
         Booking b = new Booking();
 
-        init();
 
-        ResultSet rs = stmt.executeQuery("SELECT * FROM booking_slots WHERE id = "+id+";");
+
+        ResultSet rs = Database.database().getStmt().executeQuery("SELECT * FROM booking_slots WHERE id = "+id+";");
 
         while (rs.next()){
             slot.withTimestamp(rs.getTimestamp("time_stamp"));
@@ -50,7 +50,6 @@ public class BookingSlotRepository extends Database implements Repository<Bookin
 
         slot.withBooking(b);
 
-        close();
 
         return slot;
     }
@@ -67,7 +66,6 @@ public class BookingSlotRepository extends Database implements Repository<Bookin
 
 
     public void updateBookingSlotAvailability(Tuple<String, String> id, Boolean status) throws SQLException {
-        init();
 
         Integer i = 0;
 
@@ -80,32 +78,28 @@ public class BookingSlotRepository extends Database implements Repository<Bookin
                 +i+" WHERE timestamp = '"+ id.get_1() + "' AND s_id = '"+id.get_2()+"' ;";
         System.out.println(query);
 
-            stmt.executeUpdate(query);
+            Database.database().getStmt().executeUpdate(query);
 
-        close();
     }
 
     public void addSlotsToDB(String id, List<MyCustomDateAndTime> selectedSlots) throws SQLException {
-        init();
 
 
         selectedSlots.forEach(selectedSlot->{
             try {
-                stmt.executeUpdate("INSERT INTO booking_slots values('"
+                Database.database().getStmt().executeUpdate("INSERT INTO booking_slots values('"
                         +selectedSlot.getTimestamp()+"', "+ id +", '1') ;");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
 
-        close();
     }
 
     public List<BookingSlots> getList(String id) throws SQLException {
         List<BookingSlots> slots = new ArrayList<>();
 
-        init();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM booking_slots WHERE s_id = '"+id+"';");
+        ResultSet rs = Database.database().getStmt().executeQuery("SELECT * FROM booking_slots WHERE s_id = '"+id+"';");
         while (rs.next()){
             BookingSlots bookingSlots= new BookingSlots();
             bookingSlots.withServiceId(id);
@@ -113,16 +107,14 @@ public class BookingSlotRepository extends Database implements Repository<Bookin
             bookingSlots.withAvailability(rs.getBoolean("availability"));
             slots.add(bookingSlots);
         }
-        close();
 
         return slots;
     }
 
     public void updateBookingSlotAvailability(Timestamp timestamp, String serviceId, boolean b) throws SQLException {
 
-        init();
-        stmt.executeUpdate("UPDATE booking_slots SET availability = "+b+" WHERE timestamp = " +
+        Database.database().getStmt().executeUpdate("UPDATE booking_slots SET availability = "+b+" WHERE timestamp = " +
                 "'"+timestamp+"' AND s_id = '"+serviceId+"' ;");
-        close();
+
     }
 }

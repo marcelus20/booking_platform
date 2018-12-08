@@ -10,16 +10,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceProviderRepository extends Database implements Repository<ServiceProvider>{
+public class ServiceProviderRepository implements Repository<ServiceProvider>{
 
 
-    public ServiceProviderRepository() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public ServiceProviderRepository() {
 
     }
 
     @Override
     public void addToDB(ServiceProvider obj) throws SQLException {
-        init();
+
         ServiceProvider s = obj;
         Location l = s.getLocation();
 
@@ -35,19 +35,19 @@ public class ServiceProviderRepository extends Database implements Repository<Se
                 .append(")").toString();
 
 
-        stmt.executeUpdate(query);
+        Database.database().getStmt().executeUpdate(query);
 
         String id = selectIdOfUser(s.getEmail());
         System.out.println(id);
 
         query = "INSERT INTO phone_list (id, phone) VALUES ('"+id+"','"+s.getPhone().getPhone()+"')";
 
-        stmt.executeUpdate(query);
+        Database.database().getStmt().executeUpdate(query);
 
         query = "INSERT  INTO service_provider (s_id, company_full_name, approved_status) " +
                 "VALUES ('"+id+"','"+s.getCompanyFullName()+"','"+s.getStatus()+"')";
 
-        stmt.executeUpdate(query);
+        Database.database().getStmt().executeUpdate(query);
 
         //FOR THE LOCATION WISE
         query = new StringBuilder()
@@ -60,9 +60,8 @@ public class ServiceProviderRepository extends Database implements Repository<Se
                 .append("'").append(l.getSecondLineAddress()).append("'); ")
                 .toString();
 
-        stmt.executeUpdate(query);
+        Database.database().getStmt().executeUpdate(query);
 
-        close();
     }
 
     @Override
@@ -72,9 +71,7 @@ public class ServiceProviderRepository extends Database implements Repository<Se
 
         List<BookingSlots> bookingSlots = new ArrayList<>();
 
-        init();
-
-        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider s JOIN location l ON s.s_id = l.s_id WHERE s.s_id = "+ id +";");
+        ResultSet rs = Database.database().getStmt().executeQuery("SELECT * FROM service_provider s JOIN location l ON s.s_id = l.s_id WHERE s.s_id = "+ id +";");
 
         while(rs.next()){
             serviceProvider.withId((String)id); serviceProvider.withEmail(rs.getString("company_full_name"));
@@ -88,7 +85,7 @@ public class ServiceProviderRepository extends Database implements Repository<Se
 
         serviceProvider.withLocation(location);
 
-        rs = stmt.executeQuery("SELECT * FROM service_provider s JOIN booking_slots b ON s.s_id = b.s_id WHERE s.s_id = "+id+";");
+        rs = Database.database().getStmt().executeQuery("SELECT * FROM service_provider s JOIN booking_slots b ON s.s_id = b.s_id WHERE s.s_id = "+id+";");
         while (rs.next()){
             BookingSlots b = new BookingSlots();
             b.withTimestamp(rs.getTimestamp("timestamp"));
@@ -99,28 +96,24 @@ public class ServiceProviderRepository extends Database implements Repository<Se
 
         serviceProvider.withBookingSlots(bookingSlots);
 
-        close();
         return serviceProvider;
     }
 
     @Override
     public String selectIdOfUser(String email) throws SQLException {
-        init();
-        ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE email = '"+email+"'");
+        ResultSet rs = Database.database().getStmt().executeQuery("SELECT id FROM users WHERE email = '"+email+"'");
         while (rs.next()){
             return rs.getString("id");
         }
-        close();
         return null;
     }
 
     @Override
-    public List<ServiceProvider> getList(AbstraticUser user) throws SQLException {
+    public List<ServiceProvider> getList(AbstraticUser user) {
         return null;
     }
 
     public List<ServiceProvider> selectListOfServiceProvidersByStatus(ServiceProviderStatus status) throws SQLException {
-        init();
 
         List <ServiceProvider> listOfProviders = new ArrayList<>();
         String statusSentence = "";
@@ -132,7 +125,7 @@ public class ServiceProviderRepository extends Database implements Repository<Se
                 "JOIN service_provider s ON s.s_id = u.id "+statusSentence+" ;";
         System.out.println(query);
 
-        ResultSet rs = stmt.executeQuery(query);
+        ResultSet rs = Database.database().getStmt().executeQuery(query);
 
         while (rs.next()){
             ServiceProvider serviceProvider = new ServiceProvider();
@@ -153,17 +146,14 @@ public class ServiceProviderRepository extends Database implements Repository<Se
             listOfProviders.add(serviceProvider);
         }
 
-        close();
         return listOfProviders;
     }
 
     public void updateServiceProviderStatus(ServiceProvider serviceProvider) throws SQLException {
-        init();
 
-        stmt.executeUpdate("UPDATE service_provider SET approved_status = '"+serviceProvider.getStatus()+"'" +
+        Database.database().getStmt().executeUpdate("UPDATE service_provider SET approved_status = '"+serviceProvider.getStatus()+"'" +
                 " WHERE  s_id = '"+serviceProvider.getId()+"'");
 
-        close();
     }
 
 }

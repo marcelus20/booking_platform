@@ -76,4 +76,5 @@ public class MyCaptcha extends MyCustomJPanel {
     public String getField() {
         return field.getInput().getText();
     }
+
 }

@@ -3,11 +3,11 @@ package controllers.dashboards;
 import controllers.Application;
 import controllers.Control;
 import models.Database;
+import models.enums.BookingReview;
+import models.enums.BookingStatus;
 import models.enums.UserType;
-import models.repositories.BookingSlotRepository;
+import models.repositories.*;
 import models.tuples.entitiesRepresentation.*;
-import models.repositories.BookingRepository;
-import models.repositories.Repository;
 import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.joinedEntities.ManageBookingView;
 import models.tuples.joinedEntities.ServiceProviderTableView;
@@ -18,12 +18,16 @@ import views.dashboard.customer.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.crypto.Data;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -44,11 +48,7 @@ public class CustomerDashboardController implements Control {
         this.app = app;
         user = app.getUser();
         bRep = new BookingRepository();
-        try {
-            db = new Database();
-        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        db = Database.database();
 
         initCurrentDashboardView();
         buildProperPanel();
@@ -114,14 +114,16 @@ public class CustomerDashboardController implements Control {
 
                         String [] cities = null;
                         try {
-                            cities = db.getListOfCities().toArray(new String[0]);
+                            Repository<Location> locationRepository = new LocationRepository();
+                            cities = locationRepository.getList(null).stream().map(location->location.getCity())
+                                    .collect(Collectors.toList()).toArray(new String[0]);
 
                         } catch (SQLException e1) {
                             e1.printStackTrace();
                         }
                         String chosenCity = Tools.alertComboBox(dashboard, cities, "choose city", "City search engine");
                         try {
-                            mountTable(db.getListOfBarbersByCity(chosenCity));
+                            mountTable(getListOfBarbersByCity(chosenCity));
 
                         } catch (SQLException e1) {
                             e1.printStackTrace();
@@ -129,6 +131,30 @@ public class CustomerDashboardController implements Control {
                     }
                 });
 
+    }
+
+    public List<ServiceProviderTableView>getListOfBarbersByCity(String city) throws SQLException {
+//        List<List<String>> barbers = new ArrayList<>();
+//        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider AS b JOIN location AS l ON b.s_id = l.s_id;");
+        String query = "SELECT u.id, u.email, s.company_full_name, l.first_line_address, l.city, p.phone " +
+                "FROM users u JOIN service_provider s ON u.id = s.s_id JOIN location l ON u.id = l.s_id  " +
+                " JOIN phone_list p ON u.id = p.id WHERE l.city = '"+city+"';";
+        ResultSet rs = Database.database().getStmt().executeQuery(query);
+        List<ServiceProviderTableView> tableListOfBarbers= new ArrayList<>();
+
+
+        while (rs.next()){
+            ServiceProviderTableView serviceProviderTableView = new ServiceProviderTableView();
+            serviceProviderTableView.setServiceId(rs.getString("id"));
+            serviceProviderTableView.setServiceEmail(rs.getString("email"));
+            serviceProviderTableView.setServiceName(rs.getString("company_full_name"));
+            serviceProviderTableView.setAddress(rs.getString("first_line_address"));
+            serviceProviderTableView.setCity(rs.getString("city"));
+            serviceProviderTableView.setPhone(rs.getString("phone"));
+            tableListOfBarbers.add(serviceProviderTableView);
+        }
+        System.out.println(tableListOfBarbers);
+        return tableListOfBarbers;
     }
 
     private void mountTable(List<ServiceProviderTableView> results){
@@ -254,9 +280,9 @@ public class CustomerDashboardController implements Control {
         ((CustomerDashboard) dashboard).setConsoleSearch(new ConsoleSearch());
 
         ComplaintPanel complaintPanel = new ComplaintPanel(Tools.generateArrayOfBookingReview());
-
+        BookingRepository bookingRepository = new BookingRepository();
         List<ManageBookingView> shortenedListOfBookings =
-                db.generateBookingView(user, null);
+                bookingRepository.generateBookingView(user, null);
 
         String[][] table = Tools.mapManageBookingViewsListToArrayShortened(shortenedListOfBookings);
 
@@ -283,6 +309,8 @@ public class CustomerDashboardController implements Control {
 
         ((CustomerDashboard)dashboard).withOutput(((CustomerDashboard) dashboard).getComplaintPanel());
     }
+
+
 
     private void giveSubmitComplaintAListener(ComplaintPanel complaintPanel, ManageBookingView manageBookingView) {
         complaintPanel.getSubmit().getButton().addActionListener(new ActionListener() {
@@ -313,9 +341,16 @@ public class CustomerDashboardController implements Control {
         ((CustomerDashboard)dashboard).withOutput(consoleManageBookings);
     }
 
-    private ConsoleManageBookings createConsoleManageBookings() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private ConsoleManageBookings createConsoleManageBookings() {
 
-        List<ManageBookingView> manageBookingViewList = db.generateBookingView(user, null);
+        BookingRepository bookingRepository = new BookingRepository();
+
+        List<ManageBookingView> manageBookingViewList = null;
+        try {
+            manageBookingViewList = bookingRepository.generateBookingView(user, null);
+        } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         String[][] table = Tools.mapManageBookingCustomerViewsListToArray(manageBookingViewList);
 
