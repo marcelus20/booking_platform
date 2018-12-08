@@ -105,8 +105,9 @@ public class LoginController implements Control{
         }
         System.out.println(user);
 
-        user = populateTheRestofAttributes(user);
-
+        if(user != null) {
+            user = populateTheRestofAttributes(user);
+        }
 
         return user;
     }
