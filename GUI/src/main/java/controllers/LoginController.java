@@ -8,6 +8,7 @@ import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import models.tuples.entitiesRepresentation.AbstraticUser;
+import views.captcha.Captcha;
 import views.login.Login;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -39,25 +40,30 @@ public class LoginController implements Control{
         login.getLogin().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Database db = new Database();
-                    AbstraticUser user = db.login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
-                    if(user == null){
-                        Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
-                    }else{
-                        login.dispose();
-                        app.setUser(user);
-                        if(user instanceof Customer) {
-                            redirectToCustomerDashboard(app);
-                        }else if (user instanceof ServiceProvider){
-                            redirectToServiceDashboard(app);
+                if(login.getCaptcha().captchaIsValid(login.getCaptcha().getField())){
+                    try {
+                        Database db = new Database();
+                        AbstraticUser user = db.login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
+                        if(user == null){
+                            Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
                         }else{
-                            redirectToAdminDashboard(app);
+                            login.dispose();
+                            app.setUser(user);
+                            if(user instanceof Customer) {
+                                redirectToCustomerDashboard(app);
+                            }else if (user instanceof ServiceProvider){
+                                redirectToServiceDashboard(app);
+                            }else{
+                                redirectToAdminDashboard(app);
+                            }
                         }
+                    } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
+                        e1.printStackTrace();
                     }
-                } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
-                    e1.printStackTrace();
+                }else{
+                    Tools.alertMsg(login, "You have entered the wrong captcha", "wrong captcha");
                 }
+
             }
         });
     }
@@ -152,6 +158,7 @@ public class LoginController implements Control{
                                 validator.set(1, false);
                             }
                         }
+
                         if(validator.stream().reduce(true, (current, next)->current && next)){
                             switchOnLoginButton();
                         }else{
