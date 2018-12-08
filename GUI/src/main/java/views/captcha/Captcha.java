@@ -24,7 +24,6 @@ public class Captcha extends MyCustomJPanel {
     public void loadCaptchaNames() {
         List<File> bf = new ArrayList<>();
         File[] folder = new File("src/main/java/views/captcha/images").listFiles();
-
         for (File file : folder){
             bf.add(file);
         }
@@ -33,10 +32,8 @@ public class Captcha extends MyCustomJPanel {
 
     private void showImageCaptcha(List<File> captchaImages) {
         dictionary = MapFilesWithStrings(captchaImages);
-        System.out.println(dictionary);
         Collections.shuffle(captchaImages);
         Integer randomIndex = new Random().nextInt(captchaImages.size());
-
         try {
             BufferedImage image = ImageIO.read(captchaImages.get(randomIndex));
             getContent().setLayout(new BorderLayout());
@@ -45,14 +42,8 @@ public class Captcha extends MyCustomJPanel {
             e.printStackTrace();
         }
         field = new MyCustomJField<>(new JTextField(), "upper case matters",50);
-
         getContent().add(field.getInput(), BorderLayout.SOUTH);
-
-
-
         captchaFile = captchaImages.get(randomIndex);
-        System.out.println(captchaFile.getName());
-
     }
 
     public Boolean captchaIsValid(String key){
@@ -60,7 +51,7 @@ public class Captcha extends MyCustomJPanel {
     }
 
     private Map<String, File> MapFilesWithStrings(List<File> bf) {
-        System.out.println(bf);
+
         Map<String, File> dictionary = new HashMap<>();
         dictionary.put("WKRH5", bf.get(0));
         dictionary.put("PBNN", bf.get(1));
