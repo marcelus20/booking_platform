@@ -101,16 +101,15 @@ public class AdminDashboardController implements Control {
                 admin.withDateCreated(new Date(System.currentTimeMillis()));
                 System.out.println(admin);
                 Repository<Admin> admRep = null;
-                try {
-                    admRep = new AdminRepository();
-                } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
-                    e1.printStackTrace();
-                }
+
+                admRep = new AdminRepository();
+
                 try {
                     admRep.addToDB(admin);
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
+
                 Tools.alertMsg(dashboard, admin.getEmail() + " has just been subscribed to the system", "Success");
                 goToAdminForm();
             }
