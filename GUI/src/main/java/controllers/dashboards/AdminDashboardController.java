@@ -40,7 +40,7 @@ public class AdminDashboardController implements Control {
     private final Application app;
     private Tuple<List<Boolean>, AdminForm> adminForm;
 
-    public AdminDashboardController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public AdminDashboardController(Application app) {
         user = (Admin) app.getUser();
         dashboard = new AdminDashboard();
         sRep = new ServiceProviderRepository();

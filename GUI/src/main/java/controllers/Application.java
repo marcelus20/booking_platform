@@ -17,7 +17,7 @@ public class Application {
     private AbstraticUser user;
     private AdminDashboardController adminDashboardController;
 
-    public Application() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public Application(){
         this.loginController = new LoginController(this);
 
 
