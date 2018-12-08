@@ -43,7 +43,7 @@ public class LoginController implements Control{
         login.getLogin().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(login.getMyCaptcha().captchaIsValid(login.getMyCaptcha().getField())){
+                if(login.getMyCaptcha().captchaIsValid()){
                     try {
                         AbstraticUser user = login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
                         if(user == null){
@@ -64,6 +64,8 @@ public class LoginController implements Control{
                     }
                 }else{
                     Tools.alertMsg(login, "You have entered the wrong captcha", "wrong captcha");
+                    login.getMyCaptcha().getContent().removeAll();
+                    login.getMyCaptcha().generateCaptcha();
                 }
 
             }
