@@ -88,4 +88,5 @@ public class CustomerDashboard extends Dashboard implements ButtonPanelContainer
     public MyCustomJPanel getComplaintPanel() {
         return complaintPanel;
     }
+
 }

@@ -3,8 +3,6 @@ package controllers.dashboards;
 import controllers.Application;
 import controllers.Control;
 import models.Database;
-import models.enums.BookingReview;
-import models.enums.BookingStatus;
 import models.enums.UserType;
 import models.repositories.*;
 import models.tuples.entitiesRepresentation.*;
@@ -18,7 +16,6 @@ import views.dashboard.customer.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.xml.crypto.Data;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -40,20 +37,15 @@ public class CustomerDashboardController implements Control {
     private Database db;
 
     private Repository<Booking> bRep;
+    private String selectedServiceId;
 
 
-
-
-    public CustomerDashboardController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public CustomerDashboardController(Application app){
         this.app = app;
         user = app.getUser();
         bRep = new BookingRepository();
         db = Database.database();
-
         initCurrentDashboardView();
-        buildProperPanel();
-
-
         addButtonsAFunction();
         addInputsAListener();
     }
@@ -83,8 +75,6 @@ public class CustomerDashboardController implements Control {
         dashboard.getSideBar().setTitle("Hello, "+name+"! :)");
     }
 
-    private void buildProperPanel(){
-    }
 
     private void logout(){
         dashboard.dispose();
@@ -130,6 +120,7 @@ public class CustomerDashboardController implements Control {
                         }
                     }
                 });
+
 
     }
 
@@ -259,11 +250,9 @@ public class CustomerDashboardController implements Control {
                 if(e.getActionCommand().contains("earch")){ // IF BUTTON IS SEARCH FOR BARBERS
                     goToSearchEngine();
                 }else if (e.getActionCommand().contains("bookings")){//IF BUTTONS IS MANAGING BOOKINGS
-                    try {
-                        goToViewBookings();
-                    } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e1) {
-                        e1.printStackTrace();
-                    }
+
+                    goToViewBookings();
+
                 }else if(e.getActionCommand().contains("omplain")){//IF BUTTON IS MAKE A COMPLAINT
                     try {
                         goToReviewPanel();
@@ -297,22 +286,46 @@ public class CustomerDashboardController implements Control {
                 if(!e.getValueIsAdjusting()){
                     complaintPanel.showComplaintContainer();
                     dashboard.validadeAndRepaint();
-                    giveSubmitComplaintAListener(complaintPanel, dictionary.get(t.getSelectedRow()));
+                    selectedServiceId = dictionary.get(t.getSelectedRow()).getServiceId();
+                    giveSubimitReviewALIstener(complaintPanel, dictionary.get(t.getSelectedRow()));
 
                 }
             }
         });
 
 
+
         dashboard.validadeAndRepaint();
         ((CustomerDashboard) dashboard).setComplaintPanel(complaintPanel);
 
         ((CustomerDashboard)dashboard).withOutput(((CustomerDashboard) dashboard).getComplaintPanel());
+
+        complaintPanel.getSendComplaint().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    recordAComplaint(complaintPanel.getTextArea());
+                    String serviceName = new ServiceProviderRepository().selectObjById(selectedServiceId).getCompanyFullName();
+                    Tools.alertMsg(dashboard, "You have successfully added a complaint to "+ serviceName, "success");
+                    goToSearchEngine();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void recordAComplaint(String complaintPanelTextArea) throws SQLException {
+        Repository<Complaint> complaintRepository = new ComplaintRepository();
+        Complaint complaint = new Complaint();
+        complaint.setServiceId(selectedServiceId);
+        complaint.setCustomerId(user.getId());
+        complaint.setComplaint(complaintPanelTextArea);
+        complaintRepository.addToDB(complaint);
     }
 
 
-
-    private void giveSubmitComplaintAListener(ComplaintPanel complaintPanel, ManageBookingView manageBookingView) {
+    private void giveSubimitReviewALIstener(ComplaintPanel complaintPanel, ManageBookingView manageBookingView) {
         complaintPanel.getSubmit().getButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -336,7 +349,7 @@ public class CustomerDashboardController implements Control {
 
     }
 
-    public void goToViewBookings() throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void goToViewBookings(){
         ConsoleManageBookings consoleManageBookings = createConsoleManageBookings();
         ((CustomerDashboard)dashboard).withOutput(consoleManageBookings);
     }

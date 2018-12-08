@@ -3,17 +3,27 @@ package models.tuples.entitiesRepresentation;
 import java.util.Objects;
 
 public class Complaint {
+    private String complaintID;
     private String serviceId;
     private String customerId;
     private String complaint;
 
-    public Complaint(String serviceId, String customerId, String complaint) {
+    public Complaint(String complaintID, String serviceId, String customerId, String complaint) {
+        this.complaintID = complaintID;
         this.serviceId = serviceId;
         this.customerId = customerId;
         this.complaint = complaint;
     }
 
     public Complaint() {
+    }
+
+    public String getComplaintID() {
+        return complaintID;
+    }
+
+    public void setComplaintID(String complaintID) {
+        this.complaintID = complaintID;
     }
 
     public String getServiceId() {
@@ -45,20 +55,22 @@ public class Complaint {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Complaint complaint1 = (Complaint) o;
-        return Objects.equals(serviceId, complaint1.serviceId) &&
+        return Objects.equals(complaintID, complaint1.complaintID) &&
+                Objects.equals(serviceId, complaint1.serviceId) &&
                 Objects.equals(customerId, complaint1.customerId) &&
                 Objects.equals(complaint, complaint1.complaint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(serviceId, customerId, complaint);
+        return Objects.hash(complaintID, serviceId, customerId, complaint);
     }
 
     @Override
     public String toString() {
         return "Complaint{" +
-                "serviceId='" + serviceId + '\'' +
+                "complaintID='" + complaintID + '\'' +
+                ", serviceId='" + serviceId + '\'' +
                 ", customerId='" + customerId + '\'' +
                 ", complaint='" + complaint + '\'' +
                 '}';

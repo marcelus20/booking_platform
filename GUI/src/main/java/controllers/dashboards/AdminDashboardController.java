@@ -5,10 +5,12 @@ import controllers.Control;
 import models.enums.ServiceProviderStatus;
 import models.enums.UserType;
 import models.repositories.AdminRepository;
+import models.repositories.LogRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
 import models.tuples.Tuple;
 import models.tuples.entitiesRepresentation.Admin;
+import models.tuples.entitiesRepresentation.Log;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import views.customComponents.MyCustomJPanel;
@@ -25,9 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -58,7 +59,7 @@ public class AdminDashboardController implements Control {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(button.getButton().getText().contains("activities")){
-                        Tools.alertMsg(dashboard, "activities", "");
+                        goToActivitiesPanel();
                     }else if(button.getButton().getText().contains("verify")){
                         try {
                             goToVerifyAServiceProviderView();
@@ -72,6 +73,36 @@ public class AdminDashboardController implements Control {
 
             });
         });
+    }
+
+    private void goToActivitiesPanel() {
+        dashboard.getOutput().removeAll();
+        MyCustomJPanel activitiesPanel = new MyCustomJPanel("Activities", 500,450);
+        getActivitiesLogData(activitiesPanel);
+        dashboard.getOutput().add(activitiesPanel);
+        dashboard.validadeAndRepaint();
+
+    }
+
+    private void getActivitiesLogData(MyCustomJPanel activitiesPanel) {
+        Repository<Log> logRepository = new LogRepository();
+        List<Log> logs = null;
+        try {
+            logs = logRepository.getList(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String[][] logsArray = logs.stream().map(log-> Arrays.asList(log.getUserId(), log.getActivityLog()).toArray(new String[2]))
+                .collect(Collectors.toList()).toArray(new String[logs.size()][]);
+        createLogsJTable(logsArray, activitiesPanel);
+    }
+
+    private void createLogsJTable(String[][] logsArray, MyCustomJPanel activitiesPanel) {
+        String[] columns = {"user id", "activity"};
+        JTable jTable = new JTable(logsArray, columns);
+        JScrollPane jScrollPane = new JScrollPane(jTable);
+        activitiesPanel.getContent().add(jScrollPane);
+
     }
 
     private void goToAdminForm() {
