@@ -8,7 +8,6 @@ import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.utils.Tools;
 import models.tuples.entitiesRepresentation.AbstraticUser;
-import views.captcha.Captcha;
 import views.login.Login;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -40,7 +39,7 @@ public class LoginController implements Control{
         login.getLogin().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(login.getCaptcha().captchaIsValid(login.getCaptcha().getField())){
+                if(login.getMyCaptcha().captchaIsValid(login.getMyCaptcha().getField())){
                     try {
                         Database db = new Database();
                         AbstraticUser user = db.login(login.getEmail(), Tools.hashingPassword(login.getPassword()));

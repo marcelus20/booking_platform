@@ -3,7 +3,7 @@ package views.login;
 import static models.utils.ArrayListBuilder.arrayListBuilder;
 
 import views.InputPanelContainer;
-import views.captcha.Captcha;
+import views.captcha.MyCaptcha;
 import views.customComponents.ButtonPanel;
 import views.customComponents.InputPanel;
 import views.customComponents.MyCustomJFrame;
@@ -23,7 +23,7 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
     private final InputPanel password;
     private final ButtonPanel login;
     private final ButtonPanel signUp;
-    private Captcha captcha;
+    private MyCaptcha myCaptcha;
 
     public Login() {
         super("Barbers Booking Platform System", 500,550);
@@ -32,7 +32,7 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
         this.password = new InputPanel("Password", new JPasswordField());
         this.login = new ButtonPanel("Login");
         this.signUp = new ButtonPanel( "Sign up");
-        this.captcha = new Captcha();
+        this.myCaptcha = new MyCaptcha();
 
 //        pack();
         JFrame.setDefaultLookAndFeelDecorated(true);
@@ -46,7 +46,7 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
         getFramePanel().add(centerPanel, BorderLayout.CENTER);
         centerPanel.setLayout(new GridLayout(2,1));
         centerPanel.add(credentials);
-        centerPanel.add(captcha);
+        centerPanel.add(myCaptcha);
 
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(1,2));
@@ -83,11 +83,11 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
         return arrayListBuilder(new ArrayList<InputPanel>()).add(email).add(password).build();
     }
 
-    public Captcha getCaptcha() {
-        return captcha;
+    public MyCaptcha getMyCaptcha() {
+        return myCaptcha;
     }
 
-    public void setCaptcha(Captcha captcha) {
-        this.captcha = captcha;
+    public void setMyCaptcha(MyCaptcha myCaptcha) {
+        this.myCaptcha = myCaptcha;
     }
 }

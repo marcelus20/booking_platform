@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class Captcha extends MyCustomJPanel {
+public class MyCaptcha extends MyCustomJPanel {
 
     private File captchaFile;
     private Map<String, File> dictionary;
     private MyCustomJField<JTextField> field;
 
-    public Captcha() {
+    public MyCaptcha() {
         super("captcha", 300, 200);
         loadCaptchaNames();
     }
@@ -67,7 +67,7 @@ public class Captcha extends MyCustomJPanel {
         dictionary.put("YS4ARE", bf.get(11));
         dictionary.put("HK5B6", bf.get(12));
         dictionary.put("CYKHXD", bf.get(13));
-        dictionary.put("YC3p", bf.get(14));
+        dictionary.put("YC3P", bf.get(14));
 
         return dictionary;
     }
