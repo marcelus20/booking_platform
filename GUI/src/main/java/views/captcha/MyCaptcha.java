@@ -1,80 +1,169 @@
 package views.captcha;
+import models.utils.Tools;
+import views.customComponents.MyCustomFont;
+import views.customComponents.MyCustomJButton;
 import views.customComponents.MyCustomJField;
 import views.customComponents.MyCustomJPanel;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.PerspectiveTransform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
+
+/**
+ * THIS IS MY CAPTCHA CLASS
+ * The algorithmic steps for the generation of a the MyCaptcha is the following:
+ *
+ *
+ * First: The Tools.createRandomText() method will generate a string with Random characters
+ * with length of 7 with upper lowar case and numbers randomly
+ *
+ * Second: Once the randomText is generated, an image will be created from the text using the method
+ * drawImageFromText()
+ *
+ * Third: after the image has been created, it will be skewed/distorted by using the method skewImage()
+ *
+ * Once these three steps are finished, it will gather a textfield, a button for change captcha and the image
+ * in one panel (getContent())
+ *
+ *
+ * THIS IS THE ONLY CLASS IN THE WHOLE PROJECT THAT USES THE LIBRARY JAVAFX THAT IS USED JUST FOR DISTORTING THE IMAGE
+ * IN THE METHOD skewImage()
+ */
 public class MyCaptcha extends MyCustomJPanel {
 
-    private File captchaFile;
-    private Map<String, File> dictionary;
-    private MyCustomJField<JTextField> field;
 
+    /**
+     * ATTRIBUTES
+     */
+    private String randomText;
+    private BufferedImage img;
+    private JButton changeCaptcha;
+    private JTextField field;
+
+
+    /**
+     * CONSTRUTOR
+     */
     public MyCaptcha() {
-        super("captcha", 300, 200);
-        loadCaptchaNames();
+        super("CAPTCHA - UPPER AND LOWER CASE MATTER", 400, 300);
+        changeCaptcha = new MyCustomJButton("change captcha", 300,30).getButton();
+        field = new MyCustomJField<JTextField>(new JTextField(), 25).getInput();
+        generateCaptcha();
+
+
+        /**
+         * ON THE CLICK OF BUTTON, A NEW CAPTCHA WILL BE GENERATED
+         */
+        changeCaptcha.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getContent().removeAll();//removing first everything
+                generateCaptcha();//generating and populating panel again
+            }
+        });
     }
 
-    public void loadCaptchaNames() {
-        List<File> bf = new ArrayList<>();
-        File[] folder = new File("src/main/java/views/captcha/images").listFiles();
-        for (File file : folder){
-            bf.add(file);
-        }
-        showImageCaptcha(bf);
+    /**
+     * generating the captcha image
+     */
+    public void generateCaptcha(){
+        randomText = Tools.createRandomText();
+        img = SkewImage(drawImageFromText(randomText));
+        mountCaptchaComponent();
     }
 
-    private void showImageCaptcha(List<File> captchaImages) {
-        dictionary = MapFilesWithStrings(captchaImages);
-        Collections.shuffle(captchaImages);
-        Integer randomIndex = new Random().nextInt(captchaImages.size());
+    /**
+     * gathering all attributes in one panel
+     */
+    private void mountCaptchaComponent(){
+        getContent().setLayout(new BorderLayout());
+        getContent().add(new JLabel(new ImageIcon(img)), BorderLayout.CENTER);
+        getContent().add(changeCaptcha, BorderLayout.NORTH);
+        getContent().add(field, BorderLayout.SOUTH);
+        validate();
+        repaint();
+    }
+
+
+    /**
+     * This method will draw an image from the passed string as parameter.
+     * @param text to be drawn in image
+     * @return the image itself
+     */
+    private BufferedImage drawImageFromText(String text) {
+        BufferedImage bufferedImage = new BufferedImage(300, 100, BufferedImage.TYPE_INT_RGB);
+        Graphics g = bufferedImage.getGraphics();
+        g.setFont(new MyCustomFont("serif",40).getFont());
+        g.drawString(text, 95, 50);
+        return bufferedImage;
+    }
+
+
+    /**
+     * Method for distorting image: uses JAVAFX Library
+     * @param image base image to be distorted
+     * @return distorted image
+     */
+
+    private static BufferedImage SkewImage(BufferedImage image) {
+        new JFXPanel();
+        final BufferedImage[] imageContainer = new BufferedImage[1];
+        final CountDownLatch latch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            Canvas canvas = new Canvas(width, height);
+            GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+            ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
+            PerspectiveTransform trans = new PerspectiveTransform();
+            trans.setUlx(0);
+            trans.setUly(height / 4);
+            trans.setUrx(width);
+            trans.setUry(0);
+            trans.setLrx(width);
+            trans.setLry(height);
+            trans.setLlx(0);
+            trans.setLly(height - height / 2);
+            imageView.setEffect(trans);
+            imageView.setRotate(2);
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            Image newImage = imageView.snapshot(params, null);
+            graphicsContext.drawImage(newImage, 0, 0);
+            imageContainer[0] = SwingFXUtils.fromFXImage(newImage, image);
+            latch.countDown();
+        });
         try {
-            BufferedImage image = ImageIO.read(captchaImages.get(randomIndex));
-            getContent().setLayout(new BorderLayout());
-            getContent().add(new JLabel(new ImageIcon(image)), BorderLayout.CENTER);
-        } catch (IOException e) {
+            latch.await();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        field = new MyCustomJField<>(new JTextField(), "upper case matters",50);
-        getContent().add(field.getInput(), BorderLayout.SOUTH);
-        captchaFile = captchaImages.get(randomIndex);
-    }
-
-    public Boolean captchaIsValid(String key){
-        return dictionary.get(key) == captchaFile;
-    }
-
-    private Map<String, File> MapFilesWithStrings(List<File> bf) {
-
-        Map<String, File> dictionary = new HashMap<>();
-        dictionary.put("WKRH5", bf.get(0));
-        dictionary.put("PBNN", bf.get(1));
-        dictionary.put("N3YS3", bf.get(2));
-        dictionary.put("SWY6M", bf.get(3));
-        dictionary.put("S5TB", bf.get(4));
-        dictionary.put("3JYP4", bf.get(5));
-        dictionary.put("UCHB46", bf.get(6));
-        dictionary.put("3UPURY", bf.get(7));
-        dictionary.put("YKPU3U", bf.get(8));
-        dictionary.put("VCKR", bf.get(9));
-        dictionary.put("CUXE", bf.get(10));
-        dictionary.put("YS4ARE", bf.get(11));
-        dictionary.put("HK5B6", bf.get(12));
-        dictionary.put("CYKHXD", bf.get(13));
-        dictionary.put("YC3P", bf.get(14));
-
-        return dictionary;
+        return imageContainer[0];
     }
 
 
-    public String getField() {
-        return field.getInput().getText();
+    /**
+     * FOR THE LOGINCONTROLLER TO USE:
+     * When login button is hit, this method is triggered, if textfield text matches the random text, it will return true.
+     * @return false or true
+     */
+    public Boolean captchaIsValid(){
+        return  field.getText().equals(randomText) ;
     }
 
 }
