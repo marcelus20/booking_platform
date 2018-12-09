@@ -126,64 +126,10 @@ public class Tools {
     }
 
     public static String wrapStringWithHtml(String str){
-
-
         return "<html><body>"+str+"</body></html>";
     }
 
-    public static String[][] convert2DlistTo2DArray(List<ServiceProviderTableView> results) {
-        String[][] table;
-        try{
-            table = new String[results.size()][results.get(0).getClass().getDeclaredFields().length];
-        }catch (Exception e){
-            return new String[0][0];
-        }
 
-        for(int i = 0; i < results.size(); i++){
-            table[i][0] = results.get(i).getServiceId();
-            table[i][1] = results.get(i).getServiceEmail();
-            table[i][2] = results.get(i).getServiceName();
-            table[i][3] = results.get(i).getAddress();
-            table[i][4] = results.get(i).getCity();
-            table[i][5] = results.get(i).getPhone();
-        }
-        return table;
-    }
-
-    public static String[][] mapManageBookingCustomerViewsListToArray(List<ManageBookingView> manageBookingViewList) {
-        String[][] table;
-        try{
-            table = new String[manageBookingViewList.size()][manageBookingViewList.get(0).getClass().getDeclaredFields().length];
-        }catch (Exception e){
-            return new String[0][0];
-        }
-
-        for(int i = 0; i < manageBookingViewList.size(); i++){
-            table[i][0] = String.valueOf(manageBookingViewList.get(i).getTimestamp());
-            table[i][1] = manageBookingViewList.get(i).getCompanyName();
-            table[i][2] = String.valueOf(manageBookingViewList.get(i).getBookingStatus());
-            table[i][3] = manageBookingViewList.get(i).getPhone();
-            table[i][4] = String.valueOf(manageBookingViewList.get(i).getReview());
-        }
-
-        return table;
-    }
-
-    public static String[][] mapManageBookingViewsListToArrayShortened(List<ManageBookingView> shortenedBookingViewList) {
-        String[][] table;
-        try{
-            table = new String[shortenedBookingViewList.size()][3];
-        }catch (Exception e){
-            return new String[0][0];
-        }
-
-        for(int i = 0; i < shortenedBookingViewList.size(); i++){
-            table[i][0] = String.valueOf(shortenedBookingViewList.get(i).getTimestamp());
-            table[i][1] = shortenedBookingViewList.get(i).getCompanyName();
-            table[i][2] = String.valueOf(shortenedBookingViewList.get(i).getReview());
-        }
-        return table;
-    }
 
     public static BookingReview[] generateArrayOfBookingReview() {
 
