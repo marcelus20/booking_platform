@@ -3,6 +3,7 @@ package controllers.dashboards;
 import controllers.Application;
 import controllers.Control;
 import models.Database;
+import models.enums.BookingStatus;
 import models.enums.UserType;
 import models.repositories.*;
 import models.tuples.entitiesRepresentation.*;
@@ -258,24 +259,20 @@ public class CustomerDashboardController implements Control {
                     goToViewBookings();
 
                 }else if(e.getActionCommand().contains("omplain")){//IF BUTTON IS MAKE A COMPLAINT
-                    try {
-                        goToReviewPanel();
-                    } catch (SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException e1) {
-                        e1.printStackTrace();
-                    }
+                    goToReviewPanel();
                 }
                 addButtonsAFunction();//<-THIS THING WILL UPDATE THE LISTENER TO THE BUTTONS
             }
         });
     }
 
-    private void goToReviewPanel() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private void goToReviewPanel(){
         ((CustomerDashboard) dashboard).setConsoleSearch(new ConsoleSearch());
 
         ComplaintPanel complaintPanel = new ComplaintPanel(Tools.generateArrayOfBookingReview());
         BookingRepository bookingRepository = new BookingRepository();
         List<ManageBookingView> shortenedListOfBookings =
-                bookingRepository.generateBookingView(user, null);
+                bookingRepository.generateBookingView(user, BookingStatus.COMPLETE);
 
         String[][] table = Tools.mapManageBookingViewsListToArrayShortened(shortenedListOfBookings);
 

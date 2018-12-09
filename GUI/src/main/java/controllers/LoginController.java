@@ -97,9 +97,10 @@ public class LoginController implements Control{
             }
             if(user != null) {
                 user = populateTheRestofAttributes(user);
+                Log log = new Log(user.getId(), user.getEmail()+" has just logged in!");
+                Tools.recordALogToDB(log);
             }
-            Log log = new Log(user.getId(), user.getEmail()+" has just logged in!");
-            Tools.recordALogToDB(log);
+
             return user;
         } catch (SQLException e) {
             e.printStackTrace();
