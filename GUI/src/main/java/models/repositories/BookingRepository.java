@@ -187,4 +187,13 @@ public class BookingRepository implements Repository<Booking> {
             return null;
         }
     }
+    public static void updateAllOldBookingsToComplete(){
+        try {
+            Database.database().getStmt().executeUpdate("UPDATE booking SET booking_status = 'COMPLETE'" +
+                    "WHERE time_stamp < NOW();");
+            Database.database().getStmt().executeUpdate("DELETE FROM booking_slots WHERE availability = TRUE AND timestamp < NOW();");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
