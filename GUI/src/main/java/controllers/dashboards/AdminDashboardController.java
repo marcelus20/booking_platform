@@ -2,22 +2,21 @@ package controllers.dashboards;
 
 import controllers.Application;
 import controllers.Control;
+import models.enums.ComplaitStatus;
 import models.enums.ServiceProviderStatus;
 import models.enums.UserType;
-import models.repositories.AdminRepository;
-import models.repositories.LogRepository;
-import models.repositories.Repository;
-import models.repositories.ServiceProviderRepository;
+import models.repositories.*;
 import models.tuples.Tuple;
-import models.tuples.entitiesRepresentation.Admin;
-import models.tuples.entitiesRepresentation.Log;
-import models.tuples.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.*;
 import models.utils.Tools;
+import views.customComponents.MyCustomJLabel;
 import views.customComponents.MyCustomJPanel;
 import views.dashboard.admin.AdminDashboard;
+import views.dashboard.admin.HandlingComplaints;
 import views.dashboard.admin.ServiceProviderVerification;
 import views.forms.AdminForm;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -25,6 +24,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
@@ -68,10 +69,114 @@ public class AdminDashboardController implements Control {
                         }
                     }else if (button.getButton().getText().contains("another")){
                         goToAdminForm();
+                    }else if (button.getButton().getText().contains("handle")){
+                        goToComplaintsHandler();
                     }
                 }
 
             });
+        });
+    }
+
+    private void goToComplaintsHandler() {
+        retrieveComplaintsData();
+    }
+
+    private void retrieveComplaintsData() {
+        Repository<Complaint> complaintRepository = new ComplaintRepository();
+        try {
+            List<Complaint> complaints = complaintRepository.getList(null);
+            System.out.println(complaints);
+            String[][] complaintsArr = complaints.stream().map(complaint->
+                    Arrays.asList(complaint.getComplaintID(),
+                            complaint.getServiceId(),
+                            complaint.getCustomerId(),
+                            complaint.getComplaitStatus()+"",
+                            complaint.getComplaint()
+                    ).toArray(new String[5])).collect(Collectors.toList()).toArray(new String[complaints.size()][]);
+            generateComplaintJTable(complaintsArr);
+
+        } catch (SQLException e) {
+            Tools.alertError(dashboard, "Not possible to load data, the mysql server might be down.", "Sad");
+        }
+    }
+
+    private void generateComplaintJTable(String[][] complaintsArr) {
+        String[] columns = {"ID", "Service ID", "Customer", "complaint status","Complaint Text"};
+        JTable complaintsTable = new JTable(complaintsArr, columns);
+        giveTableLinesAListener(complaintsTable);
+        HandlingComplaints handlingComplaints = new HandlingComplaints(complaintsTable);
+        dashboard.getOutput().removeAll();
+        dashboard.getOutput().setLayout(new BorderLayout());
+        dashboard.getOutput().add(handlingComplaints, BorderLayout.CENTER);
+        dashboard.validadeAndRepaint();
+
+    }
+
+    private void giveTableLinesAListener(JTable complaintsTable) {
+        complaintsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()){
+                    Repository<ServiceProvider> serviceProviderRepository = new ServiceProviderRepository();
+                    Repository<Customer> customerRepository = new CustomerRepository();
+                    try {
+                        HandlingComplaints handlingComplaints = new HandlingComplaints(complaintsTable);
+                        dashboard.getOutput().removeAll();
+                        dashboard.getOutput().setLayout(new BorderLayout());
+                        dashboard.getOutput().add(handlingComplaints, BorderLayout.CENTER);
+                        dashboard.validadeAndRepaint();
+                        String serviceProviderName = serviceProviderRepository
+                                .selectObjById(complaintsTable.getValueAt(complaintsTable
+                                        .getSelectedRow(), 1)+"").getCompanyFullName();
+                        String customerName = customerRepository.selectObjById(complaintsTable
+                                .getValueAt(complaintsTable.getSelectedRow(), 2)+"").getFirstName();
+
+                        String textArea = complaintsTable.
+                                getValueAt(complaintsTable.getSelectedRow(), 4).toString();
+
+                        String complaintID = complaintsTable.getValueAt(complaintsTable
+                                .getSelectedRow(), 0)+"";
+                        toggleHiddenHandlingArea(serviceProviderName, customerName, textArea, complaintID);
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void toggleHiddenHandlingArea(String serviceProviderName, String customerName, String complaintText, String complaintID) {
+        MyCustomJPanel handlingComplaintArea = new MyCustomJPanel("handling the complaint", 200,200);
+        handlingComplaintArea.setLayout(new BorderLayout());
+        JPanel names = new JPanel();
+        String[] complaintStatus = {ComplaitStatus.PENDENT+"", ComplaitStatus.PROCESSING+"", ComplaitStatus.FINISHED+""};
+        JComboBox<String> complaintsBox = new JComboBox<>(complaintStatus);
+        names.setLayout(new GridLayout(2,1));
+        names.add(new MyCustomJLabel("Service Name: "+serviceProviderName).getLabel());
+        names.add(new MyCustomJLabel("Customer Name:"+customerName).getLabel());
+        names.add(complaintsBox);
+        giveComboBoxAlistener(complaintsBox, complaintID);
+        JTextArea textArea = new JTextArea(complaintText);
+        textArea.setEnabled(false);
+        textArea.setPreferredSize(new Dimension(100,150));
+        handlingComplaintArea.add(names, BorderLayout.CENTER);
+        handlingComplaintArea.add(textArea, BorderLayout.SOUTH);
+        dashboard.getOutput().add(handlingComplaintArea, BorderLayout.SOUTH);
+        dashboard.validadeAndRepaint();
+    }
+
+    private void giveComboBoxAlistener(JComboBox<String> complaintsBox, String complaintID) {
+        complaintsBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    ComplaintRepository complaintRepository = new ComplaintRepository();
+                    complaintRepository.updateComplaint(complaintID, e.getItem());
+                    Tools.alertMsg(dashboard,"You have successfully updated the status of this complaint", "success");
+                    goToComplaintsHandler();
+                }
+            }
         });
     }
 

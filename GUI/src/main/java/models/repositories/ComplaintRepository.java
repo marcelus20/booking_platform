@@ -45,4 +45,13 @@ public class ComplaintRepository implements Repository<Complaint> {
         }
         return complaints;
     }
+
+    public void updateComplaint(String complaintID, Object status) {
+        try {
+            Database.database().getStmt().executeUpdate("UPDATE complaints SET complaint_status = '"+status+"'" +
+                    "WHERE complaint_ID = '"+complaintID+"'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
