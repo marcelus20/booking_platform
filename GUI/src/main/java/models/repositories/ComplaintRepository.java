@@ -1,6 +1,7 @@
 package models.repositories;
 
 import models.Database;
+import models.enums.ComplaitStatus;
 import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.Complaint;
 
@@ -23,7 +24,7 @@ public class ComplaintRepository implements Repository<Complaint> {
         Complaint complaint = null;
         while(rs.next()){
             complaint = new Complaint(rs.getString("complaint_ID"),rs.getString("s_id"),
-                    rs.getString("c_id"), rs.getString("complaint"));
+                    rs.getString("c_id"), ComplaitStatus.valueOf(rs.getString("complaint_status")),rs.getString("complaint"));
         }
         return complaint;
     }
@@ -39,7 +40,8 @@ public class ComplaintRepository implements Repository<Complaint> {
         List<Complaint> complaints = new ArrayList<>();
         while(rs.next()){
             complaints.add(new Complaint(rs.getString("complaint_ID"),rs.getString("s_id"),
-                    rs.getString("c_id"), rs.getString("complaint")));
+                    rs.getString("c_id"), ComplaitStatus.valueOf(rs.getString("complaint_status"))
+                    ,rs.getString("complaint")));
         }
         return complaints;
     }
