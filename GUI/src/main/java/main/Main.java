@@ -2,7 +2,6 @@ package main;
 
 import controllers.Application;
 
-import java.sql.SQLException;
 
 public class Main {
 
