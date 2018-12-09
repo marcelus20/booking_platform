@@ -6,11 +6,8 @@ import controllers.dashboards.ServiceDashBoardController;
 import models.Database;
 import models.enums.ServiceProviderStatus;
 import models.enums.UserType;
-import models.tuples.entitiesRepresentation.Admin;
-import models.tuples.entitiesRepresentation.Customer;
-import models.tuples.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.*;
 import models.utils.Tools;
-import models.tuples.entitiesRepresentation.AbstraticUser;
 import views.login.Login;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -44,24 +41,22 @@ public class LoginController implements Control{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(login.getMyCaptcha().captchaIsValid()){
-                    try {
-                        AbstraticUser user = login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
-                        if(user == null){
-                            Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
+
+                    AbstraticUser user = login(login.getEmail(), Tools.hashingPassword(login.getPassword()));
+                    if(user == null){
+                        Tools.alertError(login, "Email or password not correct!", "Wrong Credentials");
+                    }else{
+                        login.dispose();
+                        app.setUser(user);
+                        if(user instanceof Customer) {
+                            redirectToCustomerDashboard(app);
+                        }else if (user instanceof ServiceProvider){
+                            redirectToServiceDashboard(app);
                         }else{
-                            login.dispose();
-                            app.setUser(user);
-                            if(user instanceof Customer) {
-                                redirectToCustomerDashboard(app);
-                            }else if (user instanceof ServiceProvider){
-                                redirectToServiceDashboard(app);
-                            }else{
-                                redirectToAdminDashboard(app);
-                            }
+                            redirectToAdminDashboard(app);
                         }
-                    } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e1) {
-                        e1.printStackTrace();
                     }
+
                 }else{
                     Tools.alertMsg(login, "You have entered the wrong captcha", "wrong captcha");
                     login.getMyCaptcha().getContent().removeAll();
@@ -72,44 +67,45 @@ public class LoginController implements Control{
         });
     }
 
-    public AbstraticUser login(String email, String password) throws SQLException {
-        AbstraticUser user = null;
+    public AbstraticUser login(String email, String password){
+        try {
+            AbstraticUser user = null;
 
-        String query  = new StringBuilder().append("SELECT * FROM ").append("users")
-                .append(" WHERE email = ").append("'").append(email).append("'")
-                .append(" AND password = '").append(password).append("' ;").toString();
+            String query  = new StringBuilder().append("SELECT * FROM ").append("users")
+                    .append(" WHERE email = ").append("'").append(email).append("'")
+                    .append(" AND password = '").append(password).append("' ;").toString();
 
-        ResultSet rs = Database.database().getStmt().executeQuery(query);
-
-
-        while (rs.next()){
-            if(UserType.valueOf(rs.getString("user_type")).equals(UserType.ADMIN)){
-                user = new Admin();
-                user.withId(rs.getString("id"));
-                user.withUserType(UserType.ADMIN);
-            }else if (UserType.valueOf(rs.getString("user_type")).equals(UserType.SERVICE_PROVIDER)){
-                user = new ServiceProvider();
-                user.withId(rs.getString("id"));
-                user.withUserType(UserType.SERVICE_PROVIDER);
-
-            }else if(UserType.valueOf(rs.getString("user_type")).equals(UserType.CUSTOMER)){
-                user = new Customer();
-                user.withId(rs.getString("id"));
-                user.withUserType(UserType.CUSTOMER);
-
+            ResultSet rs;
+            rs = Database.database().getStmt().executeQuery(query);
+            while (rs.next()){
+                if(UserType.valueOf(rs.getString("user_type")).equals(UserType.ADMIN)){
+                    user = new Admin();
+                    user.withId(rs.getString("id"));
+                    user.withUserType(UserType.ADMIN);
+                }else if (UserType.valueOf(rs.getString("user_type")).equals(UserType.SERVICE_PROVIDER)){
+                    user = new ServiceProvider();
+                    user.withId(rs.getString("id"));
+                    user.withUserType(UserType.SERVICE_PROVIDER);
+                }else if(UserType.valueOf(rs.getString("user_type")).equals(UserType.CUSTOMER)){
+                    user = new Customer();
+                    user.withId(rs.getString("id"));
+                    user.withUserType(UserType.CUSTOMER);
+                }
+                user.withEmail(rs.getString("email"));
+                user.withPassword(rs.getString("password"));
+                user.withDateCreated(rs.getDate("date_created"));
             }
-
-            user.withEmail(rs.getString("email"));
-            user.withPassword(rs.getString("password"));
-            user.withDateCreated(rs.getDate("date_created"));
+            if(user != null) {
+                user = populateTheRestofAttributes(user);
+            }
+            Log log = new Log(user.getId(), user.getEmail()+" has just logged in!");
+            Tools.recordALogToDB(log);
+            return user;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        System.out.println(user);
 
-        if(user != null) {
-            user = populateTheRestofAttributes(user);
-        }
-
-        return user;
     }
 
     private AbstraticUser populateTheRestofAttributes(AbstraticUser user) throws SQLException {
@@ -140,15 +136,15 @@ public class LoginController implements Control{
         return user;
     }
 
-    private void redirectToAdminDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private void redirectToAdminDashboard(Application app) {
         app.setAdminDashboardController(new AdminDashboardController(app));
     }
 
-    private void redirectToCustomerDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private void redirectToCustomerDashboard(Application app){
         app.setCustomerDashboardController(new CustomerDashboardController(app));
     }
 
-    private void redirectToServiceDashboard(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private void redirectToServiceDashboard(Application app){
         app.setCustomerDashboardController(null);
         app.setServiceDashBoardController(new ServiceDashBoardController(app));
     }
@@ -158,11 +154,7 @@ public class LoginController implements Control{
             @Override
             public void actionPerformed(ActionEvent e) {
                 login.dispose();
-                try {
-                    app.setFormController(new FormController(app));
-                } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e1) {
-                    e1.printStackTrace();
-                }
+                app.setFormController(new FormController(app));
             }
         });
     }

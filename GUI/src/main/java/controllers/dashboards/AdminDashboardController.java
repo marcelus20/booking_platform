@@ -174,6 +174,8 @@ public class AdminDashboardController implements Control {
                     ComplaintRepository complaintRepository = new ComplaintRepository();
                     complaintRepository.updateComplaint(complaintID, e.getItem());
                     Tools.alertMsg(dashboard,"You have successfully updated the status of this complaint", "success");
+                    Log log = new Log(user.getId(), user.getEmail()+" update status of a complaint to "+e.getItem());
+                    Tools.recordALogToDB(log);
                     goToComplaintsHandler();
                 }
             }
@@ -206,6 +208,7 @@ public class AdminDashboardController implements Control {
         String[] columns = {"user id", "activity"};
         JTable jTable = new JTable(logsArray, columns);
         JScrollPane jScrollPane = new JScrollPane(jTable);
+        jScrollPane.setPreferredSize(new Dimension(500,450));
         activitiesPanel.getContent().add(jScrollPane);
 
     }
@@ -247,6 +250,8 @@ public class AdminDashboardController implements Control {
                 }
 
                 Tools.alertMsg(dashboard, admin.getEmail() + " has just been subscribed to the system", "Success");
+                Log log = new Log(user.getId(), user.getEmail()+" subscribed " + admin.getEmail());
+                Tools.recordALogToDB(log);
                 goToAdminForm();
             }
         });
@@ -352,6 +357,8 @@ public class AdminDashboardController implements Control {
                         sRep.updateServiceProviderStatus(serviceProvider);
                         Tools.alertMsg(dashboard, "You have successfuly changed the status. " +
                                 "You can change his/her status at anytime later on!", "");
+                        Log log = new Log(user.getId(), user.getEmail()+" Changed status to " + chosenOption);
+                        Tools.recordALogToDB(log);
                         goToVerifyAServiceProviderView();
                     } catch (SQLException e1) {
                         e1.printStackTrace();

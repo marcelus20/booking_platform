@@ -1,10 +1,7 @@
 package controllers;
 
 import models.enums.ServiceProviderStatus;
-import models.tuples.entitiesRepresentation.Customer;
-import models.tuples.entitiesRepresentation.Location;
-import models.tuples.entitiesRepresentation.Phone;
-import models.tuples.entitiesRepresentation.ServiceProvider;
+import models.tuples.entitiesRepresentation.*;
 import models.repositories.CustomerRepository;
 import models.repositories.Repository;
 import models.repositories.ServiceProviderRepository;
@@ -33,22 +30,16 @@ public class FormController implements Control{
     private Repository<ServiceProvider> sRep;
     private Repository<Customer> cRep;
 
-    public FormController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public FormController(Application app){
         CustomerForm cf = new CustomerForm();
         ServiceProviderForm svf = new ServiceProviderForm();
-
         customerForm = tuple(cf, cf.getInputsPanel().stream().map(i->false).collect(Collectors.toList()));
         serviceProviderForm = tuple(svf, svf.getInputsPanel().stream().map(i->false).collect(Collectors.toList()));
-
         form = new Form(customerForm.get_1());
         this.app = app;
         validator = customerForm.get_2();
-
         sRep = new ServiceProviderRepository();
         cRep = new CustomerRepository();
-
-
-
         addButtonsAFunction();
         addInputsAListener();
 
@@ -200,6 +191,8 @@ public class FormController implements Control{
                             service.withLocation(newLocation);
 
                             try {
+                                Log log = new Log(service.getId(), service.getCompanyFullName()+" subscribed! ");
+                                Tools.recordALogToDB(log);
                                 sRep.addToDB(service);
                             } catch (SQLException e1) {
                                 e1.printStackTrace();
@@ -218,6 +211,8 @@ public class FormController implements Control{
                             customer.withLastName(cf.getLastName());
                             customer.withDateCreated(new Date(System.currentTimeMillis()));
                             try {
+                                Log log = new Log(customer.getId(), customer.getFirstName()+" subscribed! ");
+                                Tools.recordALogToDB(log);
                                 cRep.addToDB(customer);
                             } catch (SQLException e1) {
                                 e1.printStackTrace();
@@ -229,7 +224,6 @@ public class FormController implements Control{
                         String msg = generateFormErrorMessage();
                         Tools.alertError(form, msg, "Form not valid");
                     }
-                    System.out.println(validator);
                 }
             });
         });
@@ -252,17 +246,12 @@ public class FormController implements Control{
 
     @Override
     public void addInputsAListener() {
-
-
         form.getRegistrationForm().getInputsPanel().get(5);
-
         form.getToggleServiceForm().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 form.withRegistrationForm(serviceProviderForm.get_1());
-
                 validator = serviceProviderForm.get_2();
-
             }
         });
 

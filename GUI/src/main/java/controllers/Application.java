@@ -13,15 +13,11 @@ public class Application {
     private FormController formController;
     private CustomerDashboardController customerDashboardController;
     private ServiceDashBoardController serviceDashBoardController;
-
     private AbstraticUser user;
     private AdminDashboardController adminDashboardController;
 
     public Application(){
         this.loginController = new LoginController(this);
-
-
-
     }
 
     public AbstraticUser getUser() {

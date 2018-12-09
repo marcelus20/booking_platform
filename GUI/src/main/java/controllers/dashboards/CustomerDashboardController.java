@@ -125,8 +125,6 @@ public class CustomerDashboardController implements Control {
     }
 
     public List<ServiceProviderTableView>getListOfBarbersByCity(String city) throws SQLException {
-//        List<List<String>> barbers = new ArrayList<>();
-//        ResultSet rs = stmt.executeQuery("SELECT * FROM service_provider AS b JOIN location AS l ON b.s_id = l.s_id;");
         String query = "SELECT u.id, u.email, s.company_full_name, l.first_line_address, l.city, p.phone " +
                 "FROM users u JOIN service_provider s ON u.id = s.s_id JOIN location l ON u.id = l.s_id  " +
                 " JOIN phone_list p ON u.id = p.id WHERE l.city = '"+city+"';";
@@ -186,20 +184,23 @@ public class CustomerDashboardController implements Control {
                     ServiceProviderTableView selectedService = dictionary.get(rowIndex);
 
 
-                    try {
-                        selectBookingsFromProvider(selectedService);
-                    } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e1) {
-                        e1.printStackTrace();
-                    }
+
+                    selectBookingsFromProvider(selectedService);
+
                 }
             }
         });
     }
 
-    private void selectBookingsFromProvider(ServiceProviderTableView serviceProviderTableView) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private void selectBookingsFromProvider(ServiceProviderTableView serviceProviderTableView){
         Repository<BookingSlots> rep = new BookingSlotRepository();
 
-        List<BookingSlots> bookingSlots = Tools.filterBookingsToJustAvailables(((BookingSlotRepository) rep).getList(serviceProviderTableView.getServiceId()));
+        List<BookingSlots> bookingSlots = null;
+        try {
+            bookingSlots = Tools.filterBookingsToJustAvailables(((BookingSlotRepository) rep).getList(serviceProviderTableView.getServiceId()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         ((CustomerDashboard) dashboard).setBookingPanel(new BookingPanel(bookingSlots, serviceProviderTableView));
 
@@ -231,7 +232,10 @@ public class CustomerDashboardController implements Control {
 
                     if(n.equals(0)){
                         try {
+                            Repository<Log> logRepository = new LogRepository();
                             ((BookingRepository)bRep).addBook(chosenSlot, (Customer)user);
+                            Log log = new Log(user.getId(), ((Customer) user).getFirstName()+ "booked a slot!");
+                            logRepository.addToDB(log);
                             goToViewBookings();
                         } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e1) {
                             e1.printStackTrace();
@@ -307,6 +311,9 @@ public class CustomerDashboardController implements Control {
                     recordAComplaint(complaintPanel.getTextArea());
                     String serviceName = new ServiceProviderRepository().selectObjById(selectedServiceId).getCompanyFullName();
                     Tools.alertMsg(dashboard, "You have successfully added a complaint to "+ serviceName, "success");
+                    Repository<Log> logRepository = new LogRepository();
+                    Log log = new Log(user.getId(), ((Customer) user).getFirstName()+ "Made a complaint about "+serviceName);
+                    logRepository.addToDB(log);
                     goToSearchEngine();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
@@ -334,6 +341,9 @@ public class CustomerDashboardController implements Control {
                             .updateAReview(manageBookingView,
                                     String.valueOf(complaintPanel.getBookingReviewComboBox().getSelectedItem()));
                     Tools.alertConfirm(dashboard, "Your review has been successfuly submitted");
+                    Repository<Log> logRepository = new LogRepository();
+                    Log log = new Log(user.getId(), ((Customer) user).getFirstName()+ "Submitted a review");
+                    logRepository.addToDB(log);
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
@@ -359,11 +369,8 @@ public class CustomerDashboardController implements Control {
         BookingRepository bookingRepository = new BookingRepository();
 
         List<ManageBookingView> manageBookingViewList = null;
-        try {
-            manageBookingViewList = bookingRepository.generateBookingView(user, null);
-        } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        manageBookingViewList = bookingRepository.generateBookingView(user, null);
+
 
         String[][] table = Tools.mapManageBookingCustomerViewsListToArray(manageBookingViewList);
 
@@ -387,6 +394,9 @@ public class CustomerDashboardController implements Control {
                     if(n == 0){
                         try {
                             ((BookingRepository) bRep).cancelBooking(dictionary.get(jTable.getSelectedRow()));
+                            Repository<Log> logRepository = new LogRepository();
+                            Log log = new Log(user.getId(), ((Customer) user).getFirstName()+ "Cancelled the booking");
+                            logRepository.addToDB(log);
                             goToViewBookings();
                         } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
                             e1.printStackTrace();

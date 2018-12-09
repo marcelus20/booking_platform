@@ -7,6 +7,7 @@ import controllers.Application;
 import controllers.Control;
 import models.enums.BookingStatus;
 import models.enums.ServiceProviderStatus;
+import models.tuples.entitiesRepresentation.Log;
 import models.tuples.entitiesRepresentation.ServiceProvider;
 import models.repositories.BookingRepository;
 import models.repositories.BookingSlotRepository;
@@ -42,12 +43,11 @@ public class ServiceDashBoardController implements Control {
     private final ServiceProvider user;
     private final BookingRepository bRep;
     private final BookingSlotRepository bsRep;
-
     private final List<MyCustomDateAndTime> selectedSlots;
     private List<String> bookingStatusList;
     private String selectedItem;
 
-    public ServiceDashBoardController(Application app) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    public ServiceDashBoardController(Application app){
         dashboard = new ServiceDashboard();
         this.app = app;
         user = (ServiceProvider) app.getUser();
@@ -116,37 +116,27 @@ public class ServiceDashBoardController implements Control {
             b.getButton().addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(e.getActionCommand().contains("pcoming")){
+                    if(e.getActionCommand().contains("pcoming")) {
 //                        Tools.alertConfirm(dashboard, "upcomming");
-                        try {
-                            goToUpComingBookings();
-                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
-                            e1.printStackTrace();
-                        }
+                        goToUpComingBookings();
+
                     }else if (e.getActionCommand().contains("vailable")){
 //                        Tools.alertConfirm(dashboard, "available");
                         goToSlotsManagement();
                     }else if (e.getActionCommand().contains("complete")){
 //                        Tools.alertConfirm(dashboard, "complete");
-                        try {
-                            goToSetBookingStatus();
-                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
-                            e1.printStackTrace();
-                        }
-
-
+                        goToSetBookingStatus();
                     }
                 }
             });
         });
-
     }
 
-    private void goToSetBookingStatus() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private void goToSetBookingStatus() {
         switchDashboardPanelSetBookings();
     }
 
-    private void switchDashboardPanelSetBookings() throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    private void switchDashboardPanelSetBookings(){
         dashboard.getOutput().removeAll();
         dashboard.withSetBookingStatusView(new SetBookingStatusView());
         dashboard.getOutput().add(dashboard.getSetBookingStatusView());
@@ -154,14 +144,14 @@ public class ServiceDashBoardController implements Control {
         mountSetBookingStatusView();
     }
 
-    private void mountSetBookingStatusView() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private void mountSetBookingStatusView() {
         bookingStatusList = bRep.selectDistinctsBookingStatus();
         dashboard.getSetBookingStatusView().withBookingStatesFilter(new JComboBox(bookingStatusList.toArray()));
         selectedItem = String.valueOf(dashboard.getSetBookingStatusView().getBookingStatesFilter().getSelectedItem());
         retrieveBookingsFromDB(selectedItem);
     }
 
-    private void retrieveBookingsFromDB(String selectedItem) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private void retrieveBookingsFromDB(String selectedItem) {
         BookingStatus bookingStatus = Tools.mapBookingStatusStringToEnum(selectedItem);
         List<ManageBookingView> bookings = bRep.selectAllBookingsFromServiceProvider(user, bookingStatus);
         createJTable(bookings);
@@ -186,17 +176,12 @@ public class ServiceDashBoardController implements Control {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()){
-
-
                     String[] statusList = Tools.getStringListOfAllBookingStatus().toArray(new String[]{});
                     String chosenOption = Tools.alertComboBox(dashboard, statusList, "Set status to..." , "Booking Status Setting");
-
-                    try {
-                        bRep.updateABookingStatus(dictionary.get(jTable.getSelectedRow()), chosenOption);
-                        goToSetBookingStatus();
-                    } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
-                        e1.printStackTrace();
-                    }
+                    bRep.updateABookingStatus(dictionary.get(jTable.getSelectedRow()), chosenOption);
+                    Log log = new Log(user.getId(), user.getCompanyFullName()+" set a booking status to "+chosenOption);
+                    Tools.recordALogToDB(log);
+                    goToSetBookingStatus();
                 }
             }
         });
@@ -207,11 +192,7 @@ public class ServiceDashBoardController implements Control {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedItem = String.valueOf(dashboard.getSetBookingStatusView().getBookingStatesFilter().getSelectedItem());
-                try {
-                    retrieveBookingsFromDB(selectedItem);
-                } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
-                    e1.printStackTrace();
-                }
+                retrieveBookingsFromDB(selectedItem);
             }
         });
     }
@@ -309,6 +290,8 @@ public class ServiceDashBoardController implements Control {
                     e1.printStackTrace();
                 }
                 Tools.alertMsg(dashboard,"You have successfully inserted the slots", "Success");
+                Log log = new Log(user.getId(), user.getEmail()+" has inserted available slots to the system");
+                Tools.recordALogToDB(log);
                 goToSlotsManagement();
             }
         });
@@ -337,11 +320,11 @@ public class ServiceDashBoardController implements Control {
         return dateAndTimes.stream().map(dateAndTime -> dateAndTime.getTime()).collect(Collectors.toList());
     }
 
-    private void goToUpComingBookings() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private void goToUpComingBookings(){
         switchDashboardPanelToBookingList();
     }
 
-    private void switchDashboardPanelToBookingList() throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    private void switchDashboardPanelToBookingList(){
         List<ManageBookingView> listOfBookings = getAllBookings();
         System.out.println(listOfBookings);
 //        List<List<String>> tableAsList = Tools.breakListOfTuplesToTuple_2(listOfBookings);
@@ -375,8 +358,9 @@ public class ServiceDashBoardController implements Control {
                     System.out.println(dictionary.get(table.getSelectedRow()));
                     if(n == 0){
                         try {
-
                             bRep.cancelBooking(dictionary.get(table.getSelectedRow()));
+                            Log log = new Log(user.getId(), user.getEmail()+" subscribed cancelled a booking");
+                            Tools.recordALogToDB(log);
                             goToUpComingBookings();
                         } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
                             e1.printStackTrace();
@@ -387,7 +371,7 @@ public class ServiceDashBoardController implements Control {
         });
     }
 
-    private List<ManageBookingView> getAllBookings() throws SQLException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private List<ManageBookingView> getAllBookings(){
         return bRep.selectAllBookingsFromServiceProvider(user);
     }
 

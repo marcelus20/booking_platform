@@ -3,12 +3,15 @@ package models.utils;
 import models.enums.BookingReview;
 import models.enums.BookingStatus;
 import models.enums.ServiceProviderStatus;
+import models.repositories.LogRepository;
+import models.repositories.Repository;
 import models.tuples.entitiesRepresentation.*;
 import models.tuples.joinedEntities.ManageBookingView;
 import models.tuples.joinedEntities.ServiceProviderTableView;
 import org.apache.commons.codec.digest.DigestUtils;
 import views.dashboard.Dashboard;
 import javax.swing.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
@@ -245,5 +248,14 @@ public class Tools {
             randomText += characters.get(new Random().nextInt(characters.size()));
         }
         return randomText;
+    }
+
+    public static void recordALogToDB(Log log){
+        Repository<Log> logRepository = new LogRepository();
+        try {
+            logRepository.addToDB(log);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
