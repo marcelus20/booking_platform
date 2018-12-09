@@ -15,19 +15,22 @@ public class AdminDashboard extends Dashboard implements ButtonPanelContainer {
     private final MyCustomJButton viewActivities;
     private final MyCustomJButton verifyAServiceProvider;
     private final MyCustomJButton addAnotherAdminToSystem;
+    private final MyCustomJButton complaintsHandler;
     private ServiceProviderVerification serviceProviderVerification;
+
 
     public AdminDashboard() {
         viewActivities = new MyCustomJButton("view activities of users", 100,50);
         verifyAServiceProvider = new MyCustomJButton("verify a service Provider", 100,50);
         addAnotherAdminToSystem = new MyCustomJButton("Add another admin");
-
+        complaintsHandler = new MyCustomJButton("handle a complaint", 100, 50);
         serviceProviderVerification = new ServiceProviderVerification();
 
         getSideBar().getContent().setLayout(new GridLayout(10,1));
         getSideBar().getContent().add(viewActivities.getButton());
         getSideBar().getContent().add(verifyAServiceProvider.getButton());
         getSideBar().getContent().add(addAnotherAdminToSystem.getButton());
+        getSideBar().getContent().add(complaintsHandler.getButton());
 
 
 
@@ -36,7 +39,7 @@ public class AdminDashboard extends Dashboard implements ButtonPanelContainer {
     @Override
     public List<MyCustomJButton> getButtonsPanel() {
         return new ArrayListBuilder<MyCustomJButton>().add(viewActivities)
-                .add(verifyAServiceProvider).add(addAnotherAdminToSystem).build();
+                .add(verifyAServiceProvider).add(addAnotherAdminToSystem).add(complaintsHandler).build();
     }
 
     public ServiceProviderVerification getServiceProviderVerification() {
