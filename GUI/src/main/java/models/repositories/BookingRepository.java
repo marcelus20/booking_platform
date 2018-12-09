@@ -93,26 +93,34 @@ public class BookingRepository implements Repository<Booking> {
 
     }
 
-    public List<ManageBookingView> selectAllBookingsFromServiceProvider(ServiceProvider serviceProvider) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-
-        return generateBookingView(serviceProvider, null);
+    public List<ManageBookingView> selectAllBookingsFromServiceProvider(ServiceProvider serviceProvider){
+            return generateBookingView(serviceProvider, null);
     }
 
-    public void updateABookingStatus(ManageBookingView manageBookingView, String bStatus) throws SQLException {
-
-        BookingStatus status = Tools.mapBookingStatusStringToEnum(bStatus);
-        System.out.println(status);
-        Database.database().getStmt().executeUpdate("UPDATE booking SET booking_status = '"+status+"' WHERE time_stamp = '"
-                + manageBookingView.getTimestamp() + "' AND c_id = '" + manageBookingView.getCustomerId() + "' AND s_id = '" +manageBookingView.getServiceId()+ "' ;");
-    }
-
-    public List<String> selectDistinctsBookingStatus() throws SQLException {
-        List<String> result = new ArrayList<>();
-        ResultSet rs = Database.database().getStmt().executeQuery("SELECT DISTINCT booking_status FROM booking;");
-        while(rs.next()){
-            result.add(rs.getString("booking_status"));
+    public void updateABookingStatus(ManageBookingView manageBookingView, String bStatus){
+        try {
+            BookingStatus status = Tools.mapBookingStatusStringToEnum(bStatus);
+            System.out.println(status);
+            Database.database().getStmt().executeUpdate("UPDATE booking SET booking_status = '"+status+"' WHERE time_stamp = '"
+                    + manageBookingView.getTimestamp() + "' AND c_id = '" + manageBookingView.getCustomerId() + "' AND s_id = '" +manageBookingView.getServiceId()+ "' ;");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return result;
+    }
+
+    public List<String> selectDistinctsBookingStatus() {
+        try {
+            List<String> result = new ArrayList<>();
+            ResultSet rs = null;
+            rs = Database.database().getStmt().executeQuery("SELECT DISTINCT booking_status FROM booking;");
+            while(rs.next()){
+                result.add(rs.getString("booking_status"));
+            }
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -131,55 +139,52 @@ public class BookingRepository implements Repository<Booking> {
 
     }
 
-    public List<ManageBookingView> selectAllBookingsFromServiceProvider(ServiceProvider user, BookingStatus bookingStatus) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-
-        return generateBookingView(user, bookingStatus);
+    public List<ManageBookingView> selectAllBookingsFromServiceProvider(ServiceProvider user, BookingStatus bookingStatus){
+       return generateBookingView(user, bookingStatus);
     }
 
-    public List<ManageBookingView> generateBookingView(AbstraticUser user, BookingStatus bookingStatus) throws SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        List<ManageBookingView> manageBookingViews = new ArrayList<>();
-        Repository<ServiceProvider> serviceProviderRepository = new ServiceProviderRepository();
-        Repository<Customer> customerRepository = new CustomerRepository();
-
-        String userString = "";
-        if(user.getUserType().equals(UserType.CUSTOMER)){
-            userString = " b.c_id ";
-        }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
-            userString = " b.s_id ";
+    public List<ManageBookingView> generateBookingView(AbstraticUser user, BookingStatus bookingStatus){
+        try {
+            List<ManageBookingView> manageBookingViews = new ArrayList<>();
+            Repository<ServiceProvider> serviceProviderRepository = new ServiceProviderRepository();
+            Repository<Customer> customerRepository = new CustomerRepository();
+            String userString = "";
+            if(user.getUserType().equals(UserType.CUSTOMER)){
+                userString = " b.c_id ";
+            }else if (user.getUserType().equals(UserType.SERVICE_PROVIDER)){
+                userString = " b.s_id ";
+            }
+            String bookingStatusSentence = "";
+            if(bookingStatus != null){
+                bookingStatusSentence += " AND booking_status = '"+bookingStatus+"' ";
+            }
+            String query = "select * from booking b join service_provider s on b.s_id = s.s_id" +
+                    " join phone_list p on p.id = b.s_id where "+userString+"  = "+user.getId()+" " +
+                    bookingStatusSentence+" ;";
+            ResultSet rs;
+            rs = Database.database().getStmt().executeQuery(query);
+            while(rs.next()){
+                System.out.println(customerRepository.selectObjById(rs.getString("c_id")));
+                ManageBookingView manageBookingView = new ManageBookingView();
+                manageBookingView.setServiceProvider(
+                        serviceProviderRepository.selectObjById(
+                                rs.getString("s_id")));
+                manageBookingView.setCustomer(
+                        customerRepository.selectObjById(
+                                rs.getString("c_id")));
+                manageBookingView.setTimestamp(rs.getTimestamp("time_stamp"));
+                manageBookingView.setServiceId(rs.getString("s_id"));
+                manageBookingView.setCustomerId(rs.getString("c_id"));
+                manageBookingView.setReview(BookingReview.valueOf(rs.getString("review")));
+                manageBookingView.setCompanyName(rs.getString("company_full_name"));
+                manageBookingView.setBookingStatus(BookingStatus.valueOf(rs.getString("booking_status")));
+                manageBookingView.setPhone(rs.getString("phone"));
+                manageBookingViews.add(manageBookingView);
+            }
+            return manageBookingViews;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        String bookingStatusSentence = "";
-        if(bookingStatus != null){
-            bookingStatusSentence += " AND booking_status = '"+bookingStatus+"' ";
-        }
-        String query = "select * from booking b join service_provider s on b.s_id = s.s_id" +
-                " join phone_list p on p.id = b.s_id where "+userString+"  = "+user.getId()+" " +
-                bookingStatusSentence+" ;";
-
-        ResultSet rs = Database.database().getStmt().executeQuery(query);
-
-        while(rs.next()){
-            System.out.println(customerRepository.selectObjById(rs.getString("c_id")));
-            ManageBookingView manageBookingView = new ManageBookingView();
-            manageBookingView.setServiceProvider(
-                    serviceProviderRepository.selectObjById(
-                            rs.getString("s_id")));
-
-            manageBookingView.setCustomer(
-                    customerRepository.selectObjById(
-                            rs.getString("c_id")));
-
-            manageBookingView.setTimestamp(rs.getTimestamp("time_stamp"));
-            manageBookingView.setServiceId(rs.getString("s_id"));
-            manageBookingView.setCustomerId(rs.getString("c_id"));
-            manageBookingView.setReview(BookingReview.valueOf(rs.getString("review")));
-            manageBookingView.setCompanyName(rs.getString("company_full_name"));
-            manageBookingView.setBookingStatus(BookingStatus.valueOf(rs.getString("booking_status")));
-            manageBookingView.setPhone(rs.getString("phone"));
-
-            manageBookingViews.add(manageBookingView);
-        }
-
-        return manageBookingViews;
     }
 }

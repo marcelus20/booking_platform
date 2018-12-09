@@ -19,12 +19,12 @@ public class ComplaintPanel extends MyCustomJPanel {
     private final MyCustomJButton sendComplaint;
 
     public ComplaintPanel(BookingReview[] options) {
-        super("Give a feedback about the service that you have experienced", 750, 700);
+        super("Review/Complaints panel - Only applied for bookings with COMPLETE status", 750, 700);
         submit = new MyCustomJButton("Submit", 100,40);
         bookingReviewComboBox = new JComboBox<BookingReview>(options);
 //        bookingReviewComboBox.setPreferredSize(new Dimension(300,300));
         listOfBookingsPanel = new MyCustomJPanel("List Of Bookings", 300, 10);
-        complaintContainer = new MyCustomJPanel("Action Manager", 300, 10);
+        complaintContainer = new MyCustomJPanel("Review Manager", 300, 10);
         complaintManager = new MyCustomJPanel("Complaints", 250, 250);
         sendComplaint =  new MyCustomJButton("Send Complaint", 200,50);
         textArea = new JTextArea();

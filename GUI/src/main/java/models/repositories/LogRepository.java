@@ -13,7 +13,7 @@ public class LogRepository implements Repository<Log> {
     @Override
     public void addToDB(Log obj) throws SQLException {
         Database.database().getStmt().executeUpdate("INSERT INTO logs (id, activity_log)" +
-                " VALUES ("+obj.getUserId()+", "+obj.getActivityLog()+");");
+                " VALUES ('"+obj.getUserId()+"', '"+obj.getActivityLog()+"');");
     }
 
     @Override
@@ -22,10 +22,7 @@ public class LogRepository implements Repository<Log> {
                 " WHERE id = '"+id+"' ;");
         Log log = null;
         while (rs.next()){
-            log = new Log(
-                    rs.getString("id"),
-                            rs.getString("activity_log")
-                    );
+            log = new Log(rs.getString("id"), rs.getString("activity_log"));
         }
 
         return log;
