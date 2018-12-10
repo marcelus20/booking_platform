@@ -2,7 +2,13 @@ package models.tuples.joinedEntities;
 
 import java.util.Objects;
 
+/**
+ * This is a view representation of the entity service_provider for the JTable creation.
+ */
 public class ServiceProviderTableView {
+    /**
+     * list of columns
+     */
     private String serviceId;
     private String serviceEmail;
     private String serviceName;
@@ -10,9 +16,16 @@ public class ServiceProviderTableView {
     private String city;
     private String phone;
 
+    /**
+     * empty constructor
+     */
     public ServiceProviderTableView() {
     }
 
+    /**
+     * GETTERS AND SETTERS
+     * @return
+     */
     public String getServiceId() {
         return serviceId;
     }
@@ -61,6 +74,11 @@ public class ServiceProviderTableView {
         this.phone = phone;
     }
 
+    /**
+     * EQUALS
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,11 +92,19 @@ public class ServiceProviderTableView {
                 Objects.equals(phone, that.phone);
     }
 
+    /**
+     * HASHCODE
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(serviceId, serviceEmail, serviceName, address, city, phone);
     }
 
+    /**
+     * TOSTRING
+     * @return
+     */
     @Override
     public String toString() {
         return "ServiceProviderTableView{" +
