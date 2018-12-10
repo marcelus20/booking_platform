@@ -500,7 +500,7 @@ public class CustomerDashboardController implements Control {
                             Tools.recordALogToDB(log);
                             //lead user to view bookings page
                             goToViewBookings();
-                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
+                        } catch (SQLException e1) {
                             e1.printStackTrace();
                         }
                     }
