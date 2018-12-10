@@ -31,7 +31,7 @@ CREATE TABLE phone_list (
 CREATE TABLE logs (
                 log_id INT AUTO_INCREMENT NOT NULL,
                 id INT NOT NULL,
-                activity_log VARCHAR(50) NOT NULL,
+                activity_log VARCHAR(120) NOT NULL,
                 PRIMARY KEY (log_id)
 );
 
@@ -78,7 +78,8 @@ CREATE TABLE complaints (
                 complaint_ID INT AUTO_INCREMENT NOT NULL,
                 s_id INT NOT NULL,
                 c_id INT NOT NULL,
-                complaint VARCHAR(500) NOT NULL,
+                complaint_status VARCHAR(20) DEFAULT 'PENDENT' NOT NULL, 
+		complaint VARCHAR(500) NOT NULL,
                 PRIMARY KEY (complaint_ID)
 );
 
