@@ -8,11 +8,16 @@ import models.tuples.entitiesRepresentation.ServiceProvider;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * this model class is a representation of a joined entities customer, service_peroviders and bookings in the database
+ */
 public class ManageBookingView {
 
+    /**
+     * LIST OF COLUMNS
+     */
     private ServiceProvider serviceProvider;
     private Customer customer;
-
     private Timestamp timestamp;
     private String serviceId;
     private String customerId;
@@ -21,9 +26,13 @@ public class ManageBookingView {
     private BookingReview review;
     private String phone;
 
+    /**
+     * EMPTY CONSTRUCTOR
+     */
     public ManageBookingView() {
     }
 
+    //GETTERS
     public Timestamp getTimestamp() {
         return timestamp;
     }
@@ -56,6 +65,10 @@ public class ManageBookingView {
         return customer;
     }
 
+    /**
+     * SETTERS
+     * @param customerId
+     */
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
@@ -92,6 +105,7 @@ public class ManageBookingView {
         this.customer = customer;
     }
 
+    //EQUALS
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,11 +122,19 @@ public class ManageBookingView {
                 Objects.equals(phone, that.phone);
     }
 
+    /**
+     * HASHCODE
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(serviceProvider, customer, timestamp, serviceId, customerId, bookingStatus, companyName, review, phone);
     }
 
+    /**
+     * TOSTRING
+     * @return
+     */
     @Override
     public String toString() {
         return "ManageBookingView{" +
