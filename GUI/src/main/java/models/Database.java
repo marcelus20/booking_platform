@@ -15,27 +15,36 @@ public class Database {
     private static Database _database = null;
 
 
-
+    /**
+     * public fatory class for initialising the database instance
+     * @return
+     */
     public static Database database(){
-        if(_database == null){
+        if(_database == null){ // if null, call private contructor
             _database = new Database();
         }
-        return _database;
+        return _database; // return the instance
     }
 
-    //connection
+    //Connection attribute
     private Connection conn;
 
 
+    /**
+     * private Constructor
+     */
     private Database() {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+            Class.forName("com.mysql.jdbc.Driver").newInstance() ; // calling driver by reflection
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         init();
     }
 
+    /**
+     * initialises the conn attribute
+     */
     private void init(){
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost/booking_platform", "root", "");
@@ -45,6 +54,10 @@ public class Database {
         }
 
     }
+
+    /**
+     * closes the conn attribute
+     */
     public void close(){
         try {
             conn.close();
@@ -54,6 +67,10 @@ public class Database {
 
     }
 
+    /**
+     * generates new Statement and returns it.
+     * @return
+     */
     public Statement getStmt() {
         try {
             return conn.createStatement();
