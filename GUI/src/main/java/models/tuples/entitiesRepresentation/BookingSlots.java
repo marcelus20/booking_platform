@@ -3,13 +3,26 @@ package models.tuples.entitiesRepresentation;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Represents the table BookingSlots in the database.
+ */
 public class BookingSlots {
 
+    /**
+     * list of table columns/attributes
+     */
     private Timestamp timestamp;
     private String serviceId;
     private Boolean availability;
-    private Booking booking;
+    private Booking booking; // ONE TO ONE RELATIONSHIP
 
+    /**
+     * FULL CONSTRUCTOR
+     * @param timestamp
+     * @param serviceId
+     * @param availability
+     * @param booking
+     */
     public BookingSlots(Timestamp timestamp, String serviceId, Boolean availability, Booking booking) {
         this.timestamp = timestamp;
         this.serviceId = serviceId;
@@ -17,9 +30,17 @@ public class BookingSlots {
         this.booking = booking;
     }
 
+    /**
+     * Empty constructor
+     */
     public BookingSlots() {
     }
 
+
+    /**
+     * GETTERS
+     * @return
+     */
     public Timestamp getTimestamp() {
         return timestamp;
     }
@@ -36,6 +57,11 @@ public class BookingSlots {
         return booking;
     }
 
+    /**
+     * SETTERS
+     * @param timestamp
+     * @return
+     */
     public BookingSlots withTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
         return this;
@@ -56,6 +82,11 @@ public class BookingSlots {
         return this;
     }
 
+    /**
+     * EQUALS
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,11 +98,19 @@ public class BookingSlots {
                 Objects.equals(booking, that.booking);
     }
 
+    /**
+     * HASHCODE
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(timestamp, serviceId, availability, booking);
     }
 
+    /**
+     * TOSTRING
+     * @return
+     */
     @Override
     public String toString() {
         return "BookingSlots{" +
