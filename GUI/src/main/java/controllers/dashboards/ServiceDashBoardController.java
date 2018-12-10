@@ -552,7 +552,7 @@ public class ServiceDashBoardController implements Control {
                             Log log = new Log(user.getId(), user.getEmail()+" cancelled a booking");
                             Tools.recordALogToDB(log);// record a log
                             goToUpComingBookings();// reload page
-                        } catch (SQLException | IllegalAccessException | ClassNotFoundException | InstantiationException e1) {
+                        } catch (SQLException e1) {
                             e1.printStackTrace();
                         }
                     }
