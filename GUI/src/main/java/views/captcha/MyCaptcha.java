@@ -92,7 +92,9 @@ public class MyCaptcha extends MyCustomJPanel {
     private BufferedImage drawImageFromText(String text) {
         BufferedImage bufferedImage = new BufferedImage(300, 100, BufferedImage.TYPE_INT_RGB);
         Graphics g = bufferedImage.getGraphics();
-        g.setFont(new MyCustomFont("serif",40).getFont());
+//        Font f = new MyCustomFont("serif",40).getFont();
+        Font f = new Font("serif", Font.CENTER_BASELINE,40);
+        g.setFont(f);
         g.drawString(text, 50, 50);
         return bufferedImage;
     }
