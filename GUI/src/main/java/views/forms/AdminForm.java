@@ -13,11 +13,13 @@ import java.util.List;
 public class AdminForm extends SignUp{
     public AdminForm() {
         super("Admin Sign Up");
-
         reduceElementsToEmailAndPassword();
-
     }
 
+    /**
+     * SignUp superclass implements InputPanel container, therefore, this method should be implemented there.
+     * @return the array of inputs conatined in the adimin form.
+     */
     @Override
     public List<InputPanel> getInputsPanel() {
         return new ArrayListBuilder<InputPanel>().add(email).add(password).add(confirmPassword).build();
