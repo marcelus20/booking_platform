@@ -30,7 +30,7 @@ public class ServiceDashboard extends Dashboard implements ButtonPanelContainer 
     public ServiceDashboard() {
         viewUpcommingBookings = new MyCustomJButton("View Upcoming bookings");
         setAvailability = new MyCustomJButton("Set slots to available or not");
-        setStatusOfApppointment = new MyCustomJButton("Set a booking to complete");
+        setStatusOfApppointment = new MyCustomJButton("Set a booking status");
 
     }
 

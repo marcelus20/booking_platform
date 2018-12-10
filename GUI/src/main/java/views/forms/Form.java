@@ -29,7 +29,7 @@ public class Form extends MyCustomJFrame{
     public Form(SignUp registrationForm) {
         super("Sign Up", 600, 900);
         bar = new JMenuBar();
-        menu = new JMenu("Registration Forms");
+        menu = new JMenu("Click here to change Form");
         togleCustomerForm = new JMenuItem("Sign up as a Customer");
         toggleServiceForm = new JMenuItem("Sign up as a Service Provider");
         this.registrationForm = registrationForm;

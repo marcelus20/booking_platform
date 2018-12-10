@@ -37,7 +37,7 @@ public class ComplaintPanel extends MyCustomJPanel {
         submit = new MyCustomJButton("Submit", 100,40);
         bookingReviewComboBox = new JComboBox<BookingReview>(options);
 //        bookingReviewComboBox.setPreferredSize(new Dimension(300,300));
-        listOfBookingsPanel = new MyCustomJPanel("List Of Bookings with COMPLETE status", 300, 10);
+        listOfBookingsPanel = new MyCustomJPanel("Click on a row to see details", 300, 10);
         complaintContainer = new MyCustomJPanel("Review Manager", 300, 10);
         complaintManager = new MyCustomJPanel("Complaints", 250, 250);
         sendComplaint =  new MyCustomJButton("Send Complaint", 200,50);
