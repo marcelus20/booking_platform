@@ -1,22 +1,35 @@
 package views.dashboard.serviceProvider;
 
 import views.customComponents.MyCustomJPanel;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class SetBookingStatusView extends MyCustomJPanel {
+/**
+ * This class is for the service provider to set a status to booking by click on one of the
+ * bookings tables row and changing the column status.
+ */
+public class SetBookingStatusView extends MyCustomJPanel {// it is a panel
 
+    /**
+     * list of attributes
+     */
     private JTable bookingsTable;
     private JComboBox<String> bookingStatesFilter;
     private MyCustomJPanel comboPanel;
 
+    /**
+     * constructor, just callin the super class and setting its content panel to border layout
+     */
     public SetBookingStatusView() {
         super("Set Booking Status", 700, 700);
         getContent().setLayout(new BorderLayout());
 
     }
 
+    /**
+     * getters
+     * @return
+     */
     public JTable getBookingsTable() {
         return bookingsTable;
     }
@@ -25,6 +38,11 @@ public class SetBookingStatusView extends MyCustomJPanel {
         return bookingStatesFilter;
     }
 
+    /**
+     * SETTERS
+     * @param bookingStatesFilterOptions
+     * @return
+     */
     public SetBookingStatusView withBookingStatesFilter(JComboBox bookingStatesFilterOptions){
         bookingStatesFilter = bookingStatesFilterOptions;
         comboPanel = new MyCustomJPanel("Filter by", 200,100);
