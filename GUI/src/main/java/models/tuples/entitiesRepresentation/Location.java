@@ -2,14 +2,29 @@ package models.tuples.entitiesRepresentation;
 
 import java.util.Objects;
 
+/**
+ * Location table in the database entity representation.
+ */
 public class Location {
-
+    /**
+     * list of Columns/ attributes
+     */
     private String serviceId;
     private String firstLineAddress;
     private String eirCode;
     private String city;
     private String secondLineAddress;
 
+
+    /**
+     * FULL CONSTRUCTOR
+     * @param serviceId COLUMN
+     * @param firstLineAddress COLUMN
+     * @param eirCode COLUMN
+     * @param city COLUMN
+     * @param secondLineAddress COLUMN
+     *
+     */
     public Location(String serviceId, String firstLineAddress, String eirCode, String city, String secondLineAddress) {
         this.serviceId = serviceId;
         this.firstLineAddress = firstLineAddress;
@@ -18,9 +33,16 @@ public class Location {
         this.secondLineAddress = secondLineAddress;
     }
 
+    /**
+     * EMPTY CONSTRUCTOR
+     */
     public Location() {
     }
 
+    /**
+     * GETTERS
+     * @return
+     */
     public String getServiceId() {
         return serviceId;
     }
@@ -41,6 +63,11 @@ public class Location {
         return secondLineAddress;
     }
 
+    /**
+     * SETTERS
+     * @param newId
+     * @return
+     */
     public Location withServiceId(String newId) {
         serviceId = newId;
         return this;
@@ -66,6 +93,11 @@ public class Location {
         return this;
     }
 
+    /**
+     * EQUALS
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,11 +110,19 @@ public class Location {
                 Objects.equals(secondLineAddress, location.secondLineAddress);
     }
 
+    /**
+     * HASHCODE
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(serviceId, firstLineAddress, eirCode, city, secondLineAddress);
     }
 
+    /**
+     * TOSTRING
+     * @return
+     */
     @Override
     public String toString() {
         return "Location{" +
