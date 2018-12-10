@@ -5,20 +5,40 @@ import models.enums.BookingStatus;
 
 import java.util.Objects;
 
+/**
+ * This class is a entity representation of the table booking in the database.
+ * the booking Slot table has a relationship one to one, so this entire class is to be
+ *  passed as a booking slot attribute.
+ */
 public class Booking {
 
+    /**
+     * LIST OF COLUMNS/ ATTRIBUTES
+     */
     private String customerId;
     private BookingStatus bookingStatus;
     private BookingReview review;
 
+    /**
+     * FULL CONSTRUCTOR
+     * @param bookingStatus COLUMN
+     * @param review COLUMN
+     */
     public Booking(BookingStatus bookingStatus, BookingReview review) {
         this.bookingStatus = bookingStatus;
         this.review = review;
     }
 
+    /**
+     * DEFAULT CONSTRUCTOR
+     */
     public Booking() {
     }
 
+    /**
+     * GETTERS
+     * @return
+     */
     public BookingStatus getBookingStatus() {
         return bookingStatus;
     }
@@ -31,6 +51,7 @@ public class Booking {
         return customerId;
     }
 
+    //SETERS
     public Booking withBookingStatus(BookingStatus newStatus){
         bookingStatus = newStatus;
         return this;
@@ -46,6 +67,11 @@ public class Booking {
         return this;
     }
 
+    /**
+     * EQUALS METHOD
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,11 +81,19 @@ public class Booking {
                 Objects.equals(review, booking.review);
     }
 
+    /**
+     * HASHCODE METHOD
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(bookingStatus, review);
     }
 
+    /**
+     * TOSTRING METHOD
+     * @return
+     */
     @Override
     public String toString() {
         return "Booking{" +
