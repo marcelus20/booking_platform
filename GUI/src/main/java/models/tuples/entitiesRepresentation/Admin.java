@@ -5,18 +5,40 @@ import models.enums.UserType;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * THIS class is represents a user recorded in users table in database that has a user type of admin,
+ * therefore it exenteds abstract user. Admins has no extra attributes aside from the ones extended from
+ * Abstract user.
+ */
+
 public class Admin extends AbstraticUser {
 
+    /**
+     * constructor empty
+     */
     public Admin (){
         super();
-        userType = UserType.ADMIN;
-        dateCreated = new Date(System.currentTimeMillis());
+        userType = UserType.ADMIN; // seting user type to admin
+        dateCreated = new Date(System.currentTimeMillis()); // seting the created date attribute
     }
 
+    /**
+     * FULL CONSTRUCCTOR
+     * @param id COLUMN
+     * @param email COLUMN
+     * @param password COLUMN
+     * @param listOfLogs COLUMN
+     * @param phones COLUMN
+     */
     public Admin(String id, String email, String password, List<Log> listOfLogs, List<Phone> phones) {
         super(id, email, password, UserType.ADMIN, new Date(System.currentTimeMillis()), listOfLogs, phones);
     }
 
+    /**
+     * SETTERS
+     * @param newId
+     * @return
+     */
     @Override
     public Admin withId(String newId) {
         id = newId;
@@ -59,6 +81,6 @@ public class Admin extends AbstraticUser {
         return this;
     }
 
-
-
+    // AS ADMIN IS AN EXACT COPY OF ABSTRACT USER, IT HAS NOT HASHCODE OR TOSTRING, IT WILL INSTEAD USE
+    //THE ONES CONTAINED IN THE SUPER CLASS
 }
