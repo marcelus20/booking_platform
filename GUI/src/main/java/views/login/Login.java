@@ -15,16 +15,24 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * THIS IS THE LOGIN VIEW WINDOW WITH PANELS class.
+ */
 public class Login extends MyCustomJFrame implements InputPanelContainer {
 
-    private final MyCustomJLabel pageTitle;
-    private final InputPanel email;
-    private final InputPanel password;
-    private final ButtonPanel login;
-    private final ButtonPanel signUp;
-    private MyCaptcha myCaptcha;
+    /**
+     * LIST OF ATTRIBUTES
+     */
+    private final MyCustomJLabel pageTitle; // TITLE FOR THE PANEL
+    private final InputPanel email; // EMAIL INPUT
+    private final InputPanel password; // PASSWORD INPUT
+    private final ButtonPanel login; // BUTTON TO LOGIN
+    private final ButtonPanel signUp; // BUTTON TO TOGLE THE FORMS REGISTRATION
+    private MyCaptcha myCaptcha; // CAPTCHA
 
+    /**
+     * Constructor: initialising all the attributes
+     */
     public Login() {
         super("Barbers Booking Platform System", 500,550);
         this.pageTitle = new MyCustomJLabel("Enter your credentials", 30);
@@ -34,9 +42,9 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
         this.signUp = new ButtonPanel( "Sign up");
         this.myCaptcha = new MyCaptcha();
 
-//        pack();
-        JFrame.setDefaultLookAndFeelDecorated(true);
-
+        /**
+         * configuring all panels and adding them to the eachother
+         */
         getFramePanel().setLayout(new BorderLayout());
         JPanel credentials = new JPanel();
         credentials.setLayout(new GridLayout(3,1));
@@ -58,6 +66,10 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
         validadeAndRepaint();
     }
 
+    /**
+     * GETTER
+     * @return
+     */
     public JLabel getPageTitle() {
         return pageTitle.getLabel();
     }
@@ -87,7 +99,4 @@ public class Login extends MyCustomJFrame implements InputPanelContainer {
         return myCaptcha;
     }
 
-    public void setMyCaptcha(MyCaptcha myCaptcha) {
-        this.myCaptcha = myCaptcha;
-    }
 }
