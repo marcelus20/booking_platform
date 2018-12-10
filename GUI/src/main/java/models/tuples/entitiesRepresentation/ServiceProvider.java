@@ -8,13 +8,35 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This is the entity representation Service_provider class.
+ * Service provider in the database relates one to many bookingSlots and one to one Location.
+ * Also, it extends from AbstractUser, therefor, it has all the attributes in the table users.
+ * So, this class is a junction bettween users, service_provider, location and bookingslots table
+ */
 public class ServiceProvider extends AbstraticUser {
 
+    /**
+     * LIST OF ATTRIBUTES/ COLUMNS
+     */
     private String companyFullName;
     private ServiceProviderStatus status;
-    private Location location;
-    private List<BookingSlots> bookingSlots;
+    private Location location; // ONE TO ONE
+    private List<BookingSlots> bookingSlots; // ONE TO MANY
 
+    /**
+     * FULL CONSTRUCTOR
+     * @param id
+     * @param email
+     * @param password
+     * @param dateCreated
+     * @param companyFullName
+     * @param status
+     * @param location
+     * @param bookingSlots
+     * @param listOfLogs
+     * @param phones
+     */
     public ServiceProvider(String id, String email, String password, Date dateCreated,
                            String companyFullName, ServiceProviderStatus status,
                            Location location, List<BookingSlots> bookingSlots,
@@ -27,11 +49,19 @@ public class ServiceProvider extends AbstraticUser {
         this.bookingSlots = bookingSlots;
     }
 
+
+    /**
+     * EMPTY CONSTRUCTOR
+     */
     public ServiceProvider() {
         userType = UserType.SERVICE_PROVIDER;
         dateCreated = new Date(System.currentTimeMillis());
     }
 
+    /**
+     * GETTERS
+     * @return
+     */
     public String getCompanyFullName() {
         return companyFullName;
     }
@@ -48,6 +78,11 @@ public class ServiceProvider extends AbstraticUser {
         return bookingSlots;
     }
 
+    /**
+     * SETTERS
+     * @param newId
+     * @return
+     */
 
     @Override
     public ServiceProvider withId(String newId) {
@@ -111,6 +146,11 @@ public class ServiceProvider extends AbstraticUser {
         return this;
     }
 
+    /**
+     * EQUALS
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,11 +163,19 @@ public class ServiceProvider extends AbstraticUser {
                 Objects.equals(bookingSlots, that.bookingSlots);
     }
 
+    /**
+     * HASHCODE
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), companyFullName, status, location, bookingSlots);
     }
 
+    /**
+     * TOSTRING
+     * @return
+     */
     @Override
     public String toString() {
         return "ServiceProvider{" +
