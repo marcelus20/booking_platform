@@ -1,14 +1,22 @@
 package models.tuples.entitiesRepresentation;
 
 import models.enums.UserType;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * THIS class is a blueprint of a user in the database.
+ * The users entity in database breaks in 2 more subclass -> the service provider and the Customer.
+ * When it comes to class representation of the entity Service provider and Customer, the these two
+ * classes will extend this abstract User class.
+ */
 public abstract class AbstraticUser {
 
+    /**
+     * LIST OF COLUMNS/ ATTRIBUTES OF THE ENTITY
+     */
     protected String id;
     protected String email;
     protected String password;
@@ -17,6 +25,16 @@ public abstract class AbstraticUser {
     protected List<Log> listOfLogs;
     protected List<Phone> phones;
 
+    /**
+     * FULL CONSTRUCTOR - WITH THE VALUES OF THE COLUMNS
+     * @param id
+     * @param email
+     * @param password
+     * @param userType
+     * @param dateCreated
+     * @param listOfLogs
+     * @param phones
+     */
     public AbstraticUser(String id, String email, String password, UserType userType, Date dateCreated, List<Log> listOfLogs, List<Phone> phones) {
         this.id = id;
         this.email = email;
@@ -27,6 +45,9 @@ public abstract class AbstraticUser {
         this.phones = phones;
     }
 
+    /**
+     * GETTERS
+     */
     public AbstraticUser() {
     }
 
@@ -66,6 +87,10 @@ public abstract class AbstraticUser {
         return null;
     }
 
+    /**
+     * SETTERS
+     * @return
+     */
     public abstract AbstraticUser withId(String newId);
     public abstract AbstraticUser withEmail(String newEmail);
     public abstract AbstraticUser withPassword(String newPassword);
@@ -81,6 +106,11 @@ public abstract class AbstraticUser {
         return this;
     }
 
+    /**
+     * EQUALS AND HASHCODE
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,6 +130,10 @@ public abstract class AbstraticUser {
         return Objects.hash(id, email, password, userType, dateCreated, listOfLogs, phones);
     }
 
+    /**
+     * TOSTRING METHOD.
+     * @return
+     */
     @Override
     public String toString() {
         return "AbstraticUser{" +
