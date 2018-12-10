@@ -1,19 +1,40 @@
 package models.tuples.entitiesRepresentation;
 
 import models.enums.UserType;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * ENTITY REPRESETATION OF THE CUSTOMER ENTITY.
+ * Each user customer type is linked to a the table Customer in a
+ * one to one relationShip.
+ */
 public class Customer extends AbstraticUser {
 
+    /**
+     * ASIDE FROM THE ONES IN THE ABSTRACT USER,
+     * HERE IS THE EXTRA ATTRIBUTES / TABLE COLUMNS
+     */
     private String firstName;
     private String lastName;
-    private List<Complaint> complaints;
-    private List<Booking> bookings;
+    private List<Complaint> complaints; // ONE TO MANY COMPLAINTS
+    private List<Booking> bookings; // ONE TO MANY BOOKINGS
 
+    /**
+     * FULL CONSTRUCTOR
+     * @param id COLUMN
+     * @param email COLUMN
+     * @param password COLUMN
+     * @param dateCreated COLUMN
+     * @param listOfLogs COLUMN
+     * @param firstName COLUMN
+     * @param lastName COLUMN
+     * @param phones COLUMN
+     * @param complaints COLUMN
+     * @param booking COLUMN
+     */
     public Customer(String id, String email, String password, Date dateCreated, List<Log> listOfLogs,
                     String firstName, String lastName, List<Phone>phones, List<Complaint> complaints,
                     List<Booking> booking
@@ -25,11 +46,18 @@ public class Customer extends AbstraticUser {
         bookings = booking;
     }
 
+    /**
+     * EMPTY CONSTRUCTOR
+     */
     public Customer() {
-        userType = UserType.CUSTOMER;
+        userType = UserType.CUSTOMER; //DEFAULT
         dateCreated = new Date(System.currentTimeMillis());
     }
 
+    /**
+     * GETTERS
+     * @return
+     */
     public String getFirstName() {
         return firstName;
     }
@@ -46,6 +74,11 @@ public class Customer extends AbstraticUser {
         return bookings;
     }
 
+    /**
+     * SETTERS
+     * @param newId
+     * @return
+     */
     @Override
     public Customer withId(String newId) {
         id = newId;
@@ -108,6 +141,11 @@ public class Customer extends AbstraticUser {
         return this;
     }
 
+    /**
+     * EQUALS
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -120,10 +158,19 @@ public class Customer extends AbstraticUser {
                 Objects.equals(bookings, customer.bookings);
     }
 
+    /**
+     * HASHCODE
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), firstName, lastName, complaints, bookings);
     }
+
+    /**
+     * TOSTRING
+     * @return
+     */
 
     @Override
     public String toString() {
