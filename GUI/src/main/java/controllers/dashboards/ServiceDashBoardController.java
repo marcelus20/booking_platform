@@ -151,7 +151,7 @@ public class ServiceDashBoardController implements Control {
                         goToUpComingBookings();
                     }else if (e.getActionCommand().contains("vailable")){// go to slots management page
                         goToSlotsManagement();
-                    }else if (e.getActionCommand().contains("complete")){// go to setting booking status page
+                    }else if (e.getActionCommand().contains("status")){// go to setting booking status page
                         goToSetBookingStatus();
                     }
                 }
