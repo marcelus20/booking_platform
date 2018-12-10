@@ -1,21 +1,30 @@
 package views.dashboard.serviceProvider;
 
 import com.github.lgooddatepicker.components.CalendarPanel;
-import views.customComponents.ButtonPanel;
 import views.customComponents.MyCustomJButton;
 import views.customComponents.MyCustomJPanel;
-
 import java.awt.*;
 
-public class SlotManagementPanel extends MyCustomJPanel {
+/**
+ * THIS PANEL WILL TOGGLE WHEN SERVICEPROVIDER WANTS TO ADD SLOTS TO THE SYSTEM.
+ */
 
+public class SlotManagementPanel extends MyCustomJPanel { // ITS A PANEL
+
+
+    /**
+     * list of attributes.
+     */
     private final MyCustomJPanel calendarPanelWrapper;
     private final CalendarPanel calendarPanel;
-    private final MyCustomJPanel slotOutputPanel;
-    private final MyCustomJPanel notAvailableSlots;
+    private final MyCustomJPanel slotOutputPanel; // RIGHT SIDE PANEL
+    private final MyCustomJPanel notAvailableSlots;//LEFT SIDE PANEL
     private final MyCustomJPanel availableSlots;
     private final MyCustomJButton saveButton;
 
+    /**
+     * CONSTRUCTOR
+     */
     public SlotManagementPanel() {
         super("Slots Panel management", 700, 800);
         this.calendarPanel = new CalendarPanel();
@@ -28,6 +37,9 @@ public class SlotManagementPanel extends MyCustomJPanel {
         mount();
     }
 
+    /**
+     * ADDS its attributes panels the content panel from super class
+     */
     private void mount(){
         getContent().setLayout(new GridLayout(2,1));
         getContent().add(calendarPanelWrapper);
@@ -39,6 +51,10 @@ public class SlotManagementPanel extends MyCustomJPanel {
 
     }
 
+    /**
+     * GETTERS
+     * @return
+     */
     public CalendarPanel getCalendarPanel() {
         return calendarPanel;
     }
