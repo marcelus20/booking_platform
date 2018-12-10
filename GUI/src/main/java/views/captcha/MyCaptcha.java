@@ -10,16 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CountDownLatch;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.PerspectiveTransform;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 
 
 /**
@@ -33,14 +23,10 @@ import javafx.scene.paint.Color;
  * Second: Once the randomText is generated, an image will be created from the text using the method
  * drawImageFromText()
  *
- * Third: after the image has been created, it will be skewed/distorted by using the method skewImage()
  *
  * Once these three steps are finished, it will gather a textfield, a button for change captcha and the image
  * in one panel (getContent())
  *
- *
- * THIS IS THE ONLY CLASS IN THE WHOLE PROJECT THAT USES THE LIBRARY JAVAFX THAT IS USED JUST FOR DISTORTING THE IMAGE
- * IN THE METHOD skewImage()
  */
 public class MyCaptcha extends MyCustomJPanel {
 
@@ -81,7 +67,7 @@ public class MyCaptcha extends MyCustomJPanel {
      */
     public void generateCaptcha(){
         randomText = Tools.createRandomText();
-        img = SkewImage(drawImageFromText(randomText));
+        img = drawImageFromText(randomText);
         mountCaptchaComponent();
     }
 
@@ -107,7 +93,7 @@ public class MyCaptcha extends MyCustomJPanel {
         BufferedImage bufferedImage = new BufferedImage(300, 100, BufferedImage.TYPE_INT_RGB);
         Graphics g = bufferedImage.getGraphics();
         g.setFont(new MyCustomFont("serif",40).getFont());
-        g.drawString(text, 95, 50);
+        g.drawString(text, 50, 50);
         return bufferedImage;
     }
 
@@ -117,7 +103,12 @@ public class MyCaptcha extends MyCustomJPanel {
      * @param image base image to be distorted
      * @return distorted image
      */
-
+    /**
+     * I wish I had the chance to use this method dor distorting the captcha image, but unfortonetly maven
+     * can't build JavaFX library for some reason. So I left it commented
+     * and my captcha is not distorted.
+     * */
+/*
     private static BufferedImage SkewImage(BufferedImage image) {
         new JFXPanel();
         final BufferedImage[] imageContainer = new BufferedImage[1];
@@ -154,7 +145,7 @@ public class MyCaptcha extends MyCustomJPanel {
         return imageContainer[0];
     }
 
-
+*/
     /**
      * FOR THE LOGINCONTROLLER TO USE:
      * When login button is hit, this method is triggered, if textfield text matches the random text, it will return true.
@@ -162,6 +153,10 @@ public class MyCaptcha extends MyCustomJPanel {
      */
     public Boolean captchaIsValid(){
         return  field.getText().equals(randomText) ;
+    }
+
+    public void clearTextField(){
+        field.setText("");
     }
 
 }
