@@ -1,17 +1,16 @@
+/**
+ * FELIPE MANTOVANI ------ ID: 2017192 -------- GROUP A ---------PROFESSOR AMILCAR APONTE ------- AMILCAR APONTE
+ */
 package models.repositories;
 
 import models.Database;
-import models.enums.BookingStatus;
 import models.enums.UserType;
 import models.tuples.entitiesRepresentation.AbstraticUser;
 import models.tuples.entitiesRepresentation.Customer;
 import models.tuples.entitiesRepresentation.Phone;
 import models.utils.Tools;
-
-import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -1,3 +1,6 @@
+/**
+ * FELIPE MANTOVANI ------ ID: 2017192 -------- GROUP A ---------PROFESSOR AMILCAR APONTE ------- AMILCAR APONTE
+ */
 package views.login;
 
 import static models.utils.ArrayListBuilder.arrayListBuilder;

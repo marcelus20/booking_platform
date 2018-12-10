@@ -1,6 +1,8 @@
+/**
+ * FELIPE MANTOVANI ------ ID: 2017192 -------- GROUP A ---------PROFESSOR AMILCAR APONTE ------- AMILCAR APONTE
+ */
 package views.captcha;
 import models.utils.Tools;
-import views.customComponents.MyCustomFont;
 import views.customComponents.MyCustomJButton;
 import views.customComponents.MyCustomJField;
 import views.customComponents.MyCustomJPanel;
@@ -9,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.CountDownLatch;
+
 
 
 /**

@@ -1,8 +1,10 @@
+/**
+ * FELIPE MANTOVANI ------ ID: 2017192 -------- GROUP A ---------PROFESSOR AMILCAR APONTE ------- AMILCAR APONTE
+ */
 package views.dashboard.admin;
 
 
 import views.customComponents.MyCustomJPanel;
-
 import javax.swing.*;
 
 /**
