@@ -2,7 +2,7 @@ package controllers.dashboards;
 
 import controllers.Application;
 import controllers.Control;
-import models.enums.ComplaitStatus;
+import models.enums.ComplaintStatus;
 import models.enums.ServiceProviderStatus;
 import models.enums.UserType;
 import models.repositories.*;
@@ -111,7 +111,7 @@ public class AdminDashboardController implements Control {
                     Arrays.asList(complaint.getComplaintID(),
                             complaint.getServiceId(),
                             complaint.getCustomerId(),
-                            complaint.getComplaitStatus()+"",
+                            complaint.getComplaintStatus()+"",
                             complaint.getComplaint()
                     ).toArray(new String[5])).collect(Collectors.toList()).toArray(new String[complaints.size()][]);
             //creating jtable out of this process
@@ -208,7 +208,7 @@ public class AdminDashboardController implements Control {
         handlingComplaintArea.setLayout(new BorderLayout());
         JPanel names = new JPanel();
         //creating JCombobox with the array of the string versions of the complaint Status Enum
-        String[] complaintStatus = {ComplaitStatus.PENDENT+"", ComplaitStatus.PROCESSING+"", ComplaitStatus.FINISHED+""};
+        String[] complaintStatus = {ComplaintStatus.PENDENT+"", ComplaintStatus.PROCESSING+"", ComplaintStatus.FINISHED+""};
         JComboBox<String> complaintsBox = new JComboBox<>(complaintStatus);
         names.setLayout(new GridLayout(2,1));
         names.add(new MyCustomJLabel("Service Name: "+serviceProviderName).getLabel());
