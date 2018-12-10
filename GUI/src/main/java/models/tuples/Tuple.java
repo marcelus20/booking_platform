@@ -11,8 +11,8 @@ import java.util.Objects;
  */
 
 public class Tuple<T, G> {
-    private final T _1;
-    private final G _2;
+    private final T _1; // first tuple element
+    private final G _2; // second tuple element
 
     //private constructor: the creation of the object is by using the Factory static method tuple()
     protected Tuple(final T _1, final G _2) {
@@ -55,7 +55,6 @@ public class Tuple<T, G> {
         return Objects.equals(_1, tuple._1) &&
                 Objects.equals(_2, tuple._2);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(_1, _2);
