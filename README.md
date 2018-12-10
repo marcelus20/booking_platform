@@ -15,4 +15,4 @@ All is controlled by an admin user.
 
 the jar file will be located in target/
 
-<h3>Run the db.sql file to installs database schema along with the db insertions.</h3>
+<h3>Run the db.sql file to install database schema along with the db insertions.</h3>
