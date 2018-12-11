@@ -291,8 +291,7 @@ public class BookingRepository implements Repository<Booking> {
      */
     public static void updateAllOldBookingsToComplete(){
         try {
-            Database.database().getStmt().executeUpdate("UPDATE booking SET booking_status = 'COMPLETE'" +
-                    "WHERE time_stamp < NOW();"); // set to complete bookings with old timestamps
+            Database.database().getStmt().executeUpdate("UPDATE booking SET booking_status = 'COMPLETE' WHERE time_stamp < NOW() AND (booking_status = 'CONFIRMED' OR booking_status = 'PENDENT');"); // set to complete bookings with old timestamps
             /**
              * after this, delete all available slots that have not been booked by anaybody.
              * This will keep the table slots with smaller in terms of useless data.
